@@ -1,4 +1,4 @@
-
+package Demo;
 /*
 In Java, if your classes are within the same package, you don't need import statements
 to access other classes within that package. Java allows classes within the same package
@@ -63,6 +63,8 @@ source folder and in the default package, MyClass can directly access OtherClass
 */
 
 
+
+
 // A java class
 public class Main {
 
@@ -89,7 +91,7 @@ public class Main {
         System.out.println();
     }
 
-    // Main program method
+    // Demo.Main program method
     public static void main(String[] args) {
 
         // Print out the class name of a temporary class object
@@ -98,9 +100,9 @@ public class Main {
         newMain.printNewLine(); // Newline
 
         // How to use constants
-        // In Java, you don't instantiate classes like Constants that are meant to hold static constants or utility methods.
+        // In Java, you don't instantiate classes like Demo.Constants that are meant to hold static constants or utility methods.
         // Instead, you access the constants directly using the class name followed by the constant name,
-        // like Constants.INT or Constants.NAME.
+        // like Demo.Constants.INT or Demo.Constants.NAME.
         System.out.println("Constant int = " + Constants.INT);
         System.out.println("Constant String = " + Constants.NAME);
         newMain.printNewLine(); // Newline
@@ -161,9 +163,57 @@ public class Main {
         nameBuilder.append(" ");
         nameBuilder.append("Gosling");
 
+        // Print out the stringBuilder
         var nameBuild = nameBuilder.toString();
         System.out.println(nameBuild);
         newMain.printNewLine(); // Newline
+
+        // In Java, arrays can be used to represent a list of any primitive or object type.
+        // To allocate an array, you follow the data type with a pair of square brackets and define how big you want the array to be.
+        String[] strings1 = new String[10];
+        int[] numbers1 = new int[5];
+
+        // You can also initialize the values of the array using the initializer list syntax.
+        String[] strings2 = {"James", "Tim", "Ada"};
+        int[] numbers2 = {1,2,3};
+
+        // Array values can be retrieved, or assigned, using the zero based index value of the array.
+        String[] names = {"James", "Tim", "Ada"};
+        // Range-based loop (print current array)
+        for (var name: names) {
+            System.out.println(name);
+        }
+        names[0] = "Jaime";
+        // Index-based loop (print updated array)
+        for (var index = 0; index < names.length; index++) {
+            System.out.println(names[index]);
+        }
+        newMain.printNewLine(); // Newline
+
+        // You can iterate over the array's values by using either a standard for loop, or the for-each loop syntax.
+        // NOTE: Arrays in Java have a length field that stores the number of elements in the array.
+        // This field is accessed like any other field of an object using the dot notation.
+        // In Java, String objects do not have a length field;
+        // instead, they have a length() method to retrieve the length of the string.
+        // Index-based loop
+        for (var index = 0; index < names.length; index++) {
+            System.out.println(names[index]);
+        }
+        // Range-based loop
+        for (var name: names) {
+            System.out.println(name);
+        }
+        newMain.printNewLine(); // Newline
+
+        /*
+        Static
+        The static keyword marks a method and variable as being independent of any object instantiation in a class.
+        That means you can use the static method without actually creating a class.
+        This is good for utility methods, or singletons, that are allocated on the class instead of an object.
+         */
+
+        newMain.printNewLine(); // Newline
+
 
     }
 }

@@ -1,4 +1,6 @@
-// Constants
+package Demo;
+
+// Demo.Constants
 // In Java, there's no direct equivalent to the C preprocessor #define directive,
 // which is used for defining macros. However, you can achieve similar behavior in Java
 // using constants, enums, or final variables
