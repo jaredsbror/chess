@@ -8,6 +8,8 @@ package chess;
  */
 public class ChessBoard {
 
+    private ChessPiece[][] board = new ChessPiece[Constants.BOARD_NUM_ROWS][Constants.BOARD_NUM_ROWS];
+
     public ChessBoard() {
         
     }
