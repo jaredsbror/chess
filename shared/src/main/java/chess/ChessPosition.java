@@ -11,6 +11,7 @@ public class ChessPosition {
     private int row;
     private int column;
 
+    // Constructor
     public ChessPosition(int row, int column) {
         this.row = row;
         this.column = column;
@@ -20,27 +21,19 @@ public class ChessPosition {
      * @return which row this position is in
      * 1 codes for the bottom row
      */
-    public int getRow() {
-        return row;
-    }
+    public int getRow() { return row; }
 
-    /** Set the column */
-    public void setRow(int row) {
-        this.row = row;
-    }
+    // Set the column
+    public void setRow(int row) { this.row = row; }
 
     /**
      * @return which column this position is in
      * 1 codes for the left row
      */
-    public int getColumn() {
-        return column;
-    }
+    public int getColumn() { return column; }
 
-    /** Set the column */
-    public void setColumn(int column) {
-        this.column = column;
-    }
+    // Set the column
+    public void setColumn(int column) { this.column = column; }
 
     //
     @Override
