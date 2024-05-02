@@ -30,6 +30,8 @@ public interface Constants {
     int BLACK_ROOK_COL_1 = 0;
     int BLACK_ROOK_COL_2 = 7;
     int BLACK_PAWN_ROW = 6;
+    int BLACK_PAWN_START_COL = 0;
+    int BLACK_PAWN_END_COL = 7;
 
     // Default white piece locations
     int WHITE_KING_ROW = 0;
@@ -46,4 +48,6 @@ public interface Constants {
     int WHITE_ROOK_COL_1 = 0;
     int WHITE_ROOK_COL_2 = 7;
     int WHITE_PAWN_ROW = 1;
+    int WHITE_PAWN_START_COL = 0;
+    int WHITE_PAWN_END_COL = 7;
 }
