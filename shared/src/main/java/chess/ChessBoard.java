@@ -55,7 +55,33 @@ public class ChessBoard {
             }
         }
 
+        // Add black pieces
+        board[Constants.BLACK_NON_PAWN_ROW][Constants.ROOK_COL_1] = new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.ROOK);
+        board[Constants.BLACK_NON_PAWN_ROW][Constants.KNIGHT_COL_1] = new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.KNIGHT);
+        board[Constants.BLACK_NON_PAWN_ROW][Constants.BISHOP_COL_1] = new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.BISHOP);
+        board[Constants.BLACK_NON_PAWN_ROW][Constants.QUEEN_COL] = new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.QUEEN);
+        board[Constants.BLACK_NON_PAWN_ROW][Constants.KING_COL] = new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.KING);
+        board[Constants.BLACK_NON_PAWN_ROW][Constants.BISHOP_COL_2] = new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.BISHOP);
+        board[Constants.BLACK_NON_PAWN_ROW][Constants.KNIGHT_COL_2] = new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.KNIGHT);
+        board[Constants.BLACK_NON_PAWN_ROW][Constants.ROOK_COL_2] = new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.ROOK);
+        // Loop to add the pawns..
+        for (int col = 0; col < Constants.BOARD_NUM_COLUMNS; col++) {
+            board[Constants.BLACK_PAWN_ROW][col] = new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.PAWN);
+        }
 
+        // Add white pieces
+        board[Constants.WHITE_NON_PAWN_ROW][Constants.ROOK_COL_1] = new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.ROOK);
+        board[Constants.WHITE_NON_PAWN_ROW][Constants.KNIGHT_COL_1] = new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.KNIGHT);
+        board[Constants.WHITE_NON_PAWN_ROW][Constants.BISHOP_COL_1] = new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.BISHOP);
+        board[Constants.WHITE_NON_PAWN_ROW][Constants.QUEEN_COL] = new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.QUEEN);
+        board[Constants.WHITE_NON_PAWN_ROW][Constants.KING_COL] = new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.KING);
+        board[Constants.WHITE_NON_PAWN_ROW][Constants.BISHOP_COL_2] = new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.BISHOP);
+        board[Constants.WHITE_NON_PAWN_ROW][Constants.KNIGHT_COL_2] = new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.KNIGHT);
+        board[Constants.WHITE_NON_PAWN_ROW][Constants.ROOK_COL_2] = new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.ROOK);
+        // Loop to add the pawns..
+        for (int col = 0; col < Constants.BOARD_NUM_COLUMNS; col++) {
+            board[Constants.WHITE_PAWN_ROW][col] = new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.PAWN);
+        }
     }
 
     //
