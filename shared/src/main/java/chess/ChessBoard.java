@@ -8,10 +8,12 @@ package chess;
  */
 public class ChessBoard {
 
+    // Variables
     private ChessPiece[][] board = new ChessPiece[Constants.BOARD_NUM_ROWS][Constants.BOARD_NUM_COLUMNS];
 
+    // Constructor
     public ChessBoard() {
-        
+        resetBoard();
     }
 
     /**
@@ -21,7 +23,9 @@ public class ChessBoard {
      * @param piece    the piece to add
      */
     public void addPiece(ChessPosition position, ChessPiece piece) {
-        throw new RuntimeException("Not implemented");
+        int row = position.getRow();
+        int column = position.getColumn();
+        board[row][column] = piece;
     }
 
     /**
@@ -32,7 +36,9 @@ public class ChessBoard {
      * position
      */
     public ChessPiece getPiece(ChessPosition position) {
-        throw new RuntimeException("Not implemented");
+        int row = position.getRow();
+        int column = position.getColumn();
+        return board[row][column];
     }
 
     /**
@@ -40,7 +46,16 @@ public class ChessBoard {
      * (How the game of chess normally starts)
      */
     public void resetBoard() {
-        throw new RuntimeException("Not implemented");
+        // Iterate over the chessboard rows...
+        for (int row = 0; row < Constants.BOARD_NUM_ROWS; row++) {
+            // Iterate over the chessboard columns...
+            for (int col = 0; col < Constants.BOARD_NUM_COLUMNS; col++) {
+                // Initialize the piece to NULL
+                board[row][col] = null;
+            }
+        }
+
+
     }
 
     //
