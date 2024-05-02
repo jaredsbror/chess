@@ -12,10 +12,12 @@ public class ChessGame {
 
     // Variables
     TeamColor teamColor;
+    ChessBoard chessBoard;
 
     // Constructor
     public ChessGame() {
         teamColor = TeamColor.WHITE;
+        chessBoard = new ChessBoard();
     }
 
     /**
@@ -27,7 +29,7 @@ public class ChessGame {
 
     /**
      * Set's which teams turn it is
-     * @param team the team whose turn it is
+     * @param teamColor the team whose turn it is
      */
     public void setTeamTurn(TeamColor teamColor) {
         this.teamColor = teamColor;
@@ -59,7 +61,7 @@ public class ChessGame {
      * @throws InvalidMoveException if move is invalid
      */
     public void makeMove(ChessMove move) throws InvalidMoveException {
-        throw new RuntimeException("Not implemented");
+        // ???
     }
 
     /**
@@ -99,7 +101,7 @@ public class ChessGame {
      * @param board the new board to use
      */
     public void setBoard(ChessBoard board) {
-        throw new RuntimeException("Not implemented");
+
     }
 
     /**
@@ -108,7 +110,7 @@ public class ChessGame {
      * @return the chessboard
      */
     public ChessBoard getBoard() {
-        throw new RuntimeException("Not implemented");
+        return chessBoard;
     }
 
     //
