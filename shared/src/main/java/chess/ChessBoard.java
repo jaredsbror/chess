@@ -28,6 +28,11 @@ public class ChessBoard {
         board[row][column] = piece;
     }
 
+    // Add piece to the chessboard
+    public void addPiece(int row, int column, ChessPiece piece) {
+        board[row][column] = piece;
+    }
+
     /**
      * Gets a chess piece on the chessboard
      *
@@ -38,6 +43,11 @@ public class ChessBoard {
     public ChessPiece getPiece(ChessPosition position) {
         int row = position.getRow();
         int column = position.getColumn();
+        return board[row][column];
+    }
+
+    // Get chess piece from the chessboard
+    public ChessPiece getPiece(int row, int column) {
         return board[row][column];
     }
 
@@ -66,7 +76,7 @@ public class ChessBoard {
         board[Constants.BLACK_NON_PAWN_ROW][Constants.BISHOP_COL_2] = new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.BISHOP);
         board[Constants.BLACK_NON_PAWN_ROW][Constants.KNIGHT_COL_2] = new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.KNIGHT);
         board[Constants.BLACK_NON_PAWN_ROW][Constants.ROOK_COL_2] = new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.ROOK);
-        // Loop to add the pawns..
+        // Loop to add the pawns...
         for (int col = 0; col < Constants.BOARD_NUM_COLUMNS; col++) {
             board[Constants.BLACK_PAWN_ROW][col] = new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.PAWN);
         }
@@ -80,7 +90,7 @@ public class ChessBoard {
         board[Constants.WHITE_NON_PAWN_ROW][Constants.BISHOP_COL_2] = new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.BISHOP);
         board[Constants.WHITE_NON_PAWN_ROW][Constants.KNIGHT_COL_2] = new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.KNIGHT);
         board[Constants.WHITE_NON_PAWN_ROW][Constants.ROOK_COL_2] = new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.ROOK);
-        // Loop to add the pawns..
+        // Loop to add the pawns...
         for (int col = 0; col < Constants.BOARD_NUM_COLUMNS; col++) {
             board[Constants.WHITE_PAWN_ROW][col] = new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.PAWN);
         }
