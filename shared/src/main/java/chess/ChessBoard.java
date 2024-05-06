@@ -51,6 +51,18 @@ public class ChessBoard {
         return board[row][column];
     }
 
+    // Return true if there is a piece at a certain position
+    public boolean doesPieceExist(ChessPosition position) {
+        int row = position.getRow();
+        int column = position.getColumn();
+        return board[row][column] != null;
+    }
+
+    // Return true if there is a piece at a certain position
+    public boolean doesPieceExist(int row, int column) {
+        return board[row][column] != null;
+    }
+
     /**
      * Sets the board to the default starting board
      * (How the game of chess normally starts)
