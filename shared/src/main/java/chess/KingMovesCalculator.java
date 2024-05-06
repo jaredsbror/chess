@@ -63,8 +63,8 @@ public class KingMovesCalculator implements PieceMovesCalculator {
     }
 
     // Frequently used check in the method pieceMoves
-    private boolean isMoveValid() {
-        return (possibleRow >= 0 && possibleRow <= Constants.BOARD_MAX_ROW_INDEX && possibleColumn >= 0 && possibleColumn <= Constants.BOARD_MAX_COLUMN_INDEX && !(possibleRow >= opponentKingRowMin && possibleRow <= opponentKingRowMax && possibleColumn >= opponentKingColMin && possibleColumn <= opponentKingColMax));
+    private boolean isMoveValid(ChessBoard board) {
+        return (board.getPieceTeamColor(possibleRow, possibleColumn) == opponentTeamColor && possibleRow >= 0 && possibleRow <= Constants.BOARD_MAX_ROW_INDEX && possibleColumn >= 0 && possibleColumn <= Constants.BOARD_MAX_COLUMN_INDEX && !(possibleRow >= opponentKingRowMin && possibleRow <= opponentKingRowMax && possibleColumn >= opponentKingColMin && possibleColumn <= opponentKingColMax));
     }
 
     @Override
@@ -112,19 +112,19 @@ public class KingMovesCalculator implements PieceMovesCalculator {
         // Spot #1 (row + 1, column - 1)
         possibleColumn = currentColumn - 1;
         // If the position is valid, add it to the output collection of valid moves
-        if (isMoveValid()) {
+        if (isMoveValid(board)) {
             validMoves.add(new ChessMove(position, new ChessPosition(possibleRow, possibleColumn), ChessPiece.PieceType.QUEEN));
         }
         // Spot #2 (row + 1, column)
         possibleColumn = currentColumn;
         // If the position is valid, add it to the output collection of valid moves
-        if (isMoveValid()) {
+        if (isMoveValid(board)) {
             validMoves.add(new ChessMove(position, new ChessPosition(possibleRow, possibleColumn), ChessPiece.PieceType.QUEEN));
         }
         // Spot #3 (row + 1, column + 1)
         possibleColumn = currentColumn + 1;
         // If the position is valid, add it to the output collection of valid moves
-        if (isMoveValid()) {
+        if (isMoveValid(board)) {
             validMoves.add(new ChessMove(position, new ChessPosition(possibleRow, possibleColumn), ChessPiece.PieceType.QUEEN));
         }
 
@@ -133,13 +133,13 @@ public class KingMovesCalculator implements PieceMovesCalculator {
         // Spot #4 (row, column - 1)
         possibleColumn = currentColumn - 1;
         // If the position is valid, add it to the output collection of valid moves
-        if (isMoveValid()) {
+        if (isMoveValid(board)) {
             validMoves.add(new ChessMove(position, new ChessPosition(possibleRow, possibleColumn), ChessPiece.PieceType.QUEEN));
         }
         // Spot #5 (row, column + 1)
         possibleColumn = currentColumn + 1;
         // If the position is valid, add it to the output collection of valid moves
-        if (isMoveValid()) {
+        if (isMoveValid(board)) {
             validMoves.add(new ChessMove(position, new ChessPosition(possibleRow, possibleColumn), ChessPiece.PieceType.QUEEN));
         }
 
@@ -148,19 +148,19 @@ public class KingMovesCalculator implements PieceMovesCalculator {
         // Spot #6 (row - 1, column - 1)
         possibleColumn = currentColumn - 1;
         // If the position is valid, add it to the output collection of valid moves
-        if (isMoveValid()) {
+        if (isMoveValid(board)) {
             validMoves.add(new ChessMove(position, new ChessPosition(possibleRow, possibleColumn), ChessPiece.PieceType.QUEEN));
         }
         // Spot #7 (row - 1, column)
         possibleColumn = currentColumn;
         // If the position is valid, add it to the output collection of valid moves
-        if (isMoveValid()) {
+        if (isMoveValid(board)) {
             validMoves.add(new ChessMove(position, new ChessPosition(possibleRow, possibleColumn), ChessPiece.PieceType.QUEEN));
         }
         // Spot #8 (row - 1, column + 1)
         possibleColumn = currentColumn + 1;
         // If the position is valid, add it to the output collection of valid moves
-        if (isMoveValid()) {
+        if (isMoveValid(board)) {
             validMoves.add(new ChessMove(position, new ChessPosition(possibleRow, possibleColumn), ChessPiece.PieceType.QUEEN));
         }
 
