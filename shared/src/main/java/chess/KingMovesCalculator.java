@@ -18,14 +18,6 @@ public class KingMovesCalculator implements PieceMovesCalculator {
         currentColumn = 0;
         possibleRow = 0;
         possibleColumn = 0;
-        // Various row and column variables for the opponent king
-        opponentKingRow = 0;
-        opponentKingColumn = 0;
-        opponentKingRowMin = 0;
-        opponentKingRowMax = 0;
-        opponentKingColMin = 0;
-        opponentKingColMax = 0;
-
     }
 
     // Collection to hold resulting valid moves
@@ -38,13 +30,6 @@ public class KingMovesCalculator implements PieceMovesCalculator {
     private int currentColumn;
     private int possibleRow;
     private int possibleColumn;
-    // Various row and column variables for the opponent king
-    private int opponentKingRow;
-    private int opponentKingColumn;
-    private int opponentKingRowMin;
-    private int opponentKingRowMax;
-    private int opponentKingColMin;
-    private int opponentKingColMax;
 
     // Get current team color
     public ChessGame.TeamColor getCurrentTeamColor() {
@@ -64,42 +49,14 @@ public class KingMovesCalculator implements PieceMovesCalculator {
 
     // Frequently used check in the method pieceMoves
     private boolean isMoveValid(ChessBoard board) {
-        return (board.getPieceTeamColor(possibleRow, possibleColumn) == opponentTeamColor && possibleRow >= 0 && possibleRow <= Constants.BOARD_MAX_ROW_INDEX && possibleColumn >= 0 && possibleColumn <= Constants.BOARD_MAX_COLUMN_INDEX && !(possibleRow >= opponentKingRowMin && possibleRow <= opponentKingRowMax && possibleColumn >= opponentKingColMin && possibleColumn <= opponentKingColMax));
+        return (board.getPieceTeamColor(possibleRow, possibleColumn) == opponentTeamColor && possibleRow >= 0 &&
+                possibleRow <= Constants.BOARD_MAX_ROW_INDEX &&
+                possibleColumn >= 0 &&
+                possibleColumn <= Constants.BOARD_MAX_COLUMN_INDEX);
     }
 
     @Override
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition position) {
-
-        // Various row and column variables for the opponent king
-        opponentKingRow = 0;
-        opponentKingColumn = 0;
-        opponentKingRowMin = 0;
-        opponentKingRowMax = 0;
-        opponentKingColMin = 0;
-        opponentKingColMax = 0;
-
-        /// Iterate over the board and detect where the opponent's king is.
-        /// This will be used to make sure the current player's king's move to a spot is valid
-        outerLoop:
-        // Iterate over board rows
-        for (int row = 0; row < Constants.BOARD_NUM_ROWS; row++) {
-            // Iterate over board columns
-            for (int col = 0; col < Constants.BOARD_NUM_COLUMNS; col++) {
-                // If the king is there, save its position
-                if (board.getPiece(row, col).getPieceType() == ChessPiece.PieceType.KING) {
-                    opponentKingRow = row;
-                    opponentKingColumn = col;
-                    break outerLoop;
-                }
-            }
-        }
-
-        /// Generate row and column range of forbidden squares for the king to travel
-        opponentKingRowMin = opponentKingRow - 1;
-        opponentKingRowMax = opponentKingRow + 1;
-        opponentKingColMin = opponentKingColumn - 1;
-        opponentKingColMax = opponentKingColumn + 1;
-
 
         // Collection to hold resulting valid moves
         validMoves = new ArrayList<>();
