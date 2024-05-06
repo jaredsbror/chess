@@ -32,6 +32,28 @@ public class BishopMovesCalculator implements PieceMovesCalculator {
 
     @Override
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition position) {
-        return List.of();
+        // Collection to hold resulting valid moves
+        validMoves = new ArrayList<>();
+
+        /// Check four possible move directions
+        // Move #1: row++, column--
+        possibleColumn = currentColumn - 1;
+        possibleRow = currentRow + 1;
+        //
+        while (isWithinBounds()) {
+
+        }
+
+        // Move #2: row++, column++
+        possibleRow = currentRow;
+        // Iterate through the possible columns
+
+        // Move #3: row--, column++
+        possibleColumn = currentColumn;
+
+        // Move #4: row--, column--
+        possibleRow = currentRow;
+
+        return validMoves;
     }
 }

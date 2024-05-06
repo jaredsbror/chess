@@ -1,5 +1,7 @@
 package chess;
 
+import java.util.Arrays;
+
 /**
  * A chessboard that can hold and rearrange chess pieces.
  * <p>
@@ -63,6 +65,18 @@ public class ChessBoard {
         return board[row][column] != null;
     }
 
+    // Return the color of the piece at a certain location
+    public ChessGame.TeamColor getPieceTeamColor(int row, int column) {
+        return board[row][column].getTeamColor();
+    }
+
+    // Return the color of the piece at a certain location
+    public ChessGame.TeamColor getPieceTeamColor(ChessPosition position) {
+        int row = position.getRow();
+        int column = position.getColumn();
+        return board[row][column].getTeamColor();
+    }
+
     /**
      * Sets the board to the default starting board
      * (How the game of chess normally starts)
@@ -108,21 +122,22 @@ public class ChessBoard {
         }
     }
 
-    //
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof ChessBoard that)) return false;
+        return Arrays.equals(board, that.board);
+    }
+
     @Override
     public int hashCode() {
-        return super.hashCode();
+        return Arrays.hashCode(board);
     }
 
-    //
-    @Override
-    public boolean equals(Object obj) {
-        return super.equals(obj);
-    }
-
-    //
     @Override
     public String toString() {
-        return super.toString();
+        return "ChessBoard{" +
+                "board=" + Arrays.toString(board) +
+                '}';
     }
 }

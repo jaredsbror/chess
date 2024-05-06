@@ -34,6 +34,9 @@ public class RookMovesCalculator implements PieceMovesCalculator {
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition position) {
         // Collection to hold resulting valid moves
         validMoves = new ArrayList<>();
+        // Various row and column variables for the current player
+        currentRow = position.getRow();
+        currentColumn = position.getColumn();
 
         /// Check four possible move directions
         // Move #1: row++, column
