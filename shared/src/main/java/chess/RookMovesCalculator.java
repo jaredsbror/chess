@@ -39,7 +39,7 @@ public class RookMovesCalculator implements PieceMovesCalculator {
         // Move #1: row++, column
         possibleColumn = currentColumn;
         // Iterate through the possible rows
-        for (possibleRow = (currentRow + 1); possibleRow <= Constants.BOARD_MAX_COLUMN_INDEX; possibleRow++) {
+        for (possibleRow = currentRow + 1; possibleRow <= Constants.BOARD_MAX_COLUMN_INDEX; possibleRow++) {
             // If the position is out of bounds, break without adding a valid move
             if (!isWithinBounds()) {
                 break;
@@ -55,7 +55,7 @@ public class RookMovesCalculator implements PieceMovesCalculator {
         // Move #2: row, column++
         possibleRow = currentRow;
         // Iterate through the possible columns
-        for (possibleColumn = (currentColumn + 1); possibleColumn <= Constants.BOARD_MAX_COLUMN_INDEX; possibleColumn++) {
+        for (possibleColumn = currentColumn + 1; possibleColumn <= Constants.BOARD_MAX_COLUMN_INDEX; possibleColumn++) {
             // If the position is out of bounds, break without adding a valid move
             if (!isWithinBounds()) {
                 break;
@@ -71,7 +71,7 @@ public class RookMovesCalculator implements PieceMovesCalculator {
         // Move #3: row--, column
         possibleColumn = currentColumn;
         // Iterate through the possible rows
-        for (possibleRow = (currentRow - 1); possibleRow >= 0; possibleRow--) {
+        for (possibleRow = currentRow - 1; possibleRow >= 0; possibleRow--) {
             // If the position is out of bounds, break without adding a valid move
             if (!isWithinBounds()) {
                 break;
@@ -87,7 +87,7 @@ public class RookMovesCalculator implements PieceMovesCalculator {
         // Move #4: row, column--
         possibleRow = currentRow;
         // Iterate through the possible columns
-        for (possibleColumn = (currentColumn - 1); possibleColumn >= 0; possibleColumn--) {
+        for (possibleColumn = currentColumn - 1; possibleColumn >= 0; possibleColumn--) {
             // If the position is out of bounds, break without adding a valid move
             if (!isWithinBounds()) {
                 break;
