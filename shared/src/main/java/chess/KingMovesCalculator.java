@@ -3,6 +3,7 @@ package chess;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 
 public class KingMovesCalculator implements PieceMovesCalculator {
 
@@ -122,5 +123,29 @@ public class KingMovesCalculator implements PieceMovesCalculator {
         }
 
         return validMoves;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        KingMovesCalculator that = (KingMovesCalculator) o;
+        return currentRow == that.currentRow && currentColumn == that.currentColumn && Objects.equals(validMoves, that.validMoves) && currentTeamColor == that.currentTeamColor && opponentTeamColor == that.opponentTeamColor;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(validMoves, currentTeamColor, opponentTeamColor, currentRow, currentColumn);
+    }
+
+    @Override
+    public String toString() {
+        return "KingMovesCalculator{" +
+                "validMoves=" + validMoves +
+                ", currentTeamColor=" + currentTeamColor +
+                ", opponentTeamColor=" + opponentTeamColor +
+                ", currentRow=" + currentRow +
+                ", currentColumn=" + currentColumn +
+                '}';
     }
 }

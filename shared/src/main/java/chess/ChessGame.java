@@ -1,6 +1,7 @@
 package chess;
 
 import java.util.Collection;
+import java.util.Objects;
 
 /**
  * For a class that can manage a chess game, making moves on a board
@@ -171,21 +172,24 @@ public class ChessGame {
         return chessBoard;
     }
 
-    //
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ChessGame chessGame = (ChessGame) o;
+        return teamColor == chessGame.teamColor && Objects.equals(chessBoard, chessGame.chessBoard);
+    }
+
     @Override
     public int hashCode() {
-        return super.hashCode();
+        return Objects.hash(teamColor, chessBoard);
     }
 
-    //
-    @Override
-    public boolean equals(Object obj) {
-        return super.equals(obj);
-    }
-
-    //
     @Override
     public String toString() {
-        return super.toString();
+        return "ChessGame{" +
+                "teamColor=" + teamColor +
+                ", chessBoard=" + chessBoard +
+                '}';
     }
 }
