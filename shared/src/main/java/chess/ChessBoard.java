@@ -65,6 +65,30 @@ public class ChessBoard {
         return board[row][column] != null;
     }
 
+    // Return true if there is a piece at a certain position
+    public boolean doesFriendlyPieceExist(ChessPosition position, ChessGame.TeamColor friendlyTeamColor) {
+        int row = position.getRow();
+        int column = position.getColumn();
+        return (doesPieceExist(row, column) && getPieceTeamColor(row, column) == friendlyTeamColor);
+    }
+
+    // Return true if there is a piece at a certain position
+    public boolean doesFriendlyPieceExist(int row, int column, ChessGame.TeamColor friendlyTeamColor) {
+        return (doesPieceExist(row, column) && getPieceTeamColor(row, column) == friendlyTeamColor);
+    }
+
+    // Return true if there is a piece at a certain position
+    public boolean doesOpponentPieceExist(ChessPosition position, ChessGame.TeamColor opponentTeamColor) {
+        int row = position.getRow();
+        int column = position.getColumn();
+        return (doesPieceExist(row, column) && getPieceTeamColor(row, column) == opponentTeamColor);
+    }
+
+    // Return true if there is a piece at a certain position
+    public boolean doesOpponentPieceExist(int row, int column, ChessGame.TeamColor opponentTeamColor) {
+        return (doesPieceExist(row, column) && getPieceTeamColor(row, column) == opponentTeamColor);
+    }
+
     // Return the color of the piece at a certain location
     public ChessGame.TeamColor getPieceTeamColor(int row, int column) {
         return board[row][column].getTeamColor();

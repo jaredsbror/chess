@@ -49,7 +49,8 @@ public class KingMovesCalculator implements PieceMovesCalculator {
 
     // Frequently used check in the method pieceMoves
     private boolean isMoveValid(ChessBoard board) {
-        return (board.getPieceTeamColor(possibleRow, possibleColumn) == opponentTeamColor && possibleRow >= 0 &&
+        return (!board.doesFriendlyPieceExist(possibleRow, possibleColumn, currentTeamColor) &&
+                possibleRow >= 0 &&
                 possibleRow <= Constants.BOARD_MAX_ROW_INDEX &&
                 possibleColumn >= 0 &&
                 possibleColumn <= Constants.BOARD_MAX_COLUMN_INDEX);
@@ -57,7 +58,6 @@ public class KingMovesCalculator implements PieceMovesCalculator {
 
     @Override
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition position) {
-
         // Collection to hold resulting valid moves
         validMoves = new ArrayList<>();
         // Various row and column variables for the current player

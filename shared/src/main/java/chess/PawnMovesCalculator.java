@@ -65,7 +65,7 @@ public class PawnMovesCalculator implements PieceMovesCalculator {
         possibleRow = currentRow + 1;
         possibleColumn = currentColumn - 1;
         // If the position is valid, add it to the output collection of valid moves
-        if (isWithinBounds() && board.doesPieceExist(possibleRow, possibleColumn)) {
+        if (isWithinBounds() && !board.doesFriendlyPieceExist(possibleRow, possibleColumn, currentTeamColor)) {
             validMoves.add(new ChessMove(position, new ChessPosition(possibleRow, possibleColumn), ChessPiece.PieceType.QUEEN));
         }
 
@@ -81,7 +81,7 @@ public class PawnMovesCalculator implements PieceMovesCalculator {
         possibleRow = currentRow + 1;
         possibleColumn = currentColumn + 1;
         // If the position is valid, add it to the output collection of valid moves
-        if (isWithinBounds() && board.doesPieceExist(possibleRow, possibleColumn)) {
+        if (isWithinBounds() && !board.doesFriendlyPieceExist(possibleRow, possibleColumn, currentTeamColor)) {
             validMoves.add(new ChessMove(position, new ChessPosition(possibleRow, possibleColumn), ChessPiece.PieceType.QUEEN));
         }
 

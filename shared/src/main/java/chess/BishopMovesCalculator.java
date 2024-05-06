@@ -56,25 +56,86 @@ public class BishopMovesCalculator implements PieceMovesCalculator {
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition position) {
         // Collection to hold resulting valid moves
         validMoves = new ArrayList<>();
+        // Various row and column variables for the current player
+        currentRow = position.getRow();
+        currentColumn = position.getColumn();
 
         /// Check four possible move directions
         // Move #1: row++, column--
-        possibleColumn = currentColumn - 1;
         possibleRow = currentRow + 1;
-        //
+        possibleColumn = currentColumn - 1;
+        // Loop to check movements
         while (isWithinBounds()) {
-
+            // If there is a friendly piece there, break out of the loop before adding a valid move
+            if (board.doesFriendlyPieceExist(possibleRow, possibleColumn, currentTeamColor)) {
+                break;
+            }
+            // The position is valid, add it to the output collection of valid moves
+            validMoves.add(new ChessMove(position, new ChessPosition(possibleRow, possibleColumn), ChessPiece.PieceType.QUEEN));
+            // If there is an opponent's piece there, break out of the loop after adding a valid move
+            if (board.doesOpponentPieceExist(possibleRow, possibleColumn, opponentTeamColor)) {
+                break;
+            }
+            possibleRow++;
+            possibleColumn--;
         }
 
         // Move #2: row++, column++
-        possibleRow = currentRow;
-        // Iterate through the possible columns
+        possibleRow = currentRow + 1;
+        possibleColumn = currentColumn + 1;
+        // Loop to check movements
+        while (isWithinBounds()) {
+            // If there is a friendly piece there, break out of the loop before adding a valid move
+            if (board.doesFriendlyPieceExist(possibleRow, possibleColumn, currentTeamColor)) {
+                break;
+            }
+            // The position is valid, add it to the output collection of valid moves
+            validMoves.add(new ChessMove(position, new ChessPosition(possibleRow, possibleColumn), ChessPiece.PieceType.QUEEN));
+            // If there is an opponent's piece there, break out of the loop after adding a valid move
+            if (board.doesOpponentPieceExist(possibleRow, possibleColumn, opponentTeamColor)) {
+                break;
+            }
+            possibleRow++;
+            possibleColumn++;
+        }
 
         // Move #3: row--, column++
-        possibleColumn = currentColumn;
+        possibleRow = currentRow - 1;
+        possibleColumn = currentColumn + 1;
+        // Loop to check movements
+        while (isWithinBounds()) {
+            // If there is a friendly piece there, break out of the loop before adding a valid move
+            if (board.doesFriendlyPieceExist(possibleRow, possibleColumn, currentTeamColor)) {
+                break;
+            }
+            // The position is valid, add it to the output collection of valid moves
+            validMoves.add(new ChessMove(position, new ChessPosition(possibleRow, possibleColumn), ChessPiece.PieceType.QUEEN));
+            // If there is an opponent's piece there, break out of the loop after adding a valid move
+            if (board.doesOpponentPieceExist(possibleRow, possibleColumn, opponentTeamColor)) {
+                break;
+            }
+            possibleRow--;
+            possibleColumn++;
+        }
 
         // Move #4: row--, column--
-        possibleRow = currentRow;
+        possibleRow = currentRow - 1;
+        possibleColumn = currentColumn - 1;
+        // Loop to check movements
+        while (isWithinBounds()) {
+            // If there is a friendly piece there, break out of the loop before adding a valid move
+            if (board.doesFriendlyPieceExist(possibleRow, possibleColumn, currentTeamColor)) {
+                break;
+            }
+            // The position is valid, add it to the output collection of valid moves
+            validMoves.add(new ChessMove(position, new ChessPosition(possibleRow, possibleColumn), ChessPiece.PieceType.QUEEN));
+            // If there is an opponent's piece there, break out of the loop after adding a valid move
+            if (board.doesOpponentPieceExist(possibleRow, possibleColumn, opponentTeamColor)) {
+                break;
+            }
+            possibleRow--;
+            possibleColumn--;
+        }
 
         return validMoves;
     }

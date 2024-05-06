@@ -54,6 +54,77 @@ public class KnightMovesCalculator implements PieceMovesCalculator {
 
     @Override
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition position) {
-        return List.of();
+        // Collection to hold resulting valid moves
+        validMoves = new ArrayList<>();
+        // Various row and column variables for the current player
+        currentRow = position.getRow();
+        currentColumn = position.getColumn();
+
+        /// Check eight possible L-shaped moves
+        // Move #1 Row + 2, Column - 1
+        possibleRow = currentRow + 2;
+        possibleColumn = currentColumn - 1;
+        // If the position is valid, add it to the output collection of valid moves
+        if (isWithinBounds() && !board.doesFriendlyPieceExist(possibleRow, possibleColumn, currentTeamColor)) {
+            validMoves.add(new ChessMove(position, new ChessPosition(possibleRow, possibleColumn), ChessPiece.PieceType.QUEEN));
+        }
+
+        // Move #2 Row + 2, Column + 1
+        possibleRow = currentRow + 2;
+        possibleColumn = currentColumn + 1;
+        // If the position is valid, add it to the output collection of valid moves
+        if (isWithinBounds() && !board.doesFriendlyPieceExist(possibleRow, possibleColumn, currentTeamColor)) {
+            validMoves.add(new ChessMove(position, new ChessPosition(possibleRow, possibleColumn), ChessPiece.PieceType.QUEEN));
+        }
+
+        // Move #3 Row + 1, Column - 2
+        possibleRow = currentRow + 1;
+        possibleColumn = currentColumn - 2;
+        // If the position is valid, add it to the output collection of valid moves
+        if (isWithinBounds() && !board.doesFriendlyPieceExist(possibleRow, possibleColumn, currentTeamColor)) {
+            validMoves.add(new ChessMove(position, new ChessPosition(possibleRow, possibleColumn), ChessPiece.PieceType.QUEEN));
+        }
+
+        // Move #4 Row + 1, Column + 2
+        possibleRow = currentRow + 1;
+        possibleColumn = currentColumn + 2;
+        // If the position is valid, add it to the output collection of valid moves
+        if (isWithinBounds() && !board.doesFriendlyPieceExist(possibleRow, possibleColumn, currentTeamColor)) {
+            validMoves.add(new ChessMove(position, new ChessPosition(possibleRow, possibleColumn), ChessPiece.PieceType.QUEEN));
+        }
+
+        // Move #5 Row - 1, Column - 2
+        possibleRow = currentRow - 1;
+        possibleColumn = currentColumn - 2;
+        // If the position is valid, add it to the output collection of valid moves
+        if (isWithinBounds() && !board.doesFriendlyPieceExist(possibleRow, possibleColumn, currentTeamColor)) {
+            validMoves.add(new ChessMove(position, new ChessPosition(possibleRow, possibleColumn), ChessPiece.PieceType.QUEEN));
+        }
+
+        // Move #6 Row - 1, Column + 2
+        possibleRow = currentRow - 1;
+        possibleColumn = currentColumn + 2;
+        // If the position is valid, add it to the output collection of valid moves
+        if (isWithinBounds() && !board.doesFriendlyPieceExist(possibleRow, possibleColumn, currentTeamColor)) {
+            validMoves.add(new ChessMove(position, new ChessPosition(possibleRow, possibleColumn), ChessPiece.PieceType.QUEEN));
+        }
+
+        // Move #7 Row - 2, Column - 1
+        possibleRow = currentRow - 2;
+        possibleColumn = currentColumn - 1;
+        // If the position is valid, add it to the output collection of valid moves
+        if (isWithinBounds() && !board.doesFriendlyPieceExist(possibleRow, possibleColumn, currentTeamColor)) {
+            validMoves.add(new ChessMove(position, new ChessPosition(possibleRow, possibleColumn), ChessPiece.PieceType.QUEEN));
+        }
+
+        // Move #8 Row - 2, Column + 1
+        possibleRow = currentRow - 2;
+        possibleColumn = currentColumn + 1;
+        // If the position is valid, add it to the output collection of valid moves
+        if (isWithinBounds() && !board.doesFriendlyPieceExist(possibleRow, possibleColumn, currentTeamColor)) {
+            validMoves.add(new ChessMove(position, new ChessPosition(possibleRow, possibleColumn), ChessPiece.PieceType.QUEEN));
+        }
+
+        return validMoves;
     }
 }
