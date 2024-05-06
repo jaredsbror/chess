@@ -6,6 +6,7 @@ import java.util.List;
 
 public class PawnMovesCalculator implements PieceMovesCalculator {
 
+    // Constructor
     public PawnMovesCalculator() {
         // Collection to hold resulting valid moves
         validMoves = new ArrayList<>();
@@ -26,7 +27,7 @@ public class PawnMovesCalculator implements PieceMovesCalculator {
 
     // Check if a position is on the board
     private boolean isWithinBounds() {
-        return (possibleRow >= 0 && possibleRow <= 7 && possibleColumn >= 0 && possibleColumn <= 7);
+        return (possibleRow >= 0 && possibleRow <= Constants.BOARD_MAX_ROW_INDEX && possibleColumn >= 0 && possibleColumn <= Constants.BOARD_MAX_COLUMN_INDEX);
     }
 
     @Override
@@ -42,7 +43,7 @@ public class PawnMovesCalculator implements PieceMovesCalculator {
         possibleRow = currentRow + 1;
         possibleColumn = currentColumn - 1;
         // If the position is valid, add it to the output collection of valid moves
-        if (isWithinBounds()) {
+        if (isWithinBounds() && board.doesPieceExist(possibleRow, possibleColumn)) {
             validMoves.add(new ChessMove(position, new ChessPosition(possibleRow, possibleColumn), ChessPiece.PieceType.QUEEN));
         }
 
@@ -58,7 +59,7 @@ public class PawnMovesCalculator implements PieceMovesCalculator {
         possibleRow = currentRow + 1;
         possibleColumn = currentColumn + 1;
         // If the position is valid, add it to the output collection of valid moves
-        if (isWithinBounds()) {
+        if (isWithinBounds() && board.doesPieceExist(possibleRow, possibleColumn)) {
             validMoves.add(new ChessMove(position, new ChessPosition(possibleRow, possibleColumn), ChessPiece.PieceType.QUEEN));
         }
 

@@ -6,6 +6,7 @@ import java.util.List;
 
 public class KingMovesCalculator implements PieceMovesCalculator {
 
+    // Constructor
     public KingMovesCalculator() {
         // Collection to hold resulting valid moves
         validMoves = new ArrayList<>();
@@ -41,7 +42,7 @@ public class KingMovesCalculator implements PieceMovesCalculator {
 
     // Frequently used check in the method pieceMoves
     private boolean isMoveValid() {
-        return (possibleRow >= 0 && possibleRow <= 7 && possibleColumn >= 0 && possibleColumn <= 7 && !(possibleRow >= opponentKingRowMin && possibleRow <= opponentKingRowMax && possibleColumn >= opponentKingColMin && possibleColumn <= opponentKingColMax));
+        return (possibleRow >= 0 && possibleRow <= Constants.BOARD_MAX_ROW_INDEX && possibleColumn >= 0 && possibleColumn <= Constants.BOARD_MAX_COLUMN_INDEX && !(possibleRow >= opponentKingRowMin && possibleRow <= opponentKingRowMax && possibleColumn >= opponentKingColMin && possibleColumn <= opponentKingColMax));
     }
 
     @Override
