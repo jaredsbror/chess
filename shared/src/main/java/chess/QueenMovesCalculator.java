@@ -50,7 +50,7 @@ public class QueenMovesCalculator implements PieceMovesCalculator {
 
     // Check if a position is on the board
     private boolean isWithinBounds() {
-        return (possibleRow >= 0 && possibleRow <= Constants.BOARD_MAX_ONE_INDEX && possibleColumn >= 0 && possibleColumn <= Constants.BOARD_MAX_ONE_INDEX);
+        return (possibleRow >= Constants.BOARD_MIN_ONE_INDEX && possibleRow <= Constants.BOARD_MAX_ONE_INDEX && possibleColumn >= Constants.BOARD_MIN_ONE_INDEX && possibleColumn <= Constants.BOARD_MAX_ONE_INDEX);
     }
 
     @Override
@@ -67,12 +67,13 @@ public class QueenMovesCalculator implements PieceMovesCalculator {
         possibleColumn = currentColumn - 1;
         // Loop to check movements
         while (isWithinBounds()) {
+            System.out.println("Upper Left Diagonal (" + possibleRow + "," + possibleColumn + ")");
             // If there is a friendly piece there, break out of the loop before adding a valid move
             if (board.doesFriendlyPieceExist(possibleRow, possibleColumn, currentTeamColor)) {
                 break;
             }
             // The position is valid, add it to the output collection of valid moves
-            validMoves.add(new ChessMove(position, new ChessPosition(possibleRow, possibleColumn), ChessPiece.PieceType.QUEEN));
+            validMoves.add(new ChessMove(position, new ChessPosition(possibleRow, possibleColumn), null));
             // If there is an opponent's piece there, break out of the loop after adding a valid move
             if (board.doesOpponentPieceExist(possibleRow, possibleColumn, opponentTeamColor)) {
                 break;
@@ -86,12 +87,13 @@ public class QueenMovesCalculator implements PieceMovesCalculator {
         possibleColumn = currentColumn + 1;
         // Loop to check movements
         while (isWithinBounds()) {
+            System.out.println("Upper Right Diagonal (" + possibleRow + "," + possibleColumn + ")");
             // If there is a friendly piece there, break out of the loop before adding a valid move
             if (board.doesFriendlyPieceExist(possibleRow, possibleColumn, currentTeamColor)) {
                 break;
             }
             // The position is valid, add it to the output collection of valid moves
-            validMoves.add(new ChessMove(position, new ChessPosition(possibleRow, possibleColumn), ChessPiece.PieceType.QUEEN));
+            validMoves.add(new ChessMove(position, new ChessPosition(possibleRow, possibleColumn), null));
             // If there is an opponent's piece there, break out of the loop after adding a valid move
             if (board.doesOpponentPieceExist(possibleRow, possibleColumn, opponentTeamColor)) {
                 break;
@@ -105,12 +107,13 @@ public class QueenMovesCalculator implements PieceMovesCalculator {
         possibleColumn = currentColumn + 1;
         // Loop to check movements
         while (isWithinBounds()) {
+            System.out.println("Lower Right Diagonal (" + possibleRow + "," + possibleColumn + ")");
             // If there is a friendly piece there, break out of the loop before adding a valid move
             if (board.doesFriendlyPieceExist(possibleRow, possibleColumn, currentTeamColor)) {
                 break;
             }
             // The position is valid, add it to the output collection of valid moves
-            validMoves.add(new ChessMove(position, new ChessPosition(possibleRow, possibleColumn), ChessPiece.PieceType.QUEEN));
+            validMoves.add(new ChessMove(position, new ChessPosition(possibleRow, possibleColumn), null));
             // If there is an opponent's piece there, break out of the loop after adding a valid move
             if (board.doesOpponentPieceExist(possibleRow, possibleColumn, opponentTeamColor)) {
                 break;
@@ -124,12 +127,13 @@ public class QueenMovesCalculator implements PieceMovesCalculator {
         possibleColumn = currentColumn - 1;
         // Loop to check movements
         while (isWithinBounds()) {
+            System.out.println("Lower Left Diagonal (" + possibleRow + "," + possibleColumn + ")");
             // If there is a friendly piece there, break out of the loop before adding a valid move
             if (board.doesFriendlyPieceExist(possibleRow, possibleColumn, currentTeamColor)) {
                 break;
             }
             // The position is valid, add it to the output collection of valid moves
-            validMoves.add(new ChessMove(position, new ChessPosition(possibleRow, possibleColumn), ChessPiece.PieceType.QUEEN));
+            validMoves.add(new ChessMove(position, new ChessPosition(possibleRow, possibleColumn), null));
             // If there is an opponent's piece there, break out of the loop after adding a valid move
             if (board.doesOpponentPieceExist(possibleRow, possibleColumn, opponentTeamColor)) {
                 break;
@@ -148,13 +152,13 @@ public class QueenMovesCalculator implements PieceMovesCalculator {
                 break;
             }
             // If there is a friendly piece there, break out of the loop before adding a valid move
-            else if (board.doesNotExistPiece(possibleRow, possibleColumn) && board.getPieceTeamColor(possibleRow, possibleColumn) == currentTeamColor) {
+            else if (board.doesFriendlyPieceExist(possibleRow, possibleColumn, currentTeamColor)) {
                 break;
             }
             // The position is valid, add it to the output collection of valid moves
-            validMoves.add(new ChessMove(position, new ChessPosition(possibleRow, possibleColumn), ChessPiece.PieceType.QUEEN));
+            validMoves.add(new ChessMove(position, new ChessPosition(possibleRow, possibleColumn), null));
             // If there is an opponent's piece there, break out of the loop after adding a valid move
-            if (board.doesNotExistPiece(possibleRow, possibleColumn) && board.getPieceTeamColor(possibleRow, possibleColumn) == opponentTeamColor) {
+            if (board.doesOpponentPieceExist(possibleRow, possibleColumn, opponentTeamColor)) {
                 break;
             }
         }
@@ -172,7 +176,7 @@ public class QueenMovesCalculator implements PieceMovesCalculator {
                 break;
             }
             // The position is valid, add it to the output collection of valid moves
-            validMoves.add(new ChessMove(position, new ChessPosition(possibleRow, possibleColumn), ChessPiece.PieceType.QUEEN));
+            validMoves.add(new ChessMove(position, new ChessPosition(possibleRow, possibleColumn), null));
             // If there is an opponent's piece there, break out of the loop after adding a valid move
             if (board.doesOpponentPieceExist(possibleRow, possibleColumn, opponentTeamColor)) {
                 break;
@@ -192,7 +196,7 @@ public class QueenMovesCalculator implements PieceMovesCalculator {
                 break;
             }
             // The position is valid, add it to the output collection of valid moves
-            validMoves.add(new ChessMove(position, new ChessPosition(possibleRow, possibleColumn), ChessPiece.PieceType.QUEEN));
+            validMoves.add(new ChessMove(position, new ChessPosition(possibleRow, possibleColumn), null));
             // If there is an opponent's piece there, break out of the loop after adding a valid move
             if (board.doesOpponentPieceExist(possibleRow, possibleColumn, opponentTeamColor)) {
                 break;
@@ -212,7 +216,7 @@ public class QueenMovesCalculator implements PieceMovesCalculator {
                 break;
             }
             // The position is valid, add it to the output collection of valid moves
-            validMoves.add(new ChessMove(position, new ChessPosition(possibleRow, possibleColumn), ChessPiece.PieceType.QUEEN));
+            validMoves.add(new ChessMove(position, new ChessPosition(possibleRow, possibleColumn), null));
             // If there is an opponent's piece there, break out of the loop after adding a valid move
             if (board.doesOpponentPieceExist(possibleRow, possibleColumn, opponentTeamColor)) {
                 break;

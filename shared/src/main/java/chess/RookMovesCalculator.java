@@ -49,8 +49,8 @@ public class RookMovesCalculator implements PieceMovesCalculator {
     }
 
     // Check if a position is on the board
-    private boolean isWithinBounds() {
-        return (possibleRow >= 0 && possibleRow <= Constants.BOARD_MAX_ONE_INDEX && possibleColumn >= 0 && possibleColumn <= Constants.BOARD_MAX_ONE_INDEX);
+    private boolean isNotWithinBounds() {
+        return (possibleRow < Constants.BOARD_MIN_ONE_INDEX || possibleRow > Constants.BOARD_MAX_ONE_INDEX || possibleColumn < Constants.BOARD_MIN_ONE_INDEX || possibleColumn > Constants.BOARD_MAX_ONE_INDEX);
     }
 
     @Override
@@ -67,17 +67,17 @@ public class RookMovesCalculator implements PieceMovesCalculator {
         // Iterate through the possible rows
         for (possibleRow = currentRow + 1; possibleRow <= Constants.BOARD_MAX_ONE_INDEX; possibleRow++) {
             // If the position is out of bounds, break without adding a valid move
-            if (!isWithinBounds()) {
+            if (isNotWithinBounds()) {
                 break;
             }
             // If there is a friendly piece there, break out of the loop before adding a valid move
-            else if (board.doesNotExistPiece(possibleRow, possibleColumn) && board.getPieceTeamColor(possibleRow, possibleColumn) == currentTeamColor) {
+            else if (board.doesFriendlyPieceExist(possibleRow, possibleColumn, currentTeamColor)) {
                 break;
             }
             // The position is valid, add it to the output collection of valid moves
-            validMoves.add(new ChessMove(position, new ChessPosition(possibleRow, possibleColumn), ChessPiece.PieceType.QUEEN));
+            validMoves.add(new ChessMove(position, new ChessPosition(possibleRow, possibleColumn), null));
             // If there is an opponent's piece there, break out of the loop after adding a valid move
-            if (board.doesNotExistPiece(possibleRow, possibleColumn) && board.getPieceTeamColor(possibleRow, possibleColumn) == opponentTeamColor) {
+            if (board.doesOpponentPieceExist(possibleRow, possibleColumn, opponentTeamColor)) {
                 break;
             }
         }
@@ -87,7 +87,7 @@ public class RookMovesCalculator implements PieceMovesCalculator {
         // Iterate through the possible columns
         for (possibleColumn = currentColumn + 1; possibleColumn <= Constants.BOARD_MAX_ONE_INDEX; possibleColumn++) {
             // If the position is out of bounds, break without adding a valid move
-            if (!isWithinBounds()) {
+            if (isNotWithinBounds()) {
                 break;
             }
             // If there is a friendly piece there, break out of the loop before adding a valid move
@@ -95,7 +95,7 @@ public class RookMovesCalculator implements PieceMovesCalculator {
                 break;
             }
             // The position is valid, add it to the output collection of valid moves
-            validMoves.add(new ChessMove(position, new ChessPosition(possibleRow, possibleColumn), ChessPiece.PieceType.QUEEN));
+            validMoves.add(new ChessMove(position, new ChessPosition(possibleRow, possibleColumn), null));
             // If there is an opponent's piece there, break out of the loop after adding a valid move
             if (board.doesOpponentPieceExist(possibleRow, possibleColumn, opponentTeamColor)) {
                 break;
@@ -107,7 +107,7 @@ public class RookMovesCalculator implements PieceMovesCalculator {
         // Iterate through the possible rows
         for (possibleRow = currentRow - 1; possibleRow >= 0; possibleRow--) {
             // If the position is out of bounds, break without adding a valid move
-            if (!isWithinBounds()) {
+            if (isNotWithinBounds()) {
                 break;
             }
             // If there is a friendly piece there, break out of the loop before adding a valid move
@@ -115,7 +115,7 @@ public class RookMovesCalculator implements PieceMovesCalculator {
                 break;
             }
             // The position is valid, add it to the output collection of valid moves
-            validMoves.add(new ChessMove(position, new ChessPosition(possibleRow, possibleColumn), ChessPiece.PieceType.QUEEN));
+            validMoves.add(new ChessMove(position, new ChessPosition(possibleRow, possibleColumn), null));
             // If there is an opponent's piece there, break out of the loop after adding a valid move
             if (board.doesOpponentPieceExist(possibleRow, possibleColumn, opponentTeamColor)) {
                 break;
@@ -127,7 +127,7 @@ public class RookMovesCalculator implements PieceMovesCalculator {
         // Iterate through the possible columns
         for (possibleColumn = currentColumn - 1; possibleColumn >= 0; possibleColumn--) {
             // If the position is out of bounds, break without adding a valid move
-            if (!isWithinBounds()) {
+            if (isNotWithinBounds()) {
                 break;
             }
             // If there is a friendly piece there, break out of the loop before adding a valid move
@@ -135,7 +135,7 @@ public class RookMovesCalculator implements PieceMovesCalculator {
                 break;
             }
             // The position is valid, add it to the output collection of valid moves
-            validMoves.add(new ChessMove(position, new ChessPosition(possibleRow, possibleColumn), ChessPiece.PieceType.QUEEN));
+            validMoves.add(new ChessMove(position, new ChessPosition(possibleRow, possibleColumn), null));
             // If there is an opponent's piece there, break out of the loop after adding a valid move
             if (board.doesOpponentPieceExist(possibleRow, possibleColumn, opponentTeamColor)) {
                 break;

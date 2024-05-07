@@ -50,7 +50,7 @@ public class KnightMovesCalculator implements PieceMovesCalculator {
 
     // Check if a position is on the board
     private boolean isWithinBounds() {
-        return (possibleRow >= 0 && possibleRow <= Constants.BOARD_MAX_ONE_INDEX && possibleColumn >= 0 && possibleColumn <= Constants.BOARD_MAX_ONE_INDEX);
+        return (possibleRow >= Constants.BOARD_MIN_ONE_INDEX && possibleRow <= Constants.BOARD_MAX_ONE_INDEX && possibleColumn >= Constants.BOARD_MIN_ONE_INDEX && possibleColumn <= Constants.BOARD_MAX_ONE_INDEX);
     }
 
     @Override
@@ -67,7 +67,7 @@ public class KnightMovesCalculator implements PieceMovesCalculator {
         possibleColumn = currentColumn - 1;
         // If the position is valid, add it to the output collection of valid moves
         if (isWithinBounds() && !board.doesFriendlyPieceExist(possibleRow, possibleColumn, currentTeamColor)) {
-            validMoves.add(new ChessMove(position, new ChessPosition(possibleRow, possibleColumn), ChessPiece.PieceType.QUEEN));
+            validMoves.add(new ChessMove(position, new ChessPosition(possibleRow, possibleColumn), null));
         }
 
         // Move #2 Row + 2, Column + 1
@@ -75,7 +75,7 @@ public class KnightMovesCalculator implements PieceMovesCalculator {
         possibleColumn = currentColumn + 1;
         // If the position is valid, add it to the output collection of valid moves
         if (isWithinBounds() && !board.doesFriendlyPieceExist(possibleRow, possibleColumn, currentTeamColor)) {
-            validMoves.add(new ChessMove(position, new ChessPosition(possibleRow, possibleColumn), ChessPiece.PieceType.QUEEN));
+            validMoves.add(new ChessMove(position, new ChessPosition(possibleRow, possibleColumn), null));
         }
 
         // Move #3 Row + 1, Column - 2
@@ -83,7 +83,7 @@ public class KnightMovesCalculator implements PieceMovesCalculator {
         possibleColumn = currentColumn - 2;
         // If the position is valid, add it to the output collection of valid moves
         if (isWithinBounds() && !board.doesFriendlyPieceExist(possibleRow, possibleColumn, currentTeamColor)) {
-            validMoves.add(new ChessMove(position, new ChessPosition(possibleRow, possibleColumn), ChessPiece.PieceType.QUEEN));
+            validMoves.add(new ChessMove(position, new ChessPosition(possibleRow, possibleColumn), null));
         }
 
         // Move #4 Row + 1, Column + 2
@@ -91,7 +91,7 @@ public class KnightMovesCalculator implements PieceMovesCalculator {
         possibleColumn = currentColumn + 2;
         // If the position is valid, add it to the output collection of valid moves
         if (isWithinBounds() && !board.doesFriendlyPieceExist(possibleRow, possibleColumn, currentTeamColor)) {
-            validMoves.add(new ChessMove(position, new ChessPosition(possibleRow, possibleColumn), ChessPiece.PieceType.QUEEN));
+            validMoves.add(new ChessMove(position, new ChessPosition(possibleRow, possibleColumn), null));
         }
 
         // Move #5 Row - 1, Column - 2
@@ -99,7 +99,7 @@ public class KnightMovesCalculator implements PieceMovesCalculator {
         possibleColumn = currentColumn - 2;
         // If the position is valid, add it to the output collection of valid moves
         if (isWithinBounds() && !board.doesFriendlyPieceExist(possibleRow, possibleColumn, currentTeamColor)) {
-            validMoves.add(new ChessMove(position, new ChessPosition(possibleRow, possibleColumn), ChessPiece.PieceType.QUEEN));
+            validMoves.add(new ChessMove(position, new ChessPosition(possibleRow, possibleColumn), null));
         }
 
         // Move #6 Row - 1, Column + 2
@@ -107,7 +107,7 @@ public class KnightMovesCalculator implements PieceMovesCalculator {
         possibleColumn = currentColumn + 2;
         // If the position is valid, add it to the output collection of valid moves
         if (isWithinBounds() && !board.doesFriendlyPieceExist(possibleRow, possibleColumn, currentTeamColor)) {
-            validMoves.add(new ChessMove(position, new ChessPosition(possibleRow, possibleColumn), ChessPiece.PieceType.QUEEN));
+            validMoves.add(new ChessMove(position, new ChessPosition(possibleRow, possibleColumn), null));
         }
 
         // Move #7 Row - 2, Column - 1
@@ -115,7 +115,7 @@ public class KnightMovesCalculator implements PieceMovesCalculator {
         possibleColumn = currentColumn - 1;
         // If the position is valid, add it to the output collection of valid moves
         if (isWithinBounds() && !board.doesFriendlyPieceExist(possibleRow, possibleColumn, currentTeamColor)) {
-            validMoves.add(new ChessMove(position, new ChessPosition(possibleRow, possibleColumn), ChessPiece.PieceType.QUEEN));
+            validMoves.add(new ChessMove(position, new ChessPosition(possibleRow, possibleColumn), null));
         }
 
         // Move #8 Row - 2, Column + 1
@@ -123,7 +123,7 @@ public class KnightMovesCalculator implements PieceMovesCalculator {
         possibleColumn = currentColumn + 1;
         // If the position is valid, add it to the output collection of valid moves
         if (isWithinBounds() && !board.doesFriendlyPieceExist(possibleRow, possibleColumn, currentTeamColor)) {
-            validMoves.add(new ChessMove(position, new ChessPosition(possibleRow, possibleColumn), ChessPiece.PieceType.QUEEN));
+            validMoves.add(new ChessMove(position, new ChessPosition(possibleRow, possibleColumn), null));
         }
 
         return validMoves;

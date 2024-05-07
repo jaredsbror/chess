@@ -14,6 +14,7 @@ public class ChessBoard {
 
     // Constructor
     public ChessBoard() {
+        System.out.println("Creating new ChessBoard");
         /// Reset the board completely with null pieces
         // Iterate over the chessboard rows...
         for (int row = 0; row < Constants.BOARD_NUM_ROWS; row++) {

@@ -50,7 +50,7 @@ public class PawnMovesCalculator implements PieceMovesCalculator {
 
     // Check if a position is on the board
     private boolean isWithinBounds() {
-        return (possibleRow >= 0 && possibleRow <= Constants.BOARD_MAX_ONE_INDEX && possibleColumn >= 0 && possibleColumn <= Constants.BOARD_MAX_ONE_INDEX);
+        return (possibleRow >= Constants.BOARD_MIN_ONE_INDEX && possibleRow <= Constants.BOARD_MAX_ONE_INDEX && possibleColumn >= Constants.BOARD_MIN_ONE_INDEX && possibleColumn <= Constants.BOARD_MAX_ONE_INDEX);
     }
 
     @Override
@@ -61,32 +61,112 @@ public class PawnMovesCalculator implements PieceMovesCalculator {
         currentRow = position.getRow();
         currentColumn = position.getColumn();
 
-        /// Check three possible moves
-        // Move #1: row + 1, column - 1
-        possibleRow = currentRow + 1;
-        possibleColumn = currentColumn - 1;
-        // If the position is valid, add it to the output collection of valid moves
-        if (isWithinBounds() && !board.doesFriendlyPieceExist(possibleRow, possibleColumn, currentTeamColor)) {
-            validMoves.add(new ChessMove(position, new ChessPosition(possibleRow, possibleColumn), ChessPiece.PieceType.QUEEN));
-        }
+        /// Move pawn depending on the current team color
+        // If the current team color is white
+        if (currentTeamColor == ChessGame.TeamColor.WHITE) {
+            /// Check three possible moves
+            // Move #1: row + 1, column - 1
+            possibleRow = currentRow + 1;
+            possibleColumn = currentColumn - 1;
+            // If the position is valid, add it to the output collection of valid moves
+            if (isWithinBounds() && board.doesOpponentPieceExist(possibleRow, possibleColumn, opponentTeamColor)) {
+                complexValidMovesWhite(board, position);
+            }
 
-        // Move #1: row + 1, column
-        possibleRow = currentRow + 1;
-        possibleColumn = currentColumn;
-        // If the position is valid, add it to the output collection of valid moves
-        if (isWithinBounds() && !board.doesNotExistPiece(possibleRow, possibleColumn)) {
-            validMoves.add(new ChessMove(position, new ChessPosition(possibleRow, possibleColumn), ChessPiece.PieceType.QUEEN));
-        }
+            // Move #2: row + 1, column
+            possibleColumn = currentColumn;
+            // If the position is valid, add it to the output collection of valid moves
+            if (isWithinBounds() && board.doesNotExistPiece(possibleRow, possibleColumn)) {
+                complexValidMovesWhite(board, position);
+            }
 
-        // Move #1: row + 1, column + 1
-        possibleRow = currentRow + 1;
-        possibleColumn = currentColumn + 1;
-        // If the position is valid, add it to the output collection of valid moves
-        if (isWithinBounds() && !board.doesFriendlyPieceExist(possibleRow, possibleColumn, currentTeamColor)) {
-            validMoves.add(new ChessMove(position, new ChessPosition(possibleRow, possibleColumn), ChessPiece.PieceType.QUEEN));
+            // Move #3: row + 1, column + 1
+            possibleColumn = currentColumn + 1;
+            // If the position is valid, add it to the output collection of valid moves
+            if (isWithinBounds() && board.doesOpponentPieceExist(possibleRow, possibleColumn, opponentTeamColor)) {
+                complexValidMovesWhite(board, position);
+            }
+        } else {    // Current team color is black
+            /// Check three possible moves
+            // Move #1: row - 1, column - 1
+            possibleRow = currentRow - 1;
+            possibleColumn = currentColumn - 1;
+            // If the position is valid, add it to the output collection of valid moves
+            if (isWithinBounds() && board.doesOpponentPieceExist(possibleRow, possibleColumn, opponentTeamColor)) {
+                complexValidMovesBlack(board, position);
+            }
+
+            // Move #2: row - 1, column
+            possibleColumn = currentColumn;
+            // If the position is valid, add it to the output collection of valid moves
+            if (isWithinBounds() && board.doesNotExistPiece(possibleRow, possibleColumn)) {
+                complexValidMovesBlack(board, position);
+            }
+
+            // Move #3: row - 1, column + 1
+            possibleColumn = currentColumn + 1;
+            // If the position is valid, add it to the output collection of valid moves
+            if (isWithinBounds() && board.doesOpponentPieceExist(possibleRow, possibleColumn, opponentTeamColor)) {
+                complexValidMovesBlack(board, position);
+            }
         }
 
         return validMoves;
+    }
+
+    // Assuming
+    public void complexValidMovesWhite(ChessBoard board, ChessPosition position) {
+        System.out.println("Complex Valid Moves White");
+        // Case #1 - Pawn is up for promotion
+        if (possibleRow == Constants.BOARD_MAX_ONE_INDEX) {
+            // Add all variants of promotions to default move
+            validMoves.add(new ChessMove(position, new ChessPosition(possibleRow, possibleColumn), ChessPiece.PieceType.QUEEN));
+            validMoves.add(new ChessMove(position, new ChessPosition(possibleRow, possibleColumn), ChessPiece.PieceType.BISHOP));
+            validMoves.add(new ChessMove(position, new ChessPosition(possibleRow, possibleColumn), ChessPiece.PieceType.ROOK));
+            validMoves.add(new ChessMove(position, new ChessPosition(possibleRow, possibleColumn), ChessPiece.PieceType.KNIGHT));
+        }
+        // Case #2 - Pawn initial move of 2 spaces
+        else if (currentRow == (Constants.WHITE_PAWN_ROW + 1) && currentColumn == possibleColumn) {
+            // Add default chess move
+            validMoves.add(new ChessMove(position, new ChessPosition(possibleRow, possibleColumn), null));
+            // Test extra move of one space
+            possibleRow += 1;
+            // If the position is valid, add it to the output collection of valid moves
+            if (isWithinBounds() && board.doesNotExistPiece(possibleRow, possibleColumn)) {
+                validMoves.add(new ChessMove(position, new ChessPosition(possibleRow, possibleColumn), null));
+            }
+        // Case #3 - Default move with null promotion
+        } else {
+            // Add default chess move
+            validMoves.add(new ChessMove(position, new ChessPosition(possibleRow, possibleColumn), null));
+        }
+    }
+
+    public void complexValidMovesBlack(ChessBoard board, ChessPosition position) {
+        System.out.println("Complex Valid Moves Black");
+        // Case #1 - Pawn is up for promotion
+        if (possibleRow == Constants.BOARD_MIN_ONE_INDEX) {
+            // Add all variants of promotions to default move
+            validMoves.add(new ChessMove(position, new ChessPosition(possibleRow, possibleColumn), ChessPiece.PieceType.QUEEN));
+            validMoves.add(new ChessMove(position, new ChessPosition(possibleRow, possibleColumn), ChessPiece.PieceType.BISHOP));
+            validMoves.add(new ChessMove(position, new ChessPosition(possibleRow, possibleColumn), ChessPiece.PieceType.ROOK));
+            validMoves.add(new ChessMove(position, new ChessPosition(possibleRow, possibleColumn), ChessPiece.PieceType.KNIGHT));
+        }
+        // Case #2 - Pawn initial move of 2 spaces
+        else if (currentRow == (Constants.BLACK_PAWN_ROW + 1) && currentColumn == possibleColumn) {
+            // Add default chess move
+            validMoves.add(new ChessMove(position, new ChessPosition(possibleRow, possibleColumn), null));
+            // Test extra move of one space
+            possibleRow -= 1;
+            // If the position is valid, add it to the output collection of valid moves
+            if (isWithinBounds() && board.doesNotExistPiece(possibleRow, possibleColumn)) {
+                validMoves.add(new ChessMove(position, new ChessPosition(possibleRow, possibleColumn), null));
+            }
+            // Case #3 - Default move with null promotion
+        } else {
+            // Add default chess move
+            validMoves.add(new ChessMove(position, new ChessPosition(possibleRow, possibleColumn), null));
+        }
     }
 
     @Override

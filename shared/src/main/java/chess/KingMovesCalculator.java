@@ -72,61 +72,14 @@ public class KingMovesCalculator implements PieceMovesCalculator {
         currentColumn = position.getColumn();
 
         /// Check all the possible movement spots (8 around the king)
-        possibleRow = currentRow + 1; // Used for spots 1-3
-        // Spot #1 (row + 1, column - 1)
-        possibleColumn = currentColumn - 1;
-        // If the position is valid, add it to the output collection of valid moves
-        if (isMoveValid(board)) {
-            validMoves.add(new ChessMove(position, new ChessPosition(possibleRow, possibleColumn), ChessPiece.PieceType.QUEEN));
-        }
-        // Spot #2 (row + 1, column)
-        possibleColumn = currentColumn;
-        // If the position is valid, add it to the output collection of valid moves
-        if (isMoveValid(board)) {
-            validMoves.add(new ChessMove(position, new ChessPosition(possibleRow, possibleColumn), ChessPiece.PieceType.QUEEN));
-        }
-        // Spot #3 (row + 1, column + 1)
-        possibleColumn = currentColumn + 1;
-        // If the position is valid, add it to the output collection of valid moves
-        if (isMoveValid(board)) {
-            validMoves.add(new ChessMove(position, new ChessPosition(possibleRow, possibleColumn), ChessPiece.PieceType.QUEEN));
-        }
-
-
-        possibleRow = currentRow; // Used for spots 4-5
-        // Spot #4 (row, column - 1)
-        possibleColumn = currentColumn - 1;
-        // If the position is valid, add it to the output collection of valid moves
-        if (isMoveValid(board)) {
-            validMoves.add(new ChessMove(position, new ChessPosition(possibleRow, possibleColumn), ChessPiece.PieceType.QUEEN));
-        }
-        // Spot #5 (row, column + 1)
-        possibleColumn = currentColumn + 1;
-        // If the position is valid, add it to the output collection of valid moves
-        if (isMoveValid(board)) {
-            validMoves.add(new ChessMove(position, new ChessPosition(possibleRow, possibleColumn), ChessPiece.PieceType.QUEEN));
-        }
-
-
-        possibleRow = currentRow - 1;  // Used for spots 6-8
-        // Spot #6 (row - 1, column - 1)
-        possibleColumn = currentColumn - 1;
-        // If the position is valid, add it to the output collection of valid moves
-        if (isMoveValid(board)) {
-            validMoves.add(new ChessMove(position, new ChessPosition(possibleRow, possibleColumn), ChessPiece.PieceType.QUEEN));
-        }
-        // Spot #7 (row - 1, column)
-        possibleColumn = currentColumn;
-        // If the position is valid, add it to the output collection of valid moves
-        if (isMoveValid(board)) {
-            validMoves.add(new ChessMove(position, new ChessPosition(possibleRow, possibleColumn), ChessPiece.PieceType.QUEEN));
-        }
-        // Spot #8 (row - 1, column + 1)
-        possibleColumn = currentColumn + 1;
-        // If the position is valid, add it to the output collection of valid moves
-        if (isMoveValid(board)) {
-            validMoves.add(new ChessMove(position, new ChessPosition(possibleRow, possibleColumn), ChessPiece.PieceType.QUEEN));
-        }
+       for (possibleRow = currentRow - 1; possibleRow <= currentRow + 1; possibleRow++) {
+           for (possibleColumn = currentColumn - 1; possibleColumn <= currentColumn + 1; possibleColumn++) {
+               // If the position is valid, add it to the output collection of valid moves
+               if (isMoveValid(board)) {
+                   validMoves.add(new ChessMove(position, new ChessPosition(possibleRow, possibleColumn), null));
+               }
+           }
+       }
 
         return validMoves;
     }
