@@ -4,7 +4,6 @@ import java.util.Arrays;
 
 /**
  * A chessboard that can hold and rearrange chess pieces.
- * <p>
  * Note: You can add to this class, but you may not alter
  * signature of the existing methods.
  */
@@ -15,19 +14,26 @@ public class ChessBoard {
 
     // Constructor
     public ChessBoard() {
-        resetBoard();
+        /// Reset the board completely with null pieces
+        // Iterate over the chessboard rows...
+        for (int row = 0; row < Constants.BOARD_NUM_ROWS; row++) {
+            // Iterate over the chessboard columns...
+            for (int col = 0; col < Constants.BOARD_NUM_COLUMNS; col++) {
+                // Initialize the piece to NULL
+                board[row][col] = null;
+            }
+        }
     }
 
     /**
      * Adds a chess piece to the chessboard
-     *
      * @param position where to add the piece to
      * @param piece    the piece to add
      */
     public void addPiece(ChessPosition position, ChessPiece piece) {
         int row = position.getRow() - 1;
         int column = position.getColumn() - 1;
-        System.out.println("addPiece(): Adding " + piece.toString() + " to (" + row + "," + column + ")");
+        System.out.println("addPiece(): Adding " + piece.toString() + " to (" + position.getRow() + "," + position.getColumn() + ")");
         board[row][column] = piece;
     }
 
@@ -36,9 +42,21 @@ public class ChessBoard {
         board[row - 1][column - 1] = piece;
     }
 
+    // Set a position to null
+    public void addNull(ChessPosition position) {
+        int row = position.getRow() - 1;
+        int column = position.getColumn() - 1;
+        //        System.out.println("addPiece(): Adding null to (" + row + "," + column + ")");
+        board[row][column] = null;
+    }
+
+    // Set a position to null
+    public void addNull(int row, int column) {
+        board[row - 1][column - 1] = null;
+    }
+
     /**
      * Gets a chess piece on the chessboard
-     *
      * @param position The position to get the piece from
      * @return Either the piece at the position, or null if no piece is at that
      * position
@@ -55,50 +73,50 @@ public class ChessBoard {
     }
 
     // Return true if there is a piece at a certain position
-    public boolean doesPieceExist(ChessPosition position) {
-        int row = position.getRow();
-        int column = position.getColumn();
-        return board[row][column] != null;
+    public boolean doesNotExistPiece(ChessPosition position) {
+        int row = position.getRow() - 1;
+        int column = position.getColumn() - 1;
+        return board[row][column] == null;
     }
 
     // Return true if there is a piece at a certain position
-    public boolean doesPieceExist(int row, int column) {
-        return board[row][column] != null;
+    public boolean doesNotExistPiece(int row, int column) {
+        return board[row - 1][column - 1] == null;
     }
 
     // Return true if there is a piece at a certain position
     public boolean doesFriendlyPieceExist(ChessPosition position, ChessGame.TeamColor friendlyTeamColor) {
-        int row = position.getRow();
-        int column = position.getColumn();
-        return (doesPieceExist(row, column) && getPieceTeamColor(row, column) == friendlyTeamColor);
+        if (doesNotExistPiece(position)) return false;
+        return getPieceTeamColor(position) == friendlyTeamColor;
     }
 
     // Return true if there is a piece at a certain position
     public boolean doesFriendlyPieceExist(int row, int column, ChessGame.TeamColor friendlyTeamColor) {
-        return (doesPieceExist(row, column) && getPieceTeamColor(row, column) == friendlyTeamColor);
+        if (doesNotExistPiece(row, column)) return false;
+        return getPieceTeamColor(row, column) == friendlyTeamColor;
     }
 
     // Return true if there is a piece at a certain position
     public boolean doesOpponentPieceExist(ChessPosition position, ChessGame.TeamColor opponentTeamColor) {
-        int row = position.getRow();
-        int column = position.getColumn();
-        return (doesPieceExist(row, column) && getPieceTeamColor(row, column) == opponentTeamColor);
+        if (doesNotExistPiece(position)) return false;
+        return getPieceTeamColor(position) == opponentTeamColor;
     }
 
     // Return true if there is a piece at a certain position
     public boolean doesOpponentPieceExist(int row, int column, ChessGame.TeamColor opponentTeamColor) {
-        return (doesPieceExist(row, column) && getPieceTeamColor(row, column) == opponentTeamColor);
+        if (doesNotExistPiece(row, column)) return false;
+        return getPieceTeamColor(row, column) == opponentTeamColor;
     }
 
     // Return the color of the piece at a certain location
     public ChessGame.TeamColor getPieceTeamColor(int row, int column) {
-        return board[row][column].getTeamColor();
+        return board[row - 1][column - 1].getTeamColor();
     }
 
     // Return the color of the piece at a certain location
     public ChessGame.TeamColor getPieceTeamColor(ChessPosition position) {
-        int row = position.getRow();
-        int column = position.getColumn();
+        int row = position.getRow() - 1;
+        int column = position.getColumn() - 1;
         return board[row][column].getTeamColor();
     }
 
@@ -107,6 +125,7 @@ public class ChessBoard {
      * (How the game of chess normally starts)
      */
     public void resetBoard() {
+        System.out.println("Resetting Board");
         /// First reset the board completely with null pieces
         // Iterate over the chessboard rows...
         for (int row = 0; row < Constants.BOARD_NUM_ROWS; row++) {

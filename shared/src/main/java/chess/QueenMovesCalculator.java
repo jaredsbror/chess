@@ -50,7 +50,7 @@ public class QueenMovesCalculator implements PieceMovesCalculator {
 
     // Check if a position is on the board
     private boolean isWithinBounds() {
-        return (possibleRow >= 0 && possibleRow <= Constants.BOARD_MAX_ROW_INDEX && possibleColumn >= 0 && possibleColumn <= Constants.BOARD_MAX_COLUMN_INDEX);
+        return (possibleRow >= 0 && possibleRow <= Constants.BOARD_MAX_ONE_INDEX && possibleColumn >= 0 && possibleColumn <= Constants.BOARD_MAX_ONE_INDEX);
     }
 
     @Override
@@ -142,19 +142,19 @@ public class QueenMovesCalculator implements PieceMovesCalculator {
         // Move #1: row++, column
         possibleColumn = currentColumn;
         // Iterate through the possible rows
-        for (possibleRow = currentRow + 1; possibleRow <= Constants.BOARD_MAX_COLUMN_INDEX; possibleRow++) {
+        for (possibleRow = currentRow + 1; possibleRow <= Constants.BOARD_MAX_ONE_INDEX; possibleRow++) {
             // If the position is out of bounds, break without adding a valid move
             if (!isWithinBounds()) {
                 break;
             }
             // If there is a friendly piece there, break out of the loop before adding a valid move
-            else if (board.doesPieceExist(possibleRow, possibleColumn) && board.getPieceTeamColor(possibleRow, possibleColumn) == currentTeamColor) {
+            else if (board.doesNotExistPiece(possibleRow, possibleColumn) && board.getPieceTeamColor(possibleRow, possibleColumn) == currentTeamColor) {
                 break;
             }
             // The position is valid, add it to the output collection of valid moves
             validMoves.add(new ChessMove(position, new ChessPosition(possibleRow, possibleColumn), ChessPiece.PieceType.QUEEN));
             // If there is an opponent's piece there, break out of the loop after adding a valid move
-            if (board.doesPieceExist(possibleRow, possibleColumn) && board.getPieceTeamColor(possibleRow, possibleColumn) == opponentTeamColor) {
+            if (board.doesNotExistPiece(possibleRow, possibleColumn) && board.getPieceTeamColor(possibleRow, possibleColumn) == opponentTeamColor) {
                 break;
             }
         }
@@ -162,7 +162,7 @@ public class QueenMovesCalculator implements PieceMovesCalculator {
         // Move #2: row, column++
         possibleRow = currentRow;
         // Iterate through the possible columns
-        for (possibleColumn = currentColumn + 1; possibleColumn <= Constants.BOARD_MAX_COLUMN_INDEX; possibleColumn++) {
+        for (possibleColumn = currentColumn + 1; possibleColumn <= Constants.BOARD_MAX_ONE_INDEX; possibleColumn++) {
             // If the position is out of bounds, break without adding a valid move
             if (!isWithinBounds()) {
                 break;

@@ -46,18 +46,17 @@ public class ChessGame {
 
     /**
      * Gets a valid moves for a piece at the given location
-     *
      * @param startPosition the piece to get valid moves for
      * @return Set of valid moves for requested piece, or null if no piece at
      * startPosition
      */
     public Collection<ChessMove> validMoves(ChessPosition startPosition) {
-        throw new RuntimeException("Not implemented");
+        ChessPiece chessPiece = new ChessPiece(TeamColor.WHITE, ChessPiece.PieceType.PAWN);
+        return chessPiece.pieceMoves(chessBoard, startPosition);
     }
 
     /**
      * Makes a move in a chess game
-     *
      * @param move chess move to preform
      * @throws InvalidMoveException if move is invalid
      */
@@ -67,7 +66,6 @@ public class ChessGame {
 
     /**
      * Determines if the given team is in check
-     *
      * @param teamColor which team to check for check
      * @return True if the specified team is in check
      */
@@ -77,7 +75,6 @@ public class ChessGame {
 
     /**
      * Determines if the given team is in checkmate
-     *
      * @param teamColor which team to check for checkmate
      * @return True if the specified team is in checkmate
      */
@@ -88,7 +85,6 @@ public class ChessGame {
     /**
      * Determines if the given team is in stalemate, which here is defined as having
      * no valid moves
-     *
      * @param teamColor which team to check for stalemate
      * @return True if the specified team is in stalemate, otherwise false
      */
@@ -98,14 +94,18 @@ public class ChessGame {
 
     /**
      * Sets this game's chessboard with a given board
-     *
      * @param board the new board to use
      */
     public void setBoard(ChessBoard board) {
         // Iterate over the chessboard rows...
-        for (int row = 0; row < Constants.BOARD_NUM_ROWS; row++) {
+        for (int row = Constants.BOARD_MIN_ONE_INDEX; row <= Constants.BOARD_MAX_ONE_INDEX; row++) {
             // Iterate over the chessboard columns...
-            for (int col = 0; col < Constants.BOARD_NUM_COLUMNS; col++) {
+            for (int col = Constants.BOARD_MIN_ONE_INDEX; col <= Constants.BOARD_MAX_ONE_INDEX; col++) {
+                // Check if a piece exists...
+                if (!board.doesNotExistPiece(row, col)) {
+                    chessBoard.addNull(row, col);
+                    continue;
+                };
                 // Check the color...
                 if (board.getPiece(row, col).getTeamColor() == TeamColor.WHITE) {
                     // Set the board location to a certain piece
@@ -158,7 +158,6 @@ public class ChessGame {
                             break;
                     }
                 }
-
             }
         }
     }

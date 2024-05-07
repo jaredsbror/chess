@@ -48,13 +48,19 @@ public class KingMovesCalculator implements PieceMovesCalculator {
         opponentTeamColor = (currentTeamColor == ChessGame.TeamColor.WHITE ? ChessGame.TeamColor.BLACK : ChessGame.TeamColor.WHITE);
     }
 
+    // Check if a position is on the board
+    private boolean isWithinBounds() {
+        return (possibleRow >= Constants.BOARD_MIN_ONE_INDEX && possibleRow <= Constants.BOARD_MAX_ONE_INDEX && possibleColumn >= Constants.BOARD_MIN_ONE_INDEX && possibleColumn <= Constants.BOARD_MAX_ONE_INDEX);
+    }
+
     // Frequently used check in the method pieceMoves
     private boolean isMoveValid(ChessBoard board) {
-        return (!board.doesFriendlyPieceExist(possibleRow, possibleColumn, currentTeamColor) &&
-                possibleRow >= 0 &&
-                possibleRow <= Constants.BOARD_MAX_ROW_INDEX &&
-                possibleColumn >= 0 &&
-                possibleColumn <= Constants.BOARD_MAX_COLUMN_INDEX);
+        // Check if it is within bounds
+        if (isWithinBounds()) {
+            // Check if there is not a friendly piece there
+            return !board.doesFriendlyPieceExist(possibleRow, possibleColumn, currentTeamColor);
+        }
+        return false;
     }
 
     @Override

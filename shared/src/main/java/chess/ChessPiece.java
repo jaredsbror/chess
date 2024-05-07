@@ -1,5 +1,6 @@
 package chess;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Objects;
 
@@ -63,7 +64,78 @@ public class ChessPiece {
      * @return Collection of valid moves
      */
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
-        throw new RuntimeException("Not implemented");
+        Collection<ChessMove> validMoves = new ArrayList<ChessMove>();
+        PieceType movingPieceType;
+        ChessGame.TeamColor currentTeamColor;
+        // Check if a piece exists...
+        if (board.doesNotExistPiece(myPosition)) {
+            return validMoves;
+        };
+        // Check the color...
+        if (board.getPiece(myPosition).getTeamColor() == ChessGame.TeamColor.WHITE) {
+            currentTeamColor = ChessGame.TeamColor.WHITE;
+            // Get the piece type that is moving
+            switch (board.getPiece(myPosition).getPieceType()) {
+                case KING:
+                    KingMovesCalculator kingMovesCalculator = new KingMovesCalculator(currentTeamColor);
+                    validMoves = kingMovesCalculator.pieceMoves(board, myPosition);
+                    break;
+                case QUEEN:
+                    QueenMovesCalculator queenMovesCalculator = new QueenMovesCalculator(currentTeamColor);
+                    validMoves = queenMovesCalculator.pieceMoves(board, myPosition);
+                    break;
+                case BISHOP:
+                    BishopMovesCalculator bishopMovesCalculator = new BishopMovesCalculator(currentTeamColor);
+                    validMoves = bishopMovesCalculator.pieceMoves(board, myPosition);
+                    break;
+                case KNIGHT:
+                    KnightMovesCalculator knightMovesCalculator = new KnightMovesCalculator(currentTeamColor);
+                    validMoves = knightMovesCalculator.pieceMoves(board, myPosition);
+                    break;
+                case ROOK:
+                    RookMovesCalculator rookMovesCalculator = new RookMovesCalculator(currentTeamColor);
+                    validMoves = rookMovesCalculator.pieceMoves(board, myPosition);
+                    break;
+                case PAWN:
+                    PawnMovesCalculator pawnMovesCalculator = new PawnMovesCalculator(currentTeamColor);
+                    validMoves = pawnMovesCalculator.pieceMoves(board, myPosition);
+                    break;
+                default:
+                    break;
+            }
+        } else {    // The piece is black
+            currentTeamColor = ChessGame.TeamColor.BLACK;
+            // Get the piece type that is moving
+            switch (board.getPiece(myPosition).getPieceType()) {
+                case KING:
+                    KingMovesCalculator kingMovesCalculator = new KingMovesCalculator(currentTeamColor);
+                    validMoves = kingMovesCalculator.pieceMoves(board, myPosition);
+                    break;
+                case QUEEN:
+                    QueenMovesCalculator queenMovesCalculator = new QueenMovesCalculator(currentTeamColor);
+                    validMoves = queenMovesCalculator.pieceMoves(board, myPosition);
+                    break;
+                case BISHOP:
+                    BishopMovesCalculator bishopMovesCalculator = new BishopMovesCalculator(currentTeamColor);
+                    validMoves = bishopMovesCalculator.pieceMoves(board, myPosition);
+                    break;
+                case KNIGHT:
+                    KnightMovesCalculator knightMovesCalculator = new KnightMovesCalculator(currentTeamColor);
+                    validMoves = knightMovesCalculator.pieceMoves(board, myPosition);
+                    break;
+                case ROOK:
+                    RookMovesCalculator rookMovesCalculator = new RookMovesCalculator(currentTeamColor);
+                    validMoves = rookMovesCalculator.pieceMoves(board, myPosition);
+                    break;
+                case PAWN:
+                    PawnMovesCalculator pawnMovesCalculator = new PawnMovesCalculator(currentTeamColor);
+                    validMoves = pawnMovesCalculator.pieceMoves(board, myPosition);
+                    break;
+                default:
+                    break;
+            }
+        }
+        return validMoves;
     }
 
     @Override

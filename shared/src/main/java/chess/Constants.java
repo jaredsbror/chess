@@ -14,10 +14,11 @@ public interface Constants {
     // Board dimensions
     int BOARD_NUM_ROWS = 8;
     int BOARD_NUM_COLUMNS = 8;
-    int BOARD_MIN_ROW_INDEX = 0;
-    int BOARD_MAX_ROW_INDEX = 7;
-    int BOARD_MIN_COLUMN_INDEX = 0;
-    int BOARD_MAX_COLUMN_INDEX = 7;
+    int BOARD_MIN_ONE_INDEX = 1;
+    int BOARD_MAX_ONE_INDEX = 8;
+    int BOARD_MIN_ZERO_INDEX = 1;
+    int BOARD_MAX_ZERO_INDEX = 8;
+
 
     // Default column positions
     int ROOK_COL_1 = 0;

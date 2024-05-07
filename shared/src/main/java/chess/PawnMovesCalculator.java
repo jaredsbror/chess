@@ -50,7 +50,7 @@ public class PawnMovesCalculator implements PieceMovesCalculator {
 
     // Check if a position is on the board
     private boolean isWithinBounds() {
-        return (possibleRow >= 0 && possibleRow <= Constants.BOARD_MAX_ROW_INDEX && possibleColumn >= 0 && possibleColumn <= Constants.BOARD_MAX_COLUMN_INDEX);
+        return (possibleRow >= 0 && possibleRow <= Constants.BOARD_MAX_ONE_INDEX && possibleColumn >= 0 && possibleColumn <= Constants.BOARD_MAX_ONE_INDEX);
     }
 
     @Override
@@ -74,7 +74,7 @@ public class PawnMovesCalculator implements PieceMovesCalculator {
         possibleRow = currentRow + 1;
         possibleColumn = currentColumn;
         // If the position is valid, add it to the output collection of valid moves
-        if (isWithinBounds() && !board.doesPieceExist(possibleRow, possibleColumn)) {
+        if (isWithinBounds() && !board.doesNotExistPiece(possibleRow, possibleColumn)) {
             validMoves.add(new ChessMove(position, new ChessPosition(possibleRow, possibleColumn), ChessPiece.PieceType.QUEEN));
         }
 
