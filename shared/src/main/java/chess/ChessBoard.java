@@ -25,14 +25,15 @@ public class ChessBoard {
      * @param piece    the piece to add
      */
     public void addPiece(ChessPosition position, ChessPiece piece) {
-        int row = position.getRow();
-        int column = position.getColumn();
+        int row = position.getRow() - 1;
+        int column = position.getColumn() - 1;
+        System.out.println("addPiece(): Adding " + piece.toString() + " to (" + row + "," + column + ")");
         board[row][column] = piece;
     }
 
     // Add piece to the chessboard
     public void addPiece(int row, int column, ChessPiece piece) {
-        board[row][column] = piece;
+        board[row - 1][column - 1] = piece;
     }
 
     /**
@@ -43,14 +44,14 @@ public class ChessBoard {
      * position
      */
     public ChessPiece getPiece(ChessPosition position) {
-        int row = position.getRow();
-        int column = position.getColumn();
+        int row = position.getRow() - 1;
+        int column = position.getColumn() - 1;
         return board[row][column];
     }
 
     // Get chess piece from the chessboard
     public ChessPiece getPiece(int row, int column) {
-        return board[row][column];
+        return board[row - 1][column - 1];
     }
 
     // Return true if there is a piece at a certain position
@@ -150,12 +151,12 @@ public class ChessBoard {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof ChessBoard that)) return false;
-        return Arrays.equals(board, that.board);
+        return Arrays.deepEquals(board, that.board);
     }
 
     @Override
     public int hashCode() {
-        return Arrays.hashCode(board);
+        return Arrays.deepHashCode(board);
     }
 
     @Override
