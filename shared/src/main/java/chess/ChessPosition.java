@@ -17,6 +17,7 @@ public class ChessPosition {
     public ChessPosition(int row, int column) {
         this.row = row;
         this.column = column;
+        if (Constants.DEBUG_GLOBAL || Constants.DEBUG_CHESS_POSITION) System.out.println("Creating Chess" + this.toString());
     }
 
     /**
@@ -51,9 +52,8 @@ public class ChessPosition {
 
     @Override
     public String toString() {
-        return "Position{" +
-                "row=" + row +
-                ", column=" + column +
-                '}';
+        return "Position(" +
+                row + "," +
+                column + ')';
     }
 }

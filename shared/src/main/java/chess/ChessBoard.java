@@ -1,6 +1,10 @@
 package chess;
 
+import java.awt.color.ColorSpace;
+import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 
 /**
  * A chessboard that can hold and rearrange chess pieces.
@@ -14,7 +18,8 @@ public class ChessBoard {
 
     // Constructor
     public ChessBoard() {
-        System.out.println("Creating new ChessBoard");
+        // Optional debug
+        if (Constants.DEBUG_GLOBAL || Constants.DEBUG_CHESS_BOARD) System.out.println("Creating Chess" + this.toString());
         /// Reset the board completely with null pieces
         // Iterate over the chessboard rows...
         for (int row = 0; row < Constants.BOARD_NUM_ROWS; row++) {
@@ -34,26 +39,32 @@ public class ChessBoard {
     public void addPiece(ChessPosition position, ChessPiece piece) {
         int row = position.getRow() - 1;
         int column = position.getColumn() - 1;
-        System.out.println("addPiece(): Adding " + piece.toString() + " to (" + position.getRow() + "," + position.getColumn() + ")");
+        // Optional debug
+        if (Constants.DEBUG_GLOBAL || Constants.DEBUG_CHESS_BOARD) System.out.println("Adding " + piece.toString() + " to (" + position.getRow() + "," + position.getColumn() + ")");
         board[row][column] = piece;
     }
 
     // Add piece to the chessboard
     public void addPiece(int row, int column, ChessPiece piece) {
         board[row - 1][column - 1] = piece;
+        // Optional debug
+        if (Constants.DEBUG_GLOBAL || Constants.DEBUG_CHESS_BOARD) System.out.println("Adding " + piece.toString() + " to (" + row + "," + column + ")");
     }
 
     // Set a position to null
     public void addNull(ChessPosition position) {
         int row = position.getRow() - 1;
         int column = position.getColumn() - 1;
-        //        System.out.println("addPiece(): Adding null to (" + row + "," + column + ")");
+        // Optional debug
+        if (Constants.DEBUG_GLOBAL || Constants.DEBUG_CHESS_BOARD) System.out.println("Adding null to (" + row + "," + column + ")");
         board[row][column] = null;
     }
 
     // Set a position to null
     public void addNull(int row, int column) {
         board[row - 1][column - 1] = null;
+        // Optional debug
+        if (Constants.DEBUG_GLOBAL || Constants.DEBUG_CHESS_BOARD) System.out.println("Adding null to (" + row + "," + column + ")");
     }
 
     /**
@@ -77,35 +88,47 @@ public class ChessBoard {
     public boolean doesNotExistPiece(ChessPosition position) {
         int row = position.getRow() - 1;
         int column = position.getColumn() - 1;
+        // Optional debug
+        if (Constants.DEBUG_GLOBAL || Constants.DEBUG_CHESS_BOARD) System.out.println("Piece does" + (board[row][column] == null ? " not " : " ") + "exist at " + position.toString());
         return board[row][column] == null;
     }
 
     // Return true if there is a piece at a certain position
     public boolean doesNotExistPiece(int row, int column) {
+        // Optional debug
+        if (Constants.DEBUG_GLOBAL || Constants.DEBUG_CHESS_BOARD) System.out.println("Piece does" + (board[row - 1][column - 1] == null ? " not " : " ") + "exist at (" + row + "," + column + ")");
         return board[row - 1][column - 1] == null;
     }
 
     // Return true if there is a piece at a certain position
     public boolean doesFriendlyPieceExist(ChessPosition position, ChessGame.TeamColor friendlyTeamColor) {
         if (doesNotExistPiece(position)) return false;
+        // Optional debug
+        if (Constants.DEBUG_GLOBAL || Constants.DEBUG_CHESS_BOARD) System.out.println("Ally does" + (getPieceTeamColor(position) == friendlyTeamColor ? " not " : " ") + "exist at " + position.toString());
         return getPieceTeamColor(position) == friendlyTeamColor;
     }
 
     // Return true if there is a piece at a certain position
     public boolean doesFriendlyPieceExist(int row, int column, ChessGame.TeamColor friendlyTeamColor) {
         if (doesNotExistPiece(row, column)) return false;
+        // Optional debug
+        if (Constants.DEBUG_GLOBAL || Constants.DEBUG_CHESS_BOARD) System.out.println("Ally does" + (getPieceTeamColor(row, column) == friendlyTeamColor ? " not " : " ") + "exist at (" + row + "," + column + ")");
         return getPieceTeamColor(row, column) == friendlyTeamColor;
     }
 
     // Return true if there is a piece at a certain position
     public boolean doesOpponentPieceExist(ChessPosition position, ChessGame.TeamColor opponentTeamColor) {
         if (doesNotExistPiece(position)) return false;
+        // Optional debug
+        if (Constants.DEBUG_GLOBAL || Constants.DEBUG_CHESS_BOARD) System.out.println("Opponent does" + (getPieceTeamColor(position) == opponentTeamColor ? " not " : " ") + "exist at " + position.toString());
         return getPieceTeamColor(position) == opponentTeamColor;
     }
 
     // Return true if there is a piece at a certain position
     public boolean doesOpponentPieceExist(int row, int column, ChessGame.TeamColor opponentTeamColor) {
         if (doesNotExistPiece(row, column)) return false;
+        // Optional debug
+        if (Constants.DEBUG_GLOBAL || Constants.DEBUG_CHESS_BOARD) System.out.println("Opponent does" + (getPieceTeamColor(row, column) == opponentTeamColor ? " not " : " ") + "exist at (" + row + "," + column + ")");
         return getPieceTeamColor(row, column) == opponentTeamColor;
     }
 
@@ -126,7 +149,8 @@ public class ChessBoard {
      * (How the game of chess normally starts)
      */
     public void resetBoard() {
-        System.out.println("Resetting Board");
+        // Optional debug
+        if (Constants.DEBUG_GLOBAL || Constants.DEBUG_CHESS_BOARD) System.out.println("Resetting board to default setup");
         /// First reset the board completely with null pieces
         // Iterate over the chessboard rows...
         for (int row = 0; row < Constants.BOARD_NUM_ROWS; row++) {
@@ -165,6 +189,8 @@ public class ChessBoard {
         for (int col = 0; col < Constants.BOARD_NUM_COLUMNS; col++) {
             board[Constants.WHITE_PAWN_ROW][col] = new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.PAWN);
         }
+        // Optional debug
+        if (Constants.DEBUG_GLOBAL || Constants.DEBUG_CHESS_BOARD) printBoard();
     }
 
     @Override
@@ -181,8 +207,52 @@ public class ChessBoard {
 
     @Override
     public String toString() {
-        return "ChessBoard{" +
-                "board=" + Arrays.toString(board) +
+        return "Board{" +
+                "board=" + Arrays.deepToString(board) +
                 '}';
+    }
+
+    // Print out a visually correct chessboard (i.e. the top left corresponds to position (8,1) and the bottom left (1,1)
+    public void printBoard() {
+        // Print out the chessboard in a clear, visual way.
+        for (int row = Constants.BOARD_MAX_ZERO_INDEX; row >= Constants.BOARD_MIN_ZERO_INDEX; row--) {
+            // Iterate over the columns
+            System.out.print('|');
+            for (int col = Constants.BOARD_MIN_ZERO_INDEX; col <= Constants.BOARD_MAX_ZERO_INDEX; col++) {
+                // Continue on to the next loop if it is null
+                if (board[row][col] == null) {
+                    System.out.print( " |");
+                    continue;
+                }
+                // Save piece type and color
+                ChessGame.TeamColor pieceColor = board[row][col].getTeamColor();
+                ChessPiece.PieceType pieceType = board[row][col].getPieceType();
+                // Check the piece type
+                switch (pieceType) {
+                    case KING:
+                        System.out.print((pieceColor == ChessGame.TeamColor.WHITE ? "K" : "k" ) + "|");
+                        break;
+                    case QUEEN:
+                        System.out.print((pieceColor == ChessGame.TeamColor.WHITE ? "Q" : "q" ) + "|");
+                        break;
+                    case BISHOP:
+                        System.out.print((pieceColor == ChessGame.TeamColor.WHITE ? "B" : "b" ) + "|");
+                        break;
+                    case KNIGHT:
+                        System.out.print((pieceColor == ChessGame.TeamColor.WHITE ? "N" : "n" ) + "|");
+                        break;
+                    case ROOK:
+                        System.out.print((pieceColor == ChessGame.TeamColor.WHITE ? "R" : "r" ) + "|");
+                        break;
+                    case PAWN:
+                        System.out.print((pieceColor == ChessGame.TeamColor.WHITE ? "P" : "p" ) + "|");
+                        break;
+                    default:
+                        System.out.print( " |");
+                        break;
+                }
+            }
+            System.out.println();
+        }
     }
 }

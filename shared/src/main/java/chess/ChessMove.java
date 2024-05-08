@@ -21,6 +21,8 @@ public class ChessMove {
         this.startPosition = startPosition;
         this.endPosition = endPosition;
         this.promotionPiece = promotionPiece;
+        // Optional debug
+        if (Constants.DEBUG_GLOBAL || Constants.DEBUG_CHESS_MOVE) System.out.println("Creating Chess" + this.toString());
     }
 
     /**
@@ -61,10 +63,10 @@ public class ChessMove {
 
     @Override
     public String toString() {
-        return "Move{" +
-                "start=" + startPosition +
-                ", end=" + endPosition +
-                ", promo=" + promotionPiece +
-                '}';
+        return "Move(" +
+                "Start[" + startPosition +
+                "], End[" + endPosition +
+                "], Promotion[" + promotionPiece +
+                "])";
     }
 }

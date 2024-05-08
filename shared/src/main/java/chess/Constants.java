@@ -11,14 +11,14 @@ PAWN
  */
 
 public interface Constants {
+    /// Phase 0
     // Board dimensions
     int BOARD_NUM_ROWS = 8;
     int BOARD_NUM_COLUMNS = 8;
     int BOARD_MIN_ONE_INDEX = 1;
     int BOARD_MAX_ONE_INDEX = 8;
-    int BOARD_MIN_ZERO_INDEX = 1;
-    int BOARD_MAX_ZERO_INDEX = 8;
-
+    int BOARD_MIN_ZERO_INDEX = 0;
+    int BOARD_MAX_ZERO_INDEX = 7;
 
     // Default column positions
     int ROOK_COL_1 = 0;
@@ -37,4 +37,18 @@ public interface Constants {
     // Default white piece rows
     int WHITE_PAWN_ROW = 1;
     int WHITE_NON_PAWN_ROW = 0;
+
+    // Debugging
+    boolean DEBUG_GLOBAL = false;
+    boolean DEBUG_CHESS_GAME = true;
+    boolean DEBUG_CHESS_BOARD = false;
+    boolean DEBUG_CHESS_MOVE = false;
+    boolean DEBUG_CHESS_PIECE = false;
+    boolean DEBUG_CHESS_POSITION = false;
+    boolean DEBUG_KING_MOVES_CALCULATOR = true;
+    boolean DEBUG_QUEEN_MOVES_CALCULATOR = true;
+    boolean DEBUG_BISHOP_MOVES_CALCULATOR = true;
+    boolean DEBUG_KNIGHT_MOVES_CALCULATOR = true;
+    boolean DEBUG_ROOK_MOVES_CALCULATOR = true;
+    boolean DEBUG_PAWN_MOVES_CALCULATOR = true;
 }

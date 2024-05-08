@@ -1,5 +1,6 @@
 package chess;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Objects;
 
@@ -25,6 +26,8 @@ public class ChessGame {
 
     // Constructor
     public ChessGame() {
+        // Optional debug
+        if (Constants.DEBUG_GLOBAL || Constants.DEBUG_CHESS_GAME) System.out.println("Creating Chess" + this.toString());
         teamColor = TeamColor.WHITE;
         chessBoard = new ChessBoard();
     }
@@ -52,7 +55,9 @@ public class ChessGame {
      */
     public Collection<ChessMove> validMoves(ChessPosition startPosition) {
         ChessPiece chessPiece = new ChessPiece(TeamColor.WHITE, ChessPiece.PieceType.PAWN);
-        return chessPiece.pieceMoves(chessBoard, startPosition);
+        Collection<ChessMove> validMoves = chessPiece.pieceMoves(chessBoard, startPosition);
+
+        return validMoves;
     }
 
     /**
@@ -97,67 +102,21 @@ public class ChessGame {
      * @param board the new board to use
      */
     public void setBoard(ChessBoard board) {
+        // Optional debug
+        if (Constants.DEBUG_GLOBAL || Constants.DEBUG_CHESS_GAME) System.out.println("Setting chessBoard to " + board.toString());
         // Iterate over the chessboard rows...
         for (int row = Constants.BOARD_MIN_ONE_INDEX; row <= Constants.BOARD_MAX_ONE_INDEX; row++) {
             // Iterate over the chessboard columns...
             for (int col = Constants.BOARD_MIN_ONE_INDEX; col <= Constants.BOARD_MAX_ONE_INDEX; col++) {
                 // Check if a piece exists...
-                if (!board.doesNotExistPiece(row, col)) {
+                if (board.doesNotExistPiece(row, col)) {
                     chessBoard.addNull(row, col);
                     continue;
                 };
-                // Check the color...
-                if (board.getPiece(row, col).getTeamColor() == TeamColor.WHITE) {
-                    // Set the board location to a certain piece
-                    switch (board.getPiece(row, col).getPieceType()) {
-                        case KING:
-                            chessBoard.addPiece(row, col,new ChessPiece(TeamColor.WHITE, ChessPiece.PieceType.KING) );
-                            break;
-                        case QUEEN:
-                            chessBoard.addPiece(row, col,new ChessPiece(TeamColor.WHITE, ChessPiece.PieceType.QUEEN) );
-                            break;
-                        case BISHOP:
-                            chessBoard.addPiece(row, col,new ChessPiece(TeamColor.WHITE, ChessPiece.PieceType.BISHOP) );
-                            break;
-                        case KNIGHT:
-                            chessBoard.addPiece(row, col,new ChessPiece(TeamColor.WHITE, ChessPiece.PieceType.KNIGHT) );
-                            break;
-                        case ROOK:
-                            chessBoard.addPiece(row, col,new ChessPiece(TeamColor.WHITE, ChessPiece.PieceType.ROOK) );
-                            break;
-                        case PAWN:
-                            chessBoard.addPiece(row, col,new ChessPiece(TeamColor.WHITE, ChessPiece.PieceType.PAWN) );
-                            break;
-                        default:
-                            chessBoard.addPiece(row, col, null);
-                            break;
-                    }
-                } else {    // The piece is black
-                    // Set the board location to a certain piece
-                    switch (board.getPiece(row, col).getPieceType()) {
-                        case KING:
-                            chessBoard.addPiece(row, col,new ChessPiece(TeamColor.BLACK, ChessPiece.PieceType.KING) );
-                            break;
-                        case QUEEN:
-                            chessBoard.addPiece(row, col,new ChessPiece(TeamColor.BLACK, ChessPiece.PieceType.QUEEN) );
-                            break;
-                        case BISHOP:
-                            chessBoard.addPiece(row, col,new ChessPiece(TeamColor.BLACK, ChessPiece.PieceType.BISHOP) );
-                            break;
-                        case KNIGHT:
-                            chessBoard.addPiece(row, col,new ChessPiece(TeamColor.BLACK, ChessPiece.PieceType.KNIGHT) );
-                            break;
-                        case ROOK:
-                            chessBoard.addPiece(row, col,new ChessPiece(TeamColor.BLACK, ChessPiece.PieceType.ROOK) );
-                            break;
-                        case PAWN:
-                            chessBoard.addPiece(row, col,new ChessPiece(TeamColor.BLACK, ChessPiece.PieceType.PAWN) );
-                            break;
-                        default:
-                            chessBoard.addPiece(row, col, null);
-                            break;
-                    }
-                }
+                // Add a chess piece copy to chessBoard
+                TeamColor pieceColor = board.getPiece(row, col).getTeamColor();
+                ChessPiece.PieceType pieceType = board.getPiece(row, col).getPieceType();
+                chessBoard.addPiece(row, col,new ChessPiece(pieceColor, pieceType) );
             }
         }
     }
@@ -186,9 +145,9 @@ public class ChessGame {
 
     @Override
     public String toString() {
-        return "ChessGame{" +
-                "teamColor=" + teamColor +
-                ", chessBoard=" + chessBoard +
+        return "Game{" +
+                "Color=" + teamColor +
+                ",Board=" + chessBoard +
                 '}';
     }
 }

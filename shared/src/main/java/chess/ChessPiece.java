@@ -13,11 +13,13 @@ import java.util.Objects;
 public class ChessPiece {
 
     private ChessGame.TeamColor pieceColor;
-    private ChessPiece.PieceType type;
+    private ChessPiece.PieceType pieceType;
 
     public ChessPiece(ChessGame.TeamColor pieceColor, ChessPiece.PieceType type) {
         this.pieceColor = pieceColor;
-        this.type = type;
+        this.pieceType = type;
+        // Optional debug
+        if (Constants.DEBUG_GLOBAL || Constants.DEBUG_CHESS_PIECE) System.out.println("Creating Chess" + this.toString());
     }
 
     /**
@@ -48,12 +50,12 @@ public class ChessPiece {
      * @return which type of chess piece this piece is
      */
     public PieceType getPieceType() {
-        return type;
+        return pieceType;
     }
 
     // Set piece type
     public void setPieceType(ChessPiece.PieceType type) {
-        this.type = type;
+        this.pieceType = type;
     }
 
     /**
@@ -65,76 +67,45 @@ public class ChessPiece {
      */
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
         Collection<ChessMove> validMoves = new ArrayList<ChessMove>();
-        PieceType movingPieceType;
-        ChessGame.TeamColor currentTeamColor;
         // Check if a piece exists...
         if (board.doesNotExistPiece(myPosition)) {
             return validMoves;
         };
-        // Check the color...
-        if (board.getPiece(myPosition).getTeamColor() == ChessGame.TeamColor.WHITE) {
-            currentTeamColor = ChessGame.TeamColor.WHITE;
-            // Get the piece type that is moving
-            switch (board.getPiece(myPosition).getPieceType()) {
-                case KING:
-                    KingMovesCalculator kingMovesCalculator = new KingMovesCalculator(currentTeamColor);
-                    validMoves = kingMovesCalculator.pieceMoves(board, myPosition);
-                    break;
-                case QUEEN:
-                    QueenMovesCalculator queenMovesCalculator = new QueenMovesCalculator(currentTeamColor);
-                    validMoves = queenMovesCalculator.pieceMoves(board, myPosition);
-                    break;
-                case BISHOP:
-                    BishopMovesCalculator bishopMovesCalculator = new BishopMovesCalculator(currentTeamColor);
-                    validMoves = bishopMovesCalculator.pieceMoves(board, myPosition);
-                    break;
-                case KNIGHT:
-                    KnightMovesCalculator knightMovesCalculator = new KnightMovesCalculator(currentTeamColor);
-                    validMoves = knightMovesCalculator.pieceMoves(board, myPosition);
-                    break;
-                case ROOK:
-                    RookMovesCalculator rookMovesCalculator = new RookMovesCalculator(currentTeamColor);
-                    validMoves = rookMovesCalculator.pieceMoves(board, myPosition);
-                    break;
-                case PAWN:
-                    PawnMovesCalculator pawnMovesCalculator = new PawnMovesCalculator(currentTeamColor);
-                    validMoves = pawnMovesCalculator.pieceMoves(board, myPosition);
-                    break;
-                default:
-                    break;
-            }
-        } else {    // The piece is black
-            currentTeamColor = ChessGame.TeamColor.BLACK;
-            // Get the piece type that is moving
-            switch (board.getPiece(myPosition).getPieceType()) {
-                case KING:
-                    KingMovesCalculator kingMovesCalculator = new KingMovesCalculator(currentTeamColor);
-                    validMoves = kingMovesCalculator.pieceMoves(board, myPosition);
-                    break;
-                case QUEEN:
-                    QueenMovesCalculator queenMovesCalculator = new QueenMovesCalculator(currentTeamColor);
-                    validMoves = queenMovesCalculator.pieceMoves(board, myPosition);
-                    break;
-                case BISHOP:
-                    BishopMovesCalculator bishopMovesCalculator = new BishopMovesCalculator(currentTeamColor);
-                    validMoves = bishopMovesCalculator.pieceMoves(board, myPosition);
-                    break;
-                case KNIGHT:
-                    KnightMovesCalculator knightMovesCalculator = new KnightMovesCalculator(currentTeamColor);
-                    validMoves = knightMovesCalculator.pieceMoves(board, myPosition);
-                    break;
-                case ROOK:
-                    RookMovesCalculator rookMovesCalculator = new RookMovesCalculator(currentTeamColor);
-                    validMoves = rookMovesCalculator.pieceMoves(board, myPosition);
-                    break;
-                case PAWN:
-                    PawnMovesCalculator pawnMovesCalculator = new PawnMovesCalculator(currentTeamColor);
-                    validMoves = pawnMovesCalculator.pieceMoves(board, myPosition);
-                    break;
-                default:
-                    break;
-            }
+
+        pieceColor = board.getPiece(myPosition).getTeamColor();
+        pieceType = board.getPiece(myPosition).getPieceType();
+
+        // Get the piece type that is moving
+        switch (pieceType) {
+            case KING:
+                KingMovesCalculator kingMovesCalculator = new KingMovesCalculator(pieceColor);
+                validMoves = kingMovesCalculator.pieceMoves(board, myPosition);
+                break;
+            case QUEEN:
+                QueenMovesCalculator queenMovesCalculator = new QueenMovesCalculator(pieceColor);
+                validMoves = queenMovesCalculator.pieceMoves(board, myPosition);
+                break;
+            case BISHOP:
+                BishopMovesCalculator bishopMovesCalculator = new BishopMovesCalculator(pieceColor);
+                validMoves = bishopMovesCalculator.pieceMoves(board, myPosition);
+                break;
+            case KNIGHT:
+                KnightMovesCalculator knightMovesCalculator = new KnightMovesCalculator(pieceColor);
+                validMoves = knightMovesCalculator.pieceMoves(board, myPosition);
+                break;
+            case ROOK:
+                RookMovesCalculator rookMovesCalculator = new RookMovesCalculator(pieceColor);
+                validMoves = rookMovesCalculator.pieceMoves(board, myPosition);
+                break;
+            case PAWN:
+                PawnMovesCalculator pawnMovesCalculator = new PawnMovesCalculator(pieceColor);
+                validMoves = pawnMovesCalculator.pieceMoves(board, myPosition);
+                break;
+            default:
+                break;
         }
+        // Optional debug
+        if (Constants.DEBUG_GLOBAL || Constants.DEBUG_CHESS_PIECE) System.out.println("Evaluated moves for " + board.getPiece(myPosition).toString() + "-> " + validMoves.toString());
         return validMoves;
     }
 
@@ -142,19 +113,18 @@ public class ChessPiece {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof ChessPiece that)) return false;
-        return pieceColor == that.pieceColor && type == that.type;
+        return pieceColor == that.pieceColor && pieceType == that.pieceType;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(pieceColor, type);
+        return Objects.hash(pieceColor, pieceType);
     }
 
     @Override
     public String toString() {
-        return "ChessPiece{" +
-                "pieceColor=" + pieceColor +
-                ", type=" + type +
-                '}';
+        return "Piece[" +
+                pieceColor + " " +
+                pieceType + ']';
     }
 }
