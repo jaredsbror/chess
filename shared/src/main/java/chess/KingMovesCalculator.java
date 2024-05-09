@@ -19,6 +19,8 @@ public class KingMovesCalculator implements PieceMovesCalculator {
         currentColumn = 0;
         possibleRow = 0;
         possibleColumn = 0;
+        // Optional debug
+        if (Constants.DEBUG_GLOBAL || Constants.DEBUG_KING_MOVES_CALCULATOR) System.out.println("Creating " + toString());
     }
 
     // Collection to hold resulting valid moves
@@ -80,7 +82,8 @@ public class KingMovesCalculator implements PieceMovesCalculator {
                }
            }
        }
-
+        // Optional debug
+        if (Constants.DEBUG_GLOBAL || Constants.DEBUG_KING_MOVES_CALCULATOR) System.out.println("Found valid moves from (" + position.getRow() + "," + position.getColumn() + ") for " + board.getPiece(position).toString() + ":-> " + validMoves.toString());
         return validMoves;
     }
 
@@ -99,12 +102,12 @@ public class KingMovesCalculator implements PieceMovesCalculator {
 
     @Override
     public String toString() {
-        return "KingMovesCalculator{" +
-                "validMoves=" + validMoves +
-                ", currentTeamColor=" + currentTeamColor +
-                ", opponentTeamColor=" + opponentTeamColor +
-                ", currentRow=" + currentRow +
-                ", currentColumn=" + currentColumn +
-                '}';
+        return "KingMovesCalculator(" +
+                "ValidMoves[" + validMoves +
+                "], Team(" + currentTeamColor +
+                "), Opponent(" + opponentTeamColor +
+                "), Row(" + currentRow +
+                "), Column(" + currentColumn +
+                "))";
     }
 }

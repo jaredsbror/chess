@@ -19,6 +19,8 @@ public class RookMovesCalculator implements PieceMovesCalculator {
         currentColumn = 0;
         possibleRow = 0;
         possibleColumn = 0;
+        // Optional debug
+        if (Constants.DEBUG_GLOBAL || Constants.DEBUG_ROOK_MOVES_CALCULATOR) System.out.println("Creating " + toString());
     }
 
     // Collection to hold resulting valid moves
@@ -141,7 +143,8 @@ public class RookMovesCalculator implements PieceMovesCalculator {
                 break;
             }
         }
-
+        // Optional debug
+        if (Constants.DEBUG_GLOBAL || Constants.DEBUG_ROOK_MOVES_CALCULATOR) System.out.println("Found valid moves from (" + position.getRow() + "," + position.getColumn() + ") for " + board.getPiece(position).toString() + ":-> " + validMoves.toString());
         return validMoves;
     }
 
@@ -160,12 +163,12 @@ public class RookMovesCalculator implements PieceMovesCalculator {
 
     @Override
     public String toString() {
-        return "RookMovesCalculator{" +
-                "validMoves=" + validMoves +
-                ", currentTeamColor=" + currentTeamColor +
-                ", opponentTeamColor=" + opponentTeamColor +
-                ", currentRow=" + currentRow +
-                ", currentColumn=" + currentColumn +
-                '}';
+        return "RookMovesCalculator(" +
+                "ValidMoves[" + validMoves +
+                "], Team(" + currentTeamColor +
+                "), Opponent(" + opponentTeamColor +
+                "), Row(" + currentRow +
+                "), Column(" + currentColumn +
+                "))";
     }
 }

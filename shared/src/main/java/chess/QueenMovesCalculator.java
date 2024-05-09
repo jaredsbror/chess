@@ -19,6 +19,8 @@ public class QueenMovesCalculator implements PieceMovesCalculator {
         currentColumn = 0;
         possibleRow = 0;
         possibleColumn = 0;
+        // Optional debug
+        if (Constants.DEBUG_GLOBAL || Constants.DEBUG_QUEEN_MOVES_CALCULATOR) System.out.println("Creating " + toString());
     }
 
     // Collection to hold resulting valid moves
@@ -67,7 +69,6 @@ public class QueenMovesCalculator implements PieceMovesCalculator {
         possibleColumn = currentColumn - 1;
         // Loop to check movements
         while (isWithinBounds()) {
-            System.out.println("Upper Left Diagonal (" + possibleRow + "," + possibleColumn + ")");
             // If there is a friendly piece there, break out of the loop before adding a valid move
             if (board.doesFriendlyPieceExist(possibleRow, possibleColumn, currentTeamColor)) {
                 break;
@@ -87,7 +88,6 @@ public class QueenMovesCalculator implements PieceMovesCalculator {
         possibleColumn = currentColumn + 1;
         // Loop to check movements
         while (isWithinBounds()) {
-            System.out.println("Upper Right Diagonal (" + possibleRow + "," + possibleColumn + ")");
             // If there is a friendly piece there, break out of the loop before adding a valid move
             if (board.doesFriendlyPieceExist(possibleRow, possibleColumn, currentTeamColor)) {
                 break;
@@ -107,7 +107,6 @@ public class QueenMovesCalculator implements PieceMovesCalculator {
         possibleColumn = currentColumn + 1;
         // Loop to check movements
         while (isWithinBounds()) {
-            System.out.println("Lower Right Diagonal (" + possibleRow + "," + possibleColumn + ")");
             // If there is a friendly piece there, break out of the loop before adding a valid move
             if (board.doesFriendlyPieceExist(possibleRow, possibleColumn, currentTeamColor)) {
                 break;
@@ -127,7 +126,6 @@ public class QueenMovesCalculator implements PieceMovesCalculator {
         possibleColumn = currentColumn - 1;
         // Loop to check movements
         while (isWithinBounds()) {
-            System.out.println("Lower Left Diagonal (" + possibleRow + "," + possibleColumn + ")");
             // If there is a friendly piece there, break out of the loop before adding a valid move
             if (board.doesFriendlyPieceExist(possibleRow, possibleColumn, currentTeamColor)) {
                 break;
@@ -222,7 +220,8 @@ public class QueenMovesCalculator implements PieceMovesCalculator {
                 break;
             }
         }
-
+        // Optional debug
+        if (Constants.DEBUG_GLOBAL || Constants.DEBUG_QUEEN_MOVES_CALCULATOR) System.out.println("Found valid moves from (" + position.getRow() + "," + position.getColumn() + ") for " + board.getPiece(position).toString() + ":-> " + validMoves.toString());
         return validMoves;
     }
 
@@ -241,12 +240,12 @@ public class QueenMovesCalculator implements PieceMovesCalculator {
 
     @Override
     public String toString() {
-        return "QueenMovesCalculator{" +
-                "validMoves=" + validMoves +
-                ", currentTeamColor=" + currentTeamColor +
-                ", opponentTeamColor=" + opponentTeamColor +
-                ", currentRow=" + currentRow +
-                ", currentColumn=" + currentColumn +
-                '}';
+        return "QueenMovesCalculator(" +
+                "ValidMoves[" + validMoves +
+                "], Team(" + currentTeamColor +
+                "), Opponent(" + opponentTeamColor +
+                "), Row(" + currentRow +
+                "), Column(" + currentColumn +
+                "))";
     }
 }

@@ -45,10 +45,10 @@ public interface Constants {
     boolean DEBUG_CHESS_MOVE = false;
     boolean DEBUG_CHESS_PIECE = false;
     boolean DEBUG_CHESS_POSITION = false;
-    boolean DEBUG_KING_MOVES_CALCULATOR = true;
-    boolean DEBUG_QUEEN_MOVES_CALCULATOR = true;
-    boolean DEBUG_BISHOP_MOVES_CALCULATOR = true;
-    boolean DEBUG_KNIGHT_MOVES_CALCULATOR = true;
-    boolean DEBUG_ROOK_MOVES_CALCULATOR = true;
-    boolean DEBUG_PAWN_MOVES_CALCULATOR = true;
+    boolean DEBUG_KING_MOVES_CALCULATOR = false;
+    boolean DEBUG_QUEEN_MOVES_CALCULATOR = false;
+    boolean DEBUG_BISHOP_MOVES_CALCULATOR = false;
+    boolean DEBUG_KNIGHT_MOVES_CALCULATOR = false;
+    boolean DEBUG_ROOK_MOVES_CALCULATOR = false;
+    boolean DEBUG_PAWN_MOVES_CALCULATOR = false;
 }

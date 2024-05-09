@@ -19,6 +19,8 @@ public class PawnMovesCalculator implements PieceMovesCalculator {
         currentColumn = 0;
         possibleRow = 0;
         possibleColumn = 0;
+        // Optional debug
+        if (Constants.DEBUG_GLOBAL || Constants.DEBUG_PAWN_MOVES_CALCULATOR) System.out.println("Creating " + toString());
     }
 
     // Collection to hold resulting valid moves
@@ -110,13 +112,15 @@ public class PawnMovesCalculator implements PieceMovesCalculator {
                 complexValidMovesBlack(board, position);
             }
         }
-
+        // Optional debug
+        if (Constants.DEBUG_GLOBAL || Constants.DEBUG_PAWN_MOVES_CALCULATOR) System.out.println("Found valid moves from (" + position.getRow() + "," + position.getColumn() + ") for " + board.getPiece(position).toString() + ":-> " + validMoves.toString());
         return validMoves;
     }
 
     // Assuming
     public void complexValidMovesWhite(ChessBoard board, ChessPosition position) {
-        System.out.println("Complex Valid Moves White");
+        // Optional debug
+        if (Constants.DEBUG_GLOBAL || Constants.DEBUG_PAWN_MOVES_CALCULATOR) System.out.println("Complex Valid Moves White");
         // Case #1 - Pawn is up for promotion
         if (possibleRow == Constants.BOARD_MAX_ONE_INDEX) {
             // Add all variants of promotions to default move
@@ -143,7 +147,8 @@ public class PawnMovesCalculator implements PieceMovesCalculator {
     }
 
     public void complexValidMovesBlack(ChessBoard board, ChessPosition position) {
-        System.out.println("Complex Valid Moves Black");
+        // Optional debug
+        if (Constants.DEBUG_GLOBAL || Constants.DEBUG_PAWN_MOVES_CALCULATOR) System.out.println("Complex Valid Moves Black");
         // Case #1 - Pawn is up for promotion
         if (possibleRow == Constants.BOARD_MIN_ONE_INDEX) {
             // Add all variants of promotions to default move
@@ -184,12 +189,12 @@ public class PawnMovesCalculator implements PieceMovesCalculator {
 
     @Override
     public String toString() {
-        return "PawnMovesCalculator{" +
-                "validMoves=" + validMoves +
-                ", currentTeamColor=" + currentTeamColor +
-                ", opponentTeamColor=" + opponentTeamColor +
-                ", currentRow=" + currentRow +
-                ", currentColumn=" + currentColumn +
-                '}';
+        return "PawnMovesCalculator(" +
+                "ValidMoves[" + validMoves +
+                "], Team(" + currentTeamColor +
+                "), Opponent(" + opponentTeamColor +
+                "), Row(" + currentRow +
+                "), Column(" + currentColumn +
+                "))";
     }
 }
