@@ -128,7 +128,7 @@ public class KnightMovesCalculator implements PieceMovesCalculator {
             validMoves.add(new ChessMove(position, new ChessPosition(possibleRow, possibleColumn), null));
         }
         // Optional debug
-        if (Constants.DEBUG_GLOBAL || Constants.DEBUG_KNIGHT_MOVES_CALCULATOR) System.out.println("Found valid moves from (" + position.getRow() + "," + position.getColumn() + ") for " + board.getPiece(position).toString() + ":-> " + validMoves.toString());
+        if (Constants.DEBUG_GLOBAL || Constants.DEBUG_KNIGHT_MOVES_CALCULATOR) System.out.println("(KnightCalculator) Found moves from (" + position.getRow() + "," + position.getColumn() + ") for " + board.getPiece(position).toString() + ":-> " + validMoves.toString());
         return validMoves;
     }
 

@@ -105,7 +105,7 @@ public class ChessPiece {
                 break;
         }
         // Optional debug
-        if (Constants.DEBUG_GLOBAL || Constants.DEBUG_CHESS_PIECE) System.out.println("Evaluated moves for " + board.getPiece(myPosition).toString() + "-> " + validMoves.toString());
+        if (Constants.DEBUG_GLOBAL || Constants.DEBUG_CHESS_PIECE) System.out.println("(ChessPiece) Evaluated moves for " + board.getPiece(myPosition).toString() + "-> " + validMoves.toString());
         return validMoves;
     }
 

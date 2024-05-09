@@ -221,7 +221,7 @@ public class QueenMovesCalculator implements PieceMovesCalculator {
             }
         }
         // Optional debug
-        if (Constants.DEBUG_GLOBAL || Constants.DEBUG_QUEEN_MOVES_CALCULATOR) System.out.println("Found valid moves from (" + position.getRow() + "," + position.getColumn() + ") for " + board.getPiece(position).toString() + ":-> " + validMoves.toString());
+        if (Constants.DEBUG_GLOBAL || Constants.DEBUG_QUEEN_MOVES_CALCULATOR) System.out.println("(QueenCalculator) Found moves from (" + position.getRow() + "," + position.getColumn() + ") for " + board.getPiece(position).toString() + ":-> " + validMoves.toString());
         return validMoves;
     }
 
