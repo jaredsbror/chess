@@ -111,8 +111,8 @@ public class ChessGame {
      */
     public boolean isInCheck(TeamColor teamColor) {
         /// Get the location of the current team's King
-        int currentKingRow;
-        int currentKingColumn;
+        int currentKingRow = 0;
+        int currentKingColumn = 0;
         boolean foundKing = false;
         // Iterate over the chessboard rows...
         for (int row = Constants.BOARD_MIN_ONE_INDEX; row <= Constants.BOARD_MAX_ONE_INDEX; row++) {
