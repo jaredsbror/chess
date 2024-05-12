@@ -22,7 +22,7 @@ public class ChessGame {
 
     // Variables
     private TeamColor teamColor;
-    private ChessBoard chessBoard;
+    private final ChessBoard chessBoard;
 
     // Constructor
     public ChessGame() {

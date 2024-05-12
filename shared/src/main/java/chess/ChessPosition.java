@@ -17,7 +17,16 @@ public class ChessPosition {
     public ChessPosition(int row, int column) {
         this.row = row;
         this.column = column;
+        // Optional debug
         if (Constants.DEBUG_GLOBAL || Constants.DEBUG_CHESS_POSITION) System.out.println("Creating Chess" + this.toString());
+    }
+
+    // Copy constructor (deep)
+    public ChessPosition(ChessPosition original) {
+        this.row = original.row;
+        this.column = original.column;
+        // Optional debug
+        if (Constants.DEBUG_GLOBAL || Constants.DEBUG_CHESS_POSITION) System.out.println("Copy Chess" + this.toString());
     }
 
     /**

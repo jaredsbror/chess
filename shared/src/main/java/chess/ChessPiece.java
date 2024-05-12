@@ -12,14 +12,38 @@ import java.util.Objects;
  */
 public class ChessPiece {
 
+    // Variables
     private ChessGame.TeamColor pieceColor;
     private ChessPiece.PieceType pieceType;
+    private Collection<ChessMove> validMoves;
 
+    // Constructor
     public ChessPiece(ChessGame.TeamColor pieceColor, ChessPiece.PieceType type) {
         this.pieceColor = pieceColor;
         this.pieceType = type;
+        Collection<ChessMove> validMoves = new ArrayList<ChessMove>();
         // Optional debug
         if (Constants.DEBUG_GLOBAL || Constants.DEBUG_CHESS_PIECE) System.out.println("Creating Chess" + this.toString());
+    }
+
+    // Copy constructor (deep)
+    public ChessPiece(ChessPiece original) {
+        this.pieceColor = original.pieceColor;
+        this.pieceType = original.pieceType;
+        this.validMoves = new ArrayList<ChessMove>();
+        // Check for validmoves type
+        if (original.validMoves instanceof ArrayList<ChessMove> originalValidMoves) {
+            /// Copy the validMoves collection (they are arraylists)
+            // Iterate over rows...
+            for (int index = 0; index < original.validMoves.size(); index++) {
+                // Copy the original move to the new ArrayList<ChessMove>
+                this.validMoves.add(new ChessMove(originalValidMoves.get(index)));
+            }
+        } else {    // validMoves is not an array list, it should throw an exeption
+            throw new RuntimeException("ERROR: original.validMoves is not an ArrayList<?> in ChessPiece.java");
+        }
+        // Optional debug
+        if (Constants.DEBUG_GLOBAL || Constants.DEBUG_CHESS_PIECE) System.out.println("Copy of Chess" + this.toString());
     }
 
     /**
@@ -66,7 +90,7 @@ public class ChessPiece {
      * @return Collection of valid moves
      */
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
-        Collection<ChessMove> validMoves = new ArrayList<ChessMove>();
+        validMoves = new ArrayList<ChessMove>();
         // Check if a piece exists...
         if (board.doesNotExistPiece(myPosition)) {
             return validMoves;

@@ -14,12 +14,10 @@ import java.util.Collection;
 public class ChessBoard {
 
     // Variables
-    private ChessPiece[][] board = new ChessPiece[Constants.BOARD_NUM_ROWS][Constants.BOARD_NUM_COLUMNS];
+    private final ChessPiece[][] board = new ChessPiece[Constants.BOARD_NUM_ROWS][Constants.BOARD_NUM_COLUMNS];
 
     // Constructor
     public ChessBoard() {
-        // Optional debug
-        if (Constants.DEBUG_GLOBAL || Constants.DEBUG_CHESS_BOARD) System.out.println("Creating Chess" + this.toString());
         /// Reset the board completely with null pieces
         // Iterate over the chessboard rows...
         for (int row = 0; row < Constants.BOARD_NUM_ROWS; row++) {
@@ -29,6 +27,23 @@ public class ChessBoard {
                 board[row][col] = null;
             }
         }
+        // Optional debug
+        if (Constants.DEBUG_GLOBAL || Constants.DEBUG_CHESS_BOARD) System.out.println("Creating Chess" + this.toString());
+    }
+
+    // Copy constructor (deep)
+    public ChessBoard(ChessBoard original) {
+        /// Create a deep copy of the original board in the new ChessBoard object
+        // Iterate over the chessboard rows...
+        for (int row = Constants.BOARD_MIN_ONE_INDEX; row <= Constants.BOARD_MAX_ONE_INDEX; row++) {
+            // Iterate over the chessboard columns...
+            for (int col = Constants.BOARD_MIN_ONE_INDEX; col <= Constants.BOARD_MAX_ONE_INDEX; col++) {
+                // Initialize the piece to the value on the original board.
+                this.addPiece(row,col,new ChessPiece(original.getPiece(row, col)));
+            }
+        }
+        // Optional debug
+        if (Constants.DEBUG_GLOBAL || Constants.DEBUG_CHESS_BOARD) System.out.println("Copy of Chess" + this.toString());
     }
 
     /**
