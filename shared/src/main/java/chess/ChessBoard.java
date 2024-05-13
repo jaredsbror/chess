@@ -44,7 +44,7 @@ public class ChessBoard {
                     continue;
                 }
                 // Initialize the piece to the value on the original board.
-                this.addPiece(row,col,new ChessPiece(original.getPiece(row, col)));
+                this.addPiece(row,col, original.getPiece(row, col));
             }
         }
         // Optional debug

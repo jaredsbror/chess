@@ -25,15 +25,6 @@ public class ChessMove {
         if (Constants.DEBUG_GLOBAL || Constants.DEBUG_CHESS_MOVE) System.out.println("Creating Chess" + this.toString());
     }
 
-    // Copy constructor (deep)
-    public ChessMove(ChessMove original) {
-        this.startPosition = new ChessPosition(original.startPosition);
-        this.endPosition = new ChessPosition(original.endPosition);
-        this.promotionPieceType = original.promotionPieceType;
-        // Optional debug
-        if (Constants.DEBUG_GLOBAL || Constants.DEBUG_CHESS_MOVE) System.out.println("Copy of Chess" + this.toString());
-    }
-
     /**
      * @return ChessPosition of starting location
      */

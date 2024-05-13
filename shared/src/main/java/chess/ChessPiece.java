@@ -24,14 +24,6 @@ public class ChessPiece {
         if (Constants.DEBUG_GLOBAL || Constants.DEBUG_CHESS_PIECE) System.out.println("Creating Chess" + this.toString());
     }
 
-    // Copy constructor (deep)
-    public ChessPiece(ChessPiece original) {
-        this.pieceColor = original.pieceColor;
-        this.pieceType = original.pieceType;
-        // Optional debug
-        if (Constants.DEBUG_GLOBAL || Constants.DEBUG_CHESS_PIECE) System.out.println("Copy of Chess" + this.toString());
-    }
-
     /**
      * The various different chess piece options
      */
@@ -76,40 +68,37 @@ public class ChessPiece {
      * @return Collection of valid moves
      */
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
-        ArrayList<ChessMove> validMoves = new ArrayList<ChessMove>();
+        Collection<ChessMove> validMoves = new ArrayList<ChessMove>();
         // Check if a piece exists...
         if (board.doesNotExistPiece(myPosition)) {
             return validMoves;
         };
 
-        pieceColor = board.getPiece(myPosition).getTeamColor();
-        pieceType = board.getPiece(myPosition).getPieceType();
-
         // Get the piece type that is moving
         switch (pieceType) {
             case KING:
                 KingMovesCalculator kingMovesCalculator = new KingMovesCalculator(pieceColor);
-                validMoves = (ArrayList<ChessMove>) kingMovesCalculator.pieceMoves(board, myPosition);
+                validMoves = kingMovesCalculator.pieceMoves(board, myPosition);
                 break;
             case QUEEN:
                 QueenMovesCalculator queenMovesCalculator = new QueenMovesCalculator(pieceColor);
-                validMoves = (ArrayList<ChessMove>) queenMovesCalculator.pieceMoves(board, myPosition);
+                validMoves = queenMovesCalculator.pieceMoves(board, myPosition);
                 break;
             case BISHOP:
                 BishopMovesCalculator bishopMovesCalculator = new BishopMovesCalculator(pieceColor);
-                validMoves = (ArrayList<ChessMove>) bishopMovesCalculator.pieceMoves(board, myPosition);
+                validMoves = bishopMovesCalculator.pieceMoves(board, myPosition);
                 break;
             case KNIGHT:
                 KnightMovesCalculator knightMovesCalculator = new KnightMovesCalculator(pieceColor);
-                validMoves = (ArrayList<ChessMove>) knightMovesCalculator.pieceMoves(board, myPosition);
+                validMoves = knightMovesCalculator.pieceMoves(board, myPosition);
                 break;
             case ROOK:
                 RookMovesCalculator rookMovesCalculator = new RookMovesCalculator(pieceColor);
-                validMoves = (ArrayList<ChessMove>) rookMovesCalculator.pieceMoves(board, myPosition);
+                validMoves = rookMovesCalculator.pieceMoves(board, myPosition);
                 break;
             case PAWN:
                 PawnMovesCalculator pawnMovesCalculator = new PawnMovesCalculator(pieceColor);
-                validMoves = (ArrayList<ChessMove>) pawnMovesCalculator.pieceMoves(board, myPosition);
+                validMoves = pawnMovesCalculator.pieceMoves(board, myPosition);
                 break;
             default:
                 break;

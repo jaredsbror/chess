@@ -3,6 +3,7 @@ package chess;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Objects;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * For a class that can manage a chess game, making moves on a board
@@ -30,14 +31,6 @@ public class ChessGame {
         chessBoard = new ChessBoard();
         // Optional debug
         if (Constants.DEBUG_GLOBAL || Constants.DEBUG_CHESS_GAME) System.out.println("Creating Chess" + this.toString());
-    }
-
-    // Copy constructor
-    public ChessGame(ChessGame original) {
-        this.teamColor = original.teamColor;
-        this.chessBoard = new ChessBoard(original.chessBoard);
-        // Optional debug
-        if (Constants.DEBUG_GLOBAL || Constants.DEBUG_CHESS_GAME) System.out.println("Copy of Chess" + this.toString());
     }
 
     /**
@@ -74,29 +67,64 @@ public class ChessGame {
      * startPosition
      */
     public Collection<ChessMove> validMoves(ChessPosition startPosition) {
-        // If the startPosition is invalid, throw error.
-        if (isNotWithinBounds(startPosition)) throw new RuntimeException("ERROR: Invalid Start Position in ChessGame.validMoves()");
+        // If the startPosition is invalid, return null
+        if (isNotWithinBounds(startPosition)) return null;
         // If there is no piece at startPosition, return null.
         if (chessBoard.doesNotExistPiece(startPosition)) return null;
+
         // Create new ChessPiece object to access the pieceMoves() method.
-        ChessPiece chessPiece = new ChessPiece(chessBoard.getPiece(startPosition));
-        ArrayList<ChessMove> validMoves = (ArrayList<ChessMove>) chessPiece.pieceMoves(chessBoard, startPosition);
-        /// Check for moves that put the friendly King in check and eliminate them.
-        // Iterate over the Arraylist<> of valid moves
-        for (int index = 0; index < validMoves.size(); index++) {
-            // Simulate the move on another chessboard and eliminate move if makeMove() throws InvalidMoveException.
-            ChessGame simulation = new ChessGame(this);
-            try {
-                simulation.makeMove(validMoves.get(index));
-            } catch (InvalidMoveException exception) {
-                validMoves.remove(index);
-                // Optional debug
-                if (Constants.DEBUG_GLOBAL || Constants.DEBUG_CHESS_GAME) System.out.println("Found invalid move " + validMoves.get(index).toString() + " in ChessGame.validMoves() for " + chessPiece.toString());
+        ChessPiece chessPiece = chessBoard.getPiece(startPosition);
+        Collection<ChessMove> possibleValidMoves = chessPiece.pieceMoves(chessBoard, startPosition);
+        Collection<ChessMove> actualValidMoves = new ArrayList<ChessMove>();    // ???
+
+        /// Check for moves that don't put the friendly King in check and add them.
+        // Iterate over the Collection of valid moves
+        for (var move: possibleValidMoves) {
+            // Save essential piece information for better reading clarity
+            ChessPiece startPiece = chessBoard.getPiece(startPosition);
+            TeamColor startColor = startPiece.getTeamColor();
+            ChessPiece.PieceType startType = startPiece.getPieceType();
+            ChessPosition endPosition = move.getEndPosition();
+            ChessPiece.PieceType promotionType = move.getPromotionPieceType();
+
+            /// Check that the move is valid (not including if the King is in check)
+            // Check #1: Check that startPosition is in bounds.
+            if (isNotWithinBounds(move.getStartPosition())) continue;
+            // Check #2: Check that endPosition is in bounds.
+            if (isNotWithinBounds(move.getEndPosition())) continue;
+            // Check #3: Check that the endPosition does not already have a friendly piece.
+            if (chessBoard.doesFriendlyPieceExist(endPosition,startColor)) continue;
+            // Check #4: If the piece is a pawn, and it is due for promotion, check that its promotion piece is valid (e.g. non-null).
+            if ((startType == ChessPiece.PieceType.PAWN) &&
+                    (endPosition.getRow() == (startColor == TeamColor.WHITE ? Constants.BOARD_MAX_ONE_INDEX : Constants.BOARD_MIN_ONE_INDEX)) &&
+                    (promotionType == null)) {
+                continue;
             }
+
+            /// Simulate the move on another chessboard to avoid illegal moves causing check
+            ChessBoard simulation = new ChessBoard(chessBoard);
+            // Step #1: Add null piece to startPosition.
+            simulation.addPiece(startPosition, null);
+            // Step #2: Save piece originally at startPosition to endPosition.
+            // NOTE: Check for a pawn moving because it may need to be promoted.
+            // If the pawn is about to be promoted, place the promoted piece.
+            if ((startType == ChessPiece.PieceType.PAWN) &&
+                    (endPosition.getRow() == (startColor == TeamColor.WHITE ? Constants.BOARD_MAX_ONE_INDEX : Constants.BOARD_MIN_ONE_INDEX))) {
+                simulation.addPiece(endPosition, new ChessPiece(startColor, promotionType));
+            } else {    // Simply place the start piece at the end location
+                simulation.addPiece(endPosition, new ChessPiece(startColor, startType));
+            }
+            // Step #3: Make sure the friendly king does not go into check after this move
+            // If the king does, skip this for-loop iteration
+            if (isInCheck(startColor)) continue;
+
+            // Now that the move has been proven to be completely valid, add it to the list
+            actualValidMoves.add(move);
         }
+
         // Optional debug
-        if (Constants.DEBUG_GLOBAL || Constants.DEBUG_CHESS_GAME) System.out.println("(ChessGame) Valid moves for " + chessPiece.toString() + "-> " + validMoves.toString());
-        return validMoves;
+        if (Constants.DEBUG_GLOBAL || Constants.DEBUG_CHESS_GAME) System.out.println("(ChessGame) Valid moves for " + chessPiece + "-> " + actualValidMoves.toString());
+        return actualValidMoves;
     }
 
     /**
@@ -107,44 +135,23 @@ public class ChessGame {
      */
     public void makeMove(ChessMove move) throws InvalidMoveException {
         // Save starting, ending position, and promotion piece
-        ChessPosition start = move.getStartPosition();
-        ChessPosition end = move.getEndPosition();
-        ChessPiece.PieceType promotion = move.getPromotionPieceType();
-        // Save a copy of the pieces at the startPosition and endPosition
-        // NOTE: These can be references because they are used to create a new object later
-        ChessPiece startPiece = chessBoard.getPiece(start);
-        TeamColor startColor = startPiece.getTeamColor();
-        ChessPiece.PieceType startType = startPiece.getPieceType();
+        ChessPosition startPosition = move.getStartPosition();
+        ChessPosition endPosition = move.getEndPosition();
+        ChessPiece.PieceType promotionPieceType = move.getPromotionPieceType();
 
-        /// Check once again that the move is valid
-        // Check #1: Check that startPosition is in bounds
-        if (isNotWithinBounds(start)) throw new InvalidMoveException("InvalidMoveException: Out-of-bounds Start Position");
-        // Check #2: Check that endPosition is in bounds
-        if (isNotWithinBounds(end)) throw new InvalidMoveException("InvalidMoveException: Out-of-bounds End Position");
-        // Check #3: Check that the endPosition does not already have a friendly piece
-        if (chessBoard.doesFriendlyPieceExist(end,startColor)) throw new InvalidMoveException("InvalidMoveException: Friendly Piece exists at End Position");
-        // Check #4: If the piece is a pawn, and it is due for promotion, check that its promotion piece is valid (e.g. non-null)
-        if ((startType == ChessPiece.PieceType.PAWN) &&
-            (end.getRow() == (startColor == TeamColor.WHITE ? Constants.BOARD_MAX_ONE_INDEX : Constants.BOARD_MIN_ONE_INDEX)) &&
-            (promotion == null)) {
-            throw new InvalidMoveException("InvalidMoveException: Promotion Piece for Promoting Pawn is null");
-        }
+        // Get a list of valid moves
+        Collection<ChessMove> validMoves = validMoves(startPosition);
+        // If the move is invalid, get null from validMoves()
+        if (validMoves == null) throw new InvalidMoveException("ERROR: Invalid Move in makeMove()");
 
-        /// Process the move on the chessboard
-        // Step #1: Add null piece to startPosition
-        chessBoard.addPiece(start, null);
-        // Step #2: Save piece originally at startPosition to endPosition
-        // NOTE: Check for a pawn moving because it may need to be promoted
-        // If the pawn is about to be promoted, place the promoted piece
-        if ((startType == ChessPiece.PieceType.PAWN) &&
-            (end.getRow() == (startColor == TeamColor.WHITE ? Constants.BOARD_MAX_ONE_INDEX : Constants.BOARD_MIN_ONE_INDEX))) {
-            chessBoard.addPiece(end, new ChessPiece(startColor, promotion));
-        } else {    // Simply place the start piece at the end location
-            chessBoard.addPiece(end, new ChessPiece(startPiece));
-        }
-        // Step #3: Make sure the friendly king does not go into check after this move.
-        // If the king does, throw an error.
-        if (isInCheck(startColor)) throw new InvalidMoveException("InvalidMoveException: Move puts King in Check");
+        // Save essential start position information
+        ChessPiece startPiece = chessBoard.getPiece(startPosition);
+        TeamColor startPositionColor = startPiece.getTeamColor();
+        ChessPiece.PieceType startPositionType = startPiece.getPieceType();
+
+
+
+
     }
 
     /**
@@ -154,50 +161,7 @@ public class ChessGame {
      * @throws InvalidMoveException if move is invalid
      */
     public void makeMoveWithBackup(ChessMove move) throws InvalidMoveException {
-        // Save starting, ending position, and promotion piece.
-        ChessPosition start = move.getStartPosition();
-        ChessPosition end = move.getEndPosition();
-        ChessPiece.PieceType promotion = move.getPromotionPieceType();
-        // Save a copy of the pieces at the startPosition and endPosition.
-        // NOTE: These can be references because they are used to create a new object later.
-        ChessPiece startPiece = chessBoard.getPiece(start);
-        TeamColor startColor = startPiece.getTeamColor();
-        ChessPiece.PieceType startType = startPiece.getPieceType();
 
-        /// Check once again that the move is valid
-        // Check #1: Check that startPosition is in bounds.
-        if (isNotWithinBounds(start)) throw new InvalidMoveException("InvalidMoveException: Out-of-bounds Start Position");
-        // Check #2: Check that endPosition is in bounds.
-        if (isNotWithinBounds(end)) throw new InvalidMoveException("InvalidMoveException: Out-of-bounds End Position");
-        // Check #3: Check that the endPosition does not already have a friendly piece.
-        if (chessBoard.doesFriendlyPieceExist(end,startColor)) throw new InvalidMoveException("InvalidMoveException: Friendly Piece exists at End Position");
-        // Check #4: If the piece is a pawn, and it is due for promotion, check that its promotion piece is valid (e.g. non-null).
-        if ((startType == ChessPiece.PieceType.PAWN) &&
-                (end.getRow() == (startColor == TeamColor.WHITE ? Constants.BOARD_MAX_ONE_INDEX : Constants.BOARD_MIN_ONE_INDEX)) &&
-                (promotion == null)) {
-            throw new InvalidMoveException("InvalidMoveException: Promotion Piece for Promoting Pawn is null");
-        }
-
-        /// Process the move on the chessboard
-        // Step #1: Create a backup of the board to restore if the move becomes invalid.
-        ChessBoard backup = new ChessBoard(chessBoard);
-        // Step #2: Add null piece to startPosition.
-        chessBoard.addPiece(start, null);
-        // Step #3: Save piece originally at startPosition to endPosition.
-        // NOTE: Check for a pawn moving because it may need to be promoted.
-        // If the pawn is about to be promoted, place the promoted piece.
-        if ((startType == ChessPiece.PieceType.PAWN) &&
-                (end.getRow() == (startColor == TeamColor.WHITE ? Constants.BOARD_MAX_ONE_INDEX : Constants.BOARD_MIN_ONE_INDEX))) {
-            chessBoard.addPiece(end, new ChessPiece(startColor, promotion));
-        } else {    // Simply place the start piece at the end location
-            chessBoard.addPiece(end, new ChessPiece(startPiece));
-        }
-        // Step #4: Make sure the friendly king does not go into check after this move
-        // If the king does, restore the board and throw and error
-        if (isInCheck(startColor)) {
-            chessBoard = new ChessBoard(backup);
-            throw new InvalidMoveException("InvalidMoveException: Move puts King in Check");
-        }
     }
 
     /**
