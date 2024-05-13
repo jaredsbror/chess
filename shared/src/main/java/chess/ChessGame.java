@@ -3,7 +3,6 @@ package chess;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Objects;
-import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * For a class that can manage a chess game, making moves on a board
@@ -30,7 +29,7 @@ public class ChessGame {
         teamColor = TeamColor.WHITE;
         chessBoard = new ChessBoard();
         // Optional debug
-        if (Constants.DEBUG_GLOBAL || Constants.DEBUG_CHESS_GAME) System.out.println("Creating Chess" + this.toString());
+        if (Constants.DEBUG_GLOBAL || Constants.DEBUG_CHESS_GAME) System.out.println("Creating Chess" + this);
     }
 
     /**
@@ -40,6 +39,7 @@ public class ChessGame {
         return teamColor;
     }
 
+
     /**
      * Set's which teams turn it is
      * @param teamColor the team whose turn it is
@@ -48,6 +48,7 @@ public class ChessGame {
         this.teamColor = teamColor;
     }
 
+
     // Check if a position is on the board is valid
     private boolean isNotWithinBounds(ChessPosition position) {
         int row = position.getRow();
@@ -55,10 +56,12 @@ public class ChessGame {
         return (row < Constants.BOARD_MIN_ONE_INDEX || row > Constants.BOARD_MAX_ONE_INDEX || column < Constants.BOARD_MIN_ONE_INDEX || column > Constants.BOARD_MAX_ONE_INDEX);
     }
 
+
     // Check if a position is on the board is valid
     private boolean isNotWithinBounds(int row, int column) {
         return (row < Constants.BOARD_MIN_ONE_INDEX || row > Constants.BOARD_MAX_ONE_INDEX || column < Constants.BOARD_MIN_ONE_INDEX || column > Constants.BOARD_MAX_ONE_INDEX);
     }
+
 
     /**
      * Gets a valid moves for a piece at the given location
@@ -101,7 +104,7 @@ public class ChessGame {
                 continue;
             }
 
-            /// Simulate the move on another chessboard to avoid illegal moves causing check
+            /// Simulate the move on another chessboard to detect illegal moves causing check
             ChessBoard simulation = new ChessBoard(chessBoard);
             // Step #1: Add null piece to startPosition.
             simulation.addPiece(startPosition, null);
@@ -123,9 +126,10 @@ public class ChessGame {
         }
 
         // Optional debug
-        if (Constants.DEBUG_GLOBAL || Constants.DEBUG_CHESS_GAME) System.out.println("(ChessGame) Valid moves for " + chessPiece + "-> " + actualValidMoves.toString());
+        if (Constants.DEBUG_GLOBAL || Constants.DEBUG_CHESS_GAME) System.out.println("(ChessGame) Valid moves for " + chessPiece + "-> " + actualValidMoves);
         return actualValidMoves;
     }
+
 
     /**
      * Makes a move in a chess game
@@ -137,32 +141,35 @@ public class ChessGame {
         // Save starting, ending position, and promotion piece
         ChessPosition startPosition = move.getStartPosition();
         ChessPosition endPosition = move.getEndPosition();
-        ChessPiece.PieceType promotionPieceType = move.getPromotionPieceType();
+        ChessPiece.PieceType promotionType = move.getPromotionPieceType();
 
         // Get a list of valid moves
         Collection<ChessMove> validMoves = validMoves(startPosition);
-        // If the move is invalid, get null from validMoves()
-        if (validMoves == null) throw new InvalidMoveException("ERROR: Invalid Move in makeMove()");
+        // If the start position or start piece is invalid, get null from validMoves() and throw error
+        if (validMoves == null) throw new InvalidMoveException("ERROR: Invalid Starting Position in makeMove()");
+        // If the move is invalid, throw error
+        if (!validMoves.contains(move)) throw new InvalidMoveException("ERROR: Invalid Move in makeMove()");
 
         // Save essential start position information
         ChessPiece startPiece = chessBoard.getPiece(startPosition);
-        TeamColor startPositionColor = startPiece.getTeamColor();
-        ChessPiece.PieceType startPositionType = startPiece.getPieceType();
+        TeamColor startColor = startPiece.getTeamColor();
+        ChessPiece.PieceType startType = startPiece.getPieceType();
 
-
-
+        /// Implement the move on the chessboard
+        // Step #1: Add null piece to startPosition.
+        chessBoard.addPiece(startPosition, null);
+        // Step #2: Save piece originally at startPosition to endPosition.
+        // NOTE: Check for a pawn moving because it may need to be promoted.
+        // If the pawn is about to be promoted, place the promoted piece.
+        if ((startType == ChessPiece.PieceType.PAWN) &&
+                (endPosition.getRow() == (startColor == TeamColor.WHITE ? Constants.BOARD_MAX_ONE_INDEX : Constants.BOARD_MIN_ONE_INDEX))) {
+            chessBoard.addPiece(endPosition, new ChessPiece(startColor, promotionType));
+        } else {    // Simply place the start piece at the end location
+            chessBoard.addPiece(endPosition, new ChessPiece(startColor, startType));
+        }
 
     }
 
-    /**
-     * Makes a move in a chess game
-     * Restores the board to its original state if a move puts the king in check
-     * @param move chess move to preform
-     * @throws InvalidMoveException if move is invalid
-     */
-    public void makeMoveWithBackup(ChessMove move) throws InvalidMoveException {
-
-    }
 
     /**
      * Determines if the given team is in check
@@ -242,7 +249,7 @@ public class ChessGame {
         if (!foundKing) {
             System.out.println("Board in ChessGame.isInCheck()");
             chessBoard.printBoard();
-            System.out.println("Unable to find friendly King in ChessGame.isInCheck() on " + chessBoard.toString());
+            System.out.println("Unable to find friendly King in ChessGame.isInCheck() on " + chessBoard);
             return false;
         }
 
@@ -304,7 +311,7 @@ public class ChessGame {
                 if (board.doesNotExistPiece(row, col)) {
                     chessBoard.addNull(row, col);
                     continue;
-                };
+                }
                 // Add a chess piece copy to chessBoard
                 TeamColor pieceColor = board.getPiece(row, col).getTeamColor();
                 ChessPiece.PieceType pieceType = board.getPiece(row, col).getPieceType();
