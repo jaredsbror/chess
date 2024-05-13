@@ -15,13 +15,11 @@ public class ChessPiece {
     // Variables
     private ChessGame.TeamColor pieceColor;
     private ChessPiece.PieceType pieceType;
-    private Collection<ChessMove> validMoves;
 
     // Constructor
     public ChessPiece(ChessGame.TeamColor pieceColor, ChessPiece.PieceType type) {
         this.pieceColor = pieceColor;
         this.pieceType = type;
-        Collection<ChessMove> validMoves = new ArrayList<ChessMove>();
         // Optional debug
         if (Constants.DEBUG_GLOBAL || Constants.DEBUG_CHESS_PIECE) System.out.println("Creating Chess" + this.toString());
     }
@@ -30,18 +28,6 @@ public class ChessPiece {
     public ChessPiece(ChessPiece original) {
         this.pieceColor = original.pieceColor;
         this.pieceType = original.pieceType;
-        this.validMoves = new ArrayList<ChessMove>();
-        // Check for validmoves type
-        if (original.validMoves instanceof ArrayList<ChessMove> originalValidMoves) {
-            /// Copy the validMoves collection (they are arraylists)
-            // Iterate over rows...
-            for (int index = 0; index < original.validMoves.size(); index++) {
-                // Copy the original move to the new ArrayList<ChessMove>
-                this.validMoves.add(new ChessMove(originalValidMoves.get(index)));
-            }
-        } else {    // validMoves is not an array list, it should throw an exeption
-            throw new RuntimeException("ERROR: original.validMoves is not an ArrayList<?> in ChessPiece.java");
-        }
         // Optional debug
         if (Constants.DEBUG_GLOBAL || Constants.DEBUG_CHESS_PIECE) System.out.println("Copy of Chess" + this.toString());
     }
@@ -90,7 +76,7 @@ public class ChessPiece {
      * @return Collection of valid moves
      */
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
-        validMoves = new ArrayList<ChessMove>();
+        ArrayList<ChessMove> validMoves = new ArrayList<ChessMove>();
         // Check if a piece exists...
         if (board.doesNotExistPiece(myPosition)) {
             return validMoves;
@@ -103,27 +89,27 @@ public class ChessPiece {
         switch (pieceType) {
             case KING:
                 KingMovesCalculator kingMovesCalculator = new KingMovesCalculator(pieceColor);
-                validMoves = kingMovesCalculator.pieceMoves(board, myPosition);
+                validMoves = (ArrayList<ChessMove>) kingMovesCalculator.pieceMoves(board, myPosition);
                 break;
             case QUEEN:
                 QueenMovesCalculator queenMovesCalculator = new QueenMovesCalculator(pieceColor);
-                validMoves = queenMovesCalculator.pieceMoves(board, myPosition);
+                validMoves = (ArrayList<ChessMove>) queenMovesCalculator.pieceMoves(board, myPosition);
                 break;
             case BISHOP:
                 BishopMovesCalculator bishopMovesCalculator = new BishopMovesCalculator(pieceColor);
-                validMoves = bishopMovesCalculator.pieceMoves(board, myPosition);
+                validMoves = (ArrayList<ChessMove>) bishopMovesCalculator.pieceMoves(board, myPosition);
                 break;
             case KNIGHT:
                 KnightMovesCalculator knightMovesCalculator = new KnightMovesCalculator(pieceColor);
-                validMoves = knightMovesCalculator.pieceMoves(board, myPosition);
+                validMoves = (ArrayList<ChessMove>) knightMovesCalculator.pieceMoves(board, myPosition);
                 break;
             case ROOK:
                 RookMovesCalculator rookMovesCalculator = new RookMovesCalculator(pieceColor);
-                validMoves = rookMovesCalculator.pieceMoves(board, myPosition);
+                validMoves = (ArrayList<ChessMove>) rookMovesCalculator.pieceMoves(board, myPosition);
                 break;
             case PAWN:
                 PawnMovesCalculator pawnMovesCalculator = new PawnMovesCalculator(pieceColor);
-                validMoves = pawnMovesCalculator.pieceMoves(board, myPosition);
+                validMoves = (ArrayList<ChessMove>) pawnMovesCalculator.pieceMoves(board, myPosition);
                 break;
             default:
                 break;

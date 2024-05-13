@@ -65,4 +65,19 @@ public class ChessPosition {
                 row + "," +
                 column + ')';
     }
+
+    @Override
+    protected ChessPosition clone() throws CloneNotSupportedException {
+        try {
+            // Create a new object of the same class
+            ChessPosition clone = (ChessPosition) super.clone();
+            // Copy the internal array (assuming it's an array)
+            clone.row = this.row;
+            clone.column = this.column;
+            return clone;
+        } catch (CloneNotSupportedException e) {
+            // Handle the case where cloning is not supported
+            throw new CloneNotSupportedException("ERROR: Unable to clone ChessPosition");
+        }
+    }
 }

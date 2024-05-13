@@ -62,8 +62,7 @@ public class ChessBoard {
     // Add piece to the chessboard
     public void addPiece(int row, int column, ChessPiece piece) {
         board[row - 1][column - 1] = piece;
-        // Optional debug
-        if (Constants.DEBUG_GLOBAL || Constants.DEBUG_CHESS_BOARD) System.out.println("Adding " + piece.toString() + " to (" + row + "," + column + ")");
+        // Optional debug        if (Constants.DEBUG_GLOBAL || Constants.DEBUG_CHESS_BOARD) System.out.println("Adding " + piece.toString() + " to (" + row + "," + column + ")");
     }
 
     // Set a position to null

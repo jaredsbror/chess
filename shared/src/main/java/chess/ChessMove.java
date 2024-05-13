@@ -13,23 +13,23 @@ public class ChessMove {
     // Variables
     private final ChessPosition startPosition;
     private final ChessPosition endPosition;
-    private final ChessPiece.PieceType promotionPiece;
+    private final ChessPiece.PieceType promotionPieceType;
 
     // Constructor
     public ChessMove(ChessPosition startPosition, ChessPosition endPosition,
                      ChessPiece.PieceType promotionPiece) {
         this.startPosition = startPosition;
         this.endPosition = endPosition;
-        this.promotionPiece = promotionPiece;
+        this.promotionPieceType = promotionPiece;
         // Optional debug
         if (Constants.DEBUG_GLOBAL || Constants.DEBUG_CHESS_MOVE) System.out.println("Creating Chess" + this.toString());
     }
 
     // Copy constructor (deep)
     public ChessMove(ChessMove original) {
-        this.startPosition = new ChessPosition(original.getStartPosition());
-        this.endPosition = new ChessPosition(original.getEndPosition());
-        this.promotionPiece = original.getPromotionPiece();
+        this.startPosition = new ChessPosition(original.startPosition);
+        this.endPosition = new ChessPosition(original.endPosition);
+        this.promotionPieceType = original.promotionPieceType;
         // Optional debug
         if (Constants.DEBUG_GLOBAL || Constants.DEBUG_CHESS_MOVE) System.out.println("Copy of Chess" + this.toString());
     }
@@ -53,8 +53,8 @@ public class ChessMove {
      * chess move
      * @return Type of piece to promote a pawn to, or null if no promotion
      */
-    public ChessPiece.PieceType getPromotionPiece() {
-        return promotionPiece;
+    public ChessPiece.PieceType getPromotionPieceType() {
+        return promotionPieceType;
     }
 
 
@@ -64,12 +64,12 @@ public class ChessMove {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         ChessMove chessMove = (ChessMove) o;
-        return Objects.equals(startPosition, chessMove.startPosition) && Objects.equals(endPosition, chessMove.endPosition) && promotionPiece == chessMove.promotionPiece;
+        return Objects.equals(startPosition, chessMove.startPosition) && Objects.equals(endPosition, chessMove.endPosition) && promotionPieceType == chessMove.promotionPieceType;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(startPosition, endPosition, promotionPiece);
+        return Objects.hash(startPosition, endPosition, promotionPieceType);
     }
 
     @Override
@@ -77,7 +77,7 @@ public class ChessMove {
         return "Move(" +
                 "Start[" + startPosition +
                 "], End[" + endPosition +
-                "], Promotion[" + promotionPiece +
+                "], Promotion[" + promotionPieceType +
                 "])";
     }
 }

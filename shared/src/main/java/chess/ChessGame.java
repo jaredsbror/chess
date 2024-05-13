@@ -109,7 +109,7 @@ public class ChessGame {
         // Save starting, ending position, and promotion piece
         ChessPosition start = move.getStartPosition();
         ChessPosition end = move.getEndPosition();
-        ChessPiece.PieceType promotion = move.getPromotionPiece();
+        ChessPiece.PieceType promotion = move.getPromotionPieceType();
         // Save a copy of the pieces at the startPosition and endPosition
         // NOTE: These can be references because they are used to create a new object later
         ChessPiece startPiece = chessBoard.getPiece(start);
@@ -157,7 +157,7 @@ public class ChessGame {
         // Save starting, ending position, and promotion piece.
         ChessPosition start = move.getStartPosition();
         ChessPosition end = move.getEndPosition();
-        ChessPiece.PieceType promotion = move.getPromotionPiece();
+        ChessPiece.PieceType promotion = move.getPromotionPieceType();
         // Save a copy of the pieces at the startPosition and endPosition.
         // NOTE: These can be references because they are used to create a new object later.
         ChessPiece startPiece = chessBoard.getPiece(start);
