@@ -211,7 +211,7 @@ public class ChessGame {
                 // If the piece is the current's team color, skip this loop iteration
                 if (chessBoard.getPieceTeamColor(row, col) == teamColor) continue;
                 // Fill a new validMoves array with valid moves
-                ArrayList<ChessMove> validMoves = (ArrayList<ChessMove>) validMoves(new ChessPosition(row, col));
+                ArrayList<ChessMove> validMoves = (ArrayList<ChessMove>) chessBoard.getPiece(row ,col).pieceMoves(chessBoard, new ChessPosition(row, col));
                 // Iterate over the validMoves
                 for (var move : validMoves) {
                     // If any of those valid moves include the current player's king, return true
@@ -263,7 +263,7 @@ public class ChessGame {
                 // If the piece is the current's team color, skip this loop iteration
                 if (chessBoard.getPieceTeamColor(row, col) == teamColor) continue;
                 // Fill a new validMoves array with valid moves
-                ArrayList<ChessMove> validMoves = (ArrayList<ChessMove>) validMoves(new ChessPosition(row, col));
+                ArrayList<ChessMove> validMoves = (ArrayList<ChessMove>) chessBoard.getPiece(row ,col).pieceMoves(chessBoard, new ChessPosition(row, col));
                 // Iterate over the validMoves
                 for (var move : validMoves) {
                     // If any of those valid moves include the current player's king, return true
