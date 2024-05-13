@@ -38,6 +38,11 @@ public class ChessBoard {
         for (int row = Constants.BOARD_MIN_ONE_INDEX; row <= Constants.BOARD_MAX_ONE_INDEX; row++) {
             // Iterate over the chessboard columns...
             for (int col = Constants.BOARD_MIN_ONE_INDEX; col <= Constants.BOARD_MAX_ONE_INDEX; col++) {
+                // If the location is null, add a null piece
+                if (this.getPiece(row, col) == null) {
+                    this.addPiece(row, col, null);
+                    continue;
+                }
                 // Initialize the piece to the value on the original board.
                 this.addPiece(row,col,new ChessPiece(original.getPiece(row, col)));
             }
