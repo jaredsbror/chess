@@ -116,7 +116,7 @@ public class ChessGame {
             }
             // Step #3: Make sure the friendly king does not go into check after this move
             // If the king does, skip this for-loop iteration
-            if (isInCheck(startColor)) continue;
+            if (isInCheck(simulation, startColor)) continue;
 
             // Now that the move has been proven to be completely valid, add it to the list
             actualValidMoves.add(move);
@@ -190,7 +190,60 @@ public class ChessGame {
         if (!foundKing) {
             System.out.println("Board in ChessGame.isInCheck()");
             chessBoard.printBoard();
-            throw new RuntimeException("Unable to find friendly King in ChessGame.isInCheck() on " + chessBoard.toString());
+            System.out.println("Unable to find friendly King in ChessGame.isInCheck() on " + chessBoard.toString());
+            return false;
+        }
+
+        /// Iterate over each opponent's piece in the board and determine their valid moves.
+        // Iterate over the chessboard rows...
+        for (int row = Constants.BOARD_MIN_ONE_INDEX; row <= Constants.BOARD_MAX_ONE_INDEX; row++) {
+            // Iterate over the chessboard columns...
+            for (int col = Constants.BOARD_MIN_ONE_INDEX; col <= Constants.BOARD_MAX_ONE_INDEX; col++) {
+                // If a piece does not exist, skip this loop iteration
+                if (chessBoard.doesNotExistPiece(row, col)) continue;
+                // If the piece is the current's team color, skip this loop iteration
+                if (chessBoard.getPieceTeamColor(row, col) == teamColor) continue;
+                // Fill a new validMoves array with valid moves
+                ArrayList<ChessMove> validMoves = (ArrayList<ChessMove>) validMoves(new ChessPosition(row, col));
+                // Iterate over the validMoves
+                for (var move : validMoves) {
+                    // If any of those valid moves include the current player's king, return true
+                    if (move.getEndPosition().equals(currentKingPosition)) return true;
+                }
+            }
+        }
+        // Otherwise return false
+        return false;
+    }
+
+    /**
+     * Determines if the given team on a custom board is in check
+     * @param teamColor which team to check for check
+     * @return True if the specified team is in check
+     */
+    public boolean isInCheck(ChessBoard chessBoard ,TeamColor teamColor) {
+        /// Get the location of the current team's King
+        ChessPosition currentKingPosition = new ChessPosition(0,0);
+        boolean foundKing = false;
+        // Iterate over the chessboard rows...
+        for (int row = Constants.BOARD_MIN_ONE_INDEX; row <= Constants.BOARD_MAX_ONE_INDEX; row++) {
+            // Iterate over the chessboard columns...
+            for (int col = Constants.BOARD_MIN_ONE_INDEX; col <= Constants.BOARD_MAX_ONE_INDEX; col++) {
+                // If a friendly chess piece does not exist, skip this loop iteration
+                if (!chessBoard.doesFriendlyPieceExist(row, col, teamColor)) continue;
+                // If the piece is the current king, save its position
+                if (chessBoard.getPiece(row, col).getPieceType() == ChessPiece.PieceType.KING) {
+                    currentKingPosition = new ChessPosition(row, col);
+                    foundKing = true;
+                }
+            }
+        }
+        // If there is no friendly king, throw an error
+        if (!foundKing) {
+            System.out.println("Board in ChessGame.isInCheck()");
+            chessBoard.printBoard();
+            System.out.println("Unable to find friendly King in ChessGame.isInCheck() on " + chessBoard.toString());
+            return false;
         }
 
         /// Iterate over each opponent's piece in the board and determine their valid moves.
