@@ -15,11 +15,15 @@ public class ChessPiece {
     // Variables
     private ChessGame.TeamColor pieceColor;
     private ChessPiece.PieceType pieceType;
+    private boolean hasMoved;
+    private boolean isPawnTwoSquaresForward;
 
     // Constructor
     public ChessPiece(ChessGame.TeamColor pieceColor, ChessPiece.PieceType type) {
         this.pieceColor = pieceColor;
         this.pieceType = type;
+        hasMoved = false;
+        isPawnTwoSquaresForward = false;
         // Optional debug
         if (Constants.DEBUG_GLOBAL || Constants.DEBUG_CHESS_PIECE) System.out.println("Creating Chess" + this.toString());
     }
@@ -60,6 +64,22 @@ public class ChessPiece {
         this.pieceType = type;
     }
 
+    public boolean hasMoved() {
+        return hasMoved;
+    }
+
+    public void setHasMoved(boolean hasMoved) {
+        this.hasMoved = hasMoved;
+    }
+
+    public boolean isPawnTwoSquaresForward() {
+        return isPawnTwoSquaresForward;
+    }
+
+    public void setPawnTwoSquaresForward(boolean pawnTwoSquaresForward) {
+        isPawnTwoSquaresForward = pawnTwoSquaresForward;
+    }
+
     /**
      * Calculates all the positions a chess piece can move to
      * Does not take into account moves that are illegal due to leaving the king in
@@ -72,7 +92,7 @@ public class ChessPiece {
         // Check if a piece exists...
         if (board.doesNotExistPiece(myPosition)) {
             return validMoves;
-        };
+        }
 
         // Get the piece type that is moving
         switch (pieceType) {

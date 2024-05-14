@@ -21,12 +21,12 @@ public class ChessGame {
     }
 
     // Variables
-    private TeamColor teamColor;
+    private TeamColor gameTeamColor;
     private ChessBoard chessBoard;
 
     // Constructor
     public ChessGame() {
-        teamColor = TeamColor.WHITE;
+        gameTeamColor = TeamColor.WHITE;
         chessBoard = new ChessBoard();
         chessBoard.resetBoard();
         // Optional debug
@@ -37,7 +37,7 @@ public class ChessGame {
      * @return Which team's turn it is
      */
     public TeamColor getTeamTurn() {
-        return teamColor;
+        return gameTeamColor;
     }
 
 
@@ -46,7 +46,7 @@ public class ChessGame {
      * @param teamColor the team whose turn it is
      */
     public void setTeamTurn(TeamColor teamColor) {
-        this.teamColor = teamColor;
+        this.gameTeamColor = teamColor;
     }
 
 
@@ -162,7 +162,7 @@ public class ChessGame {
         ChessPiece.PieceType startType = startPiece.getPieceType();
 
         // If it is not the piece's proper turn, return null
-        if (startColor != teamColor) throw new InvalidMoveException("ERROR: Not this piece's turn " + startPiece);
+        if (startColor != gameTeamColor) throw new InvalidMoveException("ERROR: Not this piece's turn " + startPiece);
 
         /// Implement the move on the chessboard
         // Step #1: Add null piece to startPosition.
@@ -176,7 +176,7 @@ public class ChessGame {
         } else {    // Simply place the start piece at the end location
             chessBoard.addPiece(endPosition, new ChessPiece(startColor, startType));
         }
-        teamColor = (teamColor == TeamColor.WHITE ? TeamColor.BLACK : TeamColor.WHITE);
+        gameTeamColor = (gameTeamColor == TeamColor.WHITE ? TeamColor.BLACK : TeamColor.WHITE);
     }
 
     // Check if a piece is in danger on the current board
@@ -384,18 +384,18 @@ public class ChessGame {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         ChessGame chessGame = (ChessGame) o;
-        return teamColor == chessGame.teamColor && Objects.equals(chessBoard, chessGame.chessBoard);
+        return gameTeamColor == chessGame.gameTeamColor && Objects.equals(chessBoard, chessGame.chessBoard);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(teamColor, chessBoard);
+        return Objects.hash(gameTeamColor, chessBoard);
     }
 
     @Override
     public String toString() {
         return "Game{" +
-                "Color=" + teamColor +
+                "Color=" + gameTeamColor +
                 ",Board=" + chessBoard +
                 '}';
     }
