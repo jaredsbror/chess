@@ -80,6 +80,10 @@ public class ChessGame {
 
         // Create new ChessPiece object to access the pieceMoves() method.
         ChessPiece chessPiece = chessBoard.getPiece(startPosition);
+
+        // If it is not the piece's proper turn, return null
+        if (chessPiece.getTeamColor() != teamColor) return null;
+
         Collection<ChessMove> possibleValidMoves = chessPiece.pieceMoves(chessBoard, startPosition);
         Collection<ChessMove> actualValidMoves = new ArrayList<ChessMove>();    // ???
 
@@ -151,7 +155,7 @@ public class ChessGame {
         // Get a list of valid moves
         Collection<ChessMove> validMoves = validMoves(startPosition);
         // If the start position or start piece is invalid, get null from validMoves() and throw error
-        if (validMoves == null) throw new InvalidMoveException("ERROR: Invalid Starting Position in makeMove()");
+        if (validMoves == null) throw new InvalidMoveException("ERROR: Invalid Starting Position in makeMove() OR not the Piece's Proper Turn");
         // If the move is invalid, throw error
         if (!validMoves.contains(move)) throw new InvalidMoveException("ERROR: Invalid Move in makeMove()");
 
@@ -172,7 +176,7 @@ public class ChessGame {
         } else {    // Simply place the start piece at the end location
             chessBoard.addPiece(endPosition, new ChessPiece(startColor, startType));
         }
-
+        teamColor = (teamColor == TeamColor.WHITE ? TeamColor.BLACK : TeamColor.WHITE);
     }
 
 
