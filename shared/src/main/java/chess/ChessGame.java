@@ -179,6 +179,53 @@ public class ChessGame {
         teamColor = (teamColor == TeamColor.WHITE ? TeamColor.BLACK : TeamColor.WHITE);
     }
 
+    // Check if a piece is in danger on the current board
+    private boolean isInDanger(ChessPosition position, TeamColor teamColor) {
+        /// Iterate over each opponent's piece in the board and determine their valid moves.
+        // Iterate over the chessboard rows...
+        for (int row = Constants.BOARD_MIN_ONE_INDEX; row <= Constants.BOARD_MAX_ONE_INDEX; row++) {
+            // Iterate over the chessboard columns...
+            for (int col = Constants.BOARD_MIN_ONE_INDEX; col <= Constants.BOARD_MAX_ONE_INDEX; col++) {
+                // If a piece does not exist, skip this loop iteration
+                if (chessBoard.doesNotExistPiece(row, col)) continue;
+                // If the piece is the current's team color, skip this loop iteration
+                if (chessBoard.doesFriendlyPieceExist(row, col, teamColor)) continue;
+                // Fill a new validMoves array with valid moves
+                Collection<ChessMove> validMoves = chessBoard.getPiece(row ,col).pieceMoves(chessBoard, new ChessPosition(row, col));
+                // Iterate over the validMoves
+                for (var move : validMoves) {
+                    // If any of those valid moves include the current player's king, return true
+                    if (move.getEndPosition().equals(position)) return true;
+                }
+            }
+        }
+        // Otherwise return false
+        return false;
+    }
+
+    // Check if a piece is in danger on another board
+    private boolean isInDanger(ChessBoard board, ChessPosition position, TeamColor teamColor) {
+        /// Iterate over each opponent's piece in the board and determine their valid moves.
+        // Iterate over the chessboard rows...
+        for (int row = Constants.BOARD_MIN_ONE_INDEX; row <= Constants.BOARD_MAX_ONE_INDEX; row++) {
+            // Iterate over the chessboard columns...
+            for (int col = Constants.BOARD_MIN_ONE_INDEX; col <= Constants.BOARD_MAX_ONE_INDEX; col++) {
+                // If a piece does not exist, skip this loop iteration
+                if (board.doesNotExistPiece(row, col)) continue;
+                // If the piece is the current's team color, skip this loop iteration
+                if (board.doesFriendlyPieceExist(row, col, teamColor)) continue;
+                // Fill a new validMoves array with valid moves
+                Collection<ChessMove> validMoves = board.getPiece(row ,col).pieceMoves(board, new ChessPosition(row, col));
+                // Iterate over the validMoves
+                for (var move : validMoves) {
+                    // If any of those valid moves include the current player's king, return true
+                    if (move.getEndPosition().equals(position)) return true;
+                }
+            }
+        }
+        // Otherwise return false
+        return false;
+    }
 
     /**
      * Determines if the given team is in check
@@ -209,27 +256,8 @@ public class ChessGame {
             System.out.println("Unable to find friendly King in ChessGame.isInCheck() on " + chessBoard.toString());
             return false;
         }
-
-        /// Iterate over each opponent's piece in the board and determine their valid moves.
-        // Iterate over the chessboard rows...
-        for (int row = Constants.BOARD_MIN_ONE_INDEX; row <= Constants.BOARD_MAX_ONE_INDEX; row++) {
-            // Iterate over the chessboard columns...
-            for (int col = Constants.BOARD_MIN_ONE_INDEX; col <= Constants.BOARD_MAX_ONE_INDEX; col++) {
-                // If a piece does not exist, skip this loop iteration
-                if (chessBoard.doesNotExistPiece(row, col)) continue;
-                // If the piece is the current's team color, skip this loop iteration
-                if (chessBoard.getPieceTeamColor(row, col) == teamColor) continue;
-                // Fill a new validMoves array with valid moves
-                ArrayList<ChessMove> validMoves = (ArrayList<ChessMove>) chessBoard.getPiece(row ,col).pieceMoves(chessBoard, new ChessPosition(row, col));
-                // Iterate over the validMoves
-                for (var move : validMoves) {
-                    // If any of those valid moves include the current player's king, return true
-                    if (move.getEndPosition().equals(currentKingPosition)) return true;
-                }
-            }
-        }
-        // Otherwise return false
-        return false;
+        // Return whether any opponent moves include the King as their last position
+        return isInDanger(currentKingPosition, teamColor);
     }
 
     /**
@@ -260,27 +288,8 @@ public class ChessGame {
             board.printBoard();
             return false;
         }
-
-        /// Iterate over each opponent's piece in the board and determine their valid moves.
-        // Iterate over the board rows...
-        for (int row = Constants.BOARD_MIN_ONE_INDEX; row <= Constants.BOARD_MAX_ONE_INDEX; row++) {
-            // Iterate over the board columns...
-            for (int col = Constants.BOARD_MIN_ONE_INDEX; col <= Constants.BOARD_MAX_ONE_INDEX; col++) {
-                // If a piece does not exist, skip this loop iteration
-                if (board.doesNotExistPiece(row, col)) continue;
-                // If the piece is the current's team color, skip this loop iteration
-                if (board.getPieceTeamColor(row, col) == teamColor) continue;
-                // Fill a new validMoves array with valid moves
-                ArrayList<ChessMove> validMoves = (ArrayList<ChessMove>) board.getPiece(row ,col).pieceMoves(board, new ChessPosition(row, col));
-                // Iterate over the validMoves
-                for (var move : validMoves) {
-                    // If any of those valid moves include the current player's king, return true
-                    if (move.getEndPosition().equals(currentKingPosition)) return true;
-                }
-            }
-        }
-        // Otherwise return false
-        return false;
+        // Return whether or not any opponent moves include the King as their last position
+        return isInDanger(board, currentKingPosition, teamColor);
     }
 
     /**
