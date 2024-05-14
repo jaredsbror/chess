@@ -289,8 +289,25 @@ public class ChessGame {
      * @return True if the specified team is in checkmate
      */
     public boolean isInCheckmate(TeamColor teamColor) {
-        // Go through all possible moves and see if the friendly King is still in check
-        throw new RuntimeException("Not implemented");
+        // If the team is not in check, return false
+        if (!isInCheck(teamColor)) return false;
+
+        /// Return true if there are no possible valid moves for the friendly team
+        // Iterate over the chessboard rows...
+        for (int row = Constants.BOARD_MIN_ONE_INDEX; row <= Constants.BOARD_MAX_ONE_INDEX; row++) {
+            // Iterate over the chessboard columns...
+            for (int col = Constants.BOARD_MIN_ONE_INDEX; col <= Constants.BOARD_MAX_ONE_INDEX; col++) {
+                // If a friendly chess piece exists,
+                if (chessBoard.doesFriendlyPieceExist(row, col, teamColor)) {
+                    Collection<ChessMove> validMoves = validMoves(new ChessPosition(row, col));
+                    // If validMoves is null, continue
+                    if (validMoves == null) continue;
+                    // If validMoves is NOT empty, return false
+                    if (!validMoves.isEmpty()) return false;
+                };
+            }
+        }
+        return true;
     }
 
     /**
@@ -300,6 +317,8 @@ public class ChessGame {
      * @return True if the specified team is in stalemate, otherwise false
      */
     public boolean isInStalemate(TeamColor teamColor) {
+        // If the team is in check, return false
+        if (isInCheck(teamColor)) return false;
         /// Return true if there are no possible valid moves for the friendly team
         // Iterate over the chessboard rows...
         for (int row = Constants.BOARD_MIN_ONE_INDEX; row <= Constants.BOARD_MAX_ONE_INDEX; row++) {
