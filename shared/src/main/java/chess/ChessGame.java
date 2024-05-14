@@ -28,6 +28,7 @@ public class ChessGame {
     public ChessGame() {
         teamColor = TeamColor.WHITE;
         chessBoard = new ChessBoard();
+        chessBoard.resetBoard();
         // Optional debug
         if (Constants.DEBUG_GLOBAL || Constants.DEBUG_CHESS_GAME) System.out.println("Creating Chess" + this);
     }
