@@ -40,7 +40,7 @@ public interface Constants {
 
     // Debugging
     boolean DEBUG_GLOBAL = false;
-    boolean DEBUG_CHESS_GAME = true;
+    boolean DEBUG_CHESS_GAME = false;
     boolean DEBUG_CHESS_BOARD = false;
     boolean DEBUG_CHESS_MOVE = false;
     boolean DEBUG_CHESS_PIECE = false;

@@ -70,6 +70,8 @@ public class ChessGame {
      * startPosition
      */
     public Collection<ChessMove> validMoves(ChessPosition startPosition) {
+        System.out.println("ValidMoves:");
+        chessBoard.printBoard();
         // If the startPosition is invalid, return null
         if (isNotWithinBounds(startPosition)) return null;
         // If there is no piece at startPosition, return null.
@@ -138,6 +140,8 @@ public class ChessGame {
      * @throws InvalidMoveException if move is invalid
      */
     public void makeMove(ChessMove move) throws InvalidMoveException {
+        System.out.println("makeMove:");
+        chessBoard.printBoard();
         // Save starting, ending position, and promotion piece
         ChessPosition startPosition = move.getStartPosition();
         ChessPosition endPosition = move.getEndPosition();
@@ -228,7 +232,7 @@ public class ChessGame {
      * @param teamColor which team to check for check
      * @return True if the specified team is in check
      */
-    public boolean isInCheck(ChessBoard chessBoard ,TeamColor teamColor) {
+    public boolean isInCheck(ChessBoard board ,TeamColor teamColor) {
         /// Get the location of the current team's King
         ChessPosition currentKingPosition = new ChessPosition(0,0);
         boolean foundKing = false;
@@ -237,33 +241,32 @@ public class ChessGame {
             // Iterate over the chessboard columns...
             for (int col = Constants.BOARD_MIN_ONE_INDEX; col <= Constants.BOARD_MAX_ONE_INDEX; col++) {
                 // If a friendly chess piece does not exist, skip this loop iteration
-                if (!chessBoard.doesFriendlyPieceExist(row, col, teamColor)) continue;
+                if (!board.doesFriendlyPieceExist(row, col, teamColor)) continue;
                 // If the piece is the current king, save its position
-                if (chessBoard.getPiece(row, col).getPieceType() == ChessPiece.PieceType.KING) {
+                if (board.getPiece(row, col).getPieceType() == ChessPiece.PieceType.KING) {
                     currentKingPosition = new ChessPosition(row, col);
                     foundKing = true;
                 }
             }
         }
-        // If there is no friendly king, throw an error
+        // If there is no friendly king, return false
         if (!foundKing) {
-            System.out.println("Board in ChessGame.isInCheck()");
-            chessBoard.printBoard();
-            System.out.println("Unable to find friendly King in ChessGame.isInCheck() on " + chessBoard);
+            System.out.println("Unable to find friendly King in ChessGame.isInCheck():");
+            board.printBoard();
             return false;
         }
 
         /// Iterate over each opponent's piece in the board and determine their valid moves.
-        // Iterate over the chessboard rows...
+        // Iterate over the board rows...
         for (int row = Constants.BOARD_MIN_ONE_INDEX; row <= Constants.BOARD_MAX_ONE_INDEX; row++) {
-            // Iterate over the chessboard columns...
+            // Iterate over the board columns...
             for (int col = Constants.BOARD_MIN_ONE_INDEX; col <= Constants.BOARD_MAX_ONE_INDEX; col++) {
                 // If a piece does not exist, skip this loop iteration
-                if (chessBoard.doesNotExistPiece(row, col)) continue;
+                if (board.doesNotExistPiece(row, col)) continue;
                 // If the piece is the current's team color, skip this loop iteration
-                if (chessBoard.getPieceTeamColor(row, col) == teamColor) continue;
+                if (board.getPieceTeamColor(row, col) == teamColor) continue;
                 // Fill a new validMoves array with valid moves
-                ArrayList<ChessMove> validMoves = (ArrayList<ChessMove>) chessBoard.getPiece(row ,col).pieceMoves(chessBoard, new ChessPosition(row, col));
+                ArrayList<ChessMove> validMoves = (ArrayList<ChessMove>) board.getPiece(row ,col).pieceMoves(board, new ChessPosition(row, col));
                 // Iterate over the validMoves
                 for (var move : validMoves) {
                     // If any of those valid moves include the current player's king, return true

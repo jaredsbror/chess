@@ -39,12 +39,12 @@ public class ChessBoard {
             // Iterate over the chessboard columns...
             for (int col = Constants.BOARD_MIN_ONE_INDEX; col <= Constants.BOARD_MAX_ONE_INDEX; col++) {
                 // If the location is null, add a null piece
-                if (this.getPiece(row, col) == null) {
+                if (original.getPiece(row, col) == null) {
                     this.addPiece(row, col, null);
                     continue;
                 }
                 // Initialize the piece to the value on the original board.
-                this.addPiece(row,col, original.getPiece(row, col));
+                this.addPiece(row,col, new ChessPiece(original.getPiece(row, col).getTeamColor(), original.getPiece(row, col).getPieceType()));
             }
         }
         // Optional debug
@@ -273,5 +273,6 @@ public class ChessBoard {
             }
             System.out.println();
         }
+        System.out.println();
     }
 }
