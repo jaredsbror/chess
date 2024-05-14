@@ -81,9 +81,6 @@ public class ChessGame {
         // Create new ChessPiece object to access the pieceMoves() method.
         ChessPiece chessPiece = chessBoard.getPiece(startPosition);
 
-        // If it is not the piece's proper turn, return null
-        if (chessPiece.getTeamColor() != teamColor) return null;
-
         Collection<ChessMove> possibleValidMoves = chessPiece.pieceMoves(chessBoard, startPosition);
         Collection<ChessMove> actualValidMoves = new ArrayList<ChessMove>();    // ???
 
@@ -163,6 +160,9 @@ public class ChessGame {
         ChessPiece startPiece = chessBoard.getPiece(startPosition);
         TeamColor startColor = startPiece.getTeamColor();
         ChessPiece.PieceType startType = startPiece.getPieceType();
+
+        // If it is not the piece's proper turn, return null
+        if (startColor != teamColor) throw new InvalidMoveException("ERROR: Not this piece's turn " + startPiece);
 
         /// Implement the move on the chessboard
         // Step #1: Add null piece to startPosition.
