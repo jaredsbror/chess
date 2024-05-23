@@ -5,7 +5,8 @@ import spark.Spark;
 public class HelloBYUServer {
     public static void main(String[] args) {
         try {
-            int port = Integer.parseInt(args[0]);
+//            int port = Integer.parseInt(args[0]);
+            int port = 8080;
             Spark.port(port);
 
             createRoutes();
