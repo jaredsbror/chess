@@ -1,13 +1,13 @@
 package dataAccess.game;
 
 import dataAccess.GameDAO;
-import model.UserData;
+import model.GameData;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class MemoryGameDAO implements GameDAO {
-    Map<String, UserData> list = new HashMap<>();
+    Map<String, GameData> list = new HashMap<>();
 
     public void clear() {
         list.clear();

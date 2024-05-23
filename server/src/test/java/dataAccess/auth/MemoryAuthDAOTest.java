@@ -1,6 +1,6 @@
 package dataAccess.auth;
 
-import model.UserData;
+import model.AuthData;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -13,8 +13,8 @@ class MemoryAuthDAOTest {
 
     @Test
     void clear() {
-        Map<String, UserData> auth = new HashMap<>();
-        auth.put("key", new UserData("username", "password", "email"));
+        Map<String, AuthData> auth = new HashMap<>();
+        auth.put("key", new AuthData("authToken", "username"));
         auth.clear();
         assertEquals(auth, new HashMap<>());
         System.out.println(auth);
@@ -22,8 +22,9 @@ class MemoryAuthDAOTest {
 
     @Test
     void notClear() {
-        Map<String, UserData> auth = new HashMap<>();
-        auth.put("key", new UserData("username", "password", "email"));
+        Map<String, AuthData> auth = new HashMap<>();
+        auth.clear();
+        auth.put("key", new AuthData("authToken", "username"));
         assertNotEquals(auth, new HashMap<>());
         System.out.println(auth);
     }
