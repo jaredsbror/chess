@@ -1,10 +1,9 @@
 package server;
 
-import spark.Spark;
+import spark.*;
 
 public class Server {
 
-    // Run the server
     public int run(int desiredPort) {
         Spark.port(desiredPort);
 
@@ -16,8 +15,12 @@ public class Server {
         return Spark.port();
     }
 
-    // Stop the server
+    public int port() {
+        return Spark.port();
+    }
+
     public void stop() {
         Spark.stop();
+        Spark.awaitStop();
     }
 }
