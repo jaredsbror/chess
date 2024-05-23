@@ -15,12 +15,14 @@ public class ClearApplicationHandler implements Route {
     public Object handle(Request request, Response response) {
         Gson gson = new Gson();
 
+        // Attempt to clear the database.
+        // Otherwise, return an error.
         try {
             clearApplicationService.clearDatabase();
             return "{}";
         } catch (Exception exception) {
             response.status(500);
-            return gson.toJson(new ClearResult("Error: ???"));
+            return gson.toJson(new ClearResult("Error: Error returned from ClearApplicationsService.java"));
         }
     }
 }

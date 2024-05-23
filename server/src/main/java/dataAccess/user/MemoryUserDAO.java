@@ -5,6 +5,7 @@ import model.AuthData;
 import model.UserData;
 import java.util.*;
 
+// Contains and modifies UserData in Chess application
 public class MemoryUserDAO implements UserDAO {
     Map<String, UserData> user = new HashMap<>();
 
