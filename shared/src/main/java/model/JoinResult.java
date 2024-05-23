@@ -2,5 +2,5 @@ package model;
 
 import java.util.ArrayList;
 
-public record JoinResult() {
+public record JoinResult(boolean success, String message) {
 }

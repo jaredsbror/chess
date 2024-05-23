@@ -1,4 +1,4 @@
 package model;
 
-public record ListRequest(String authToken) {
+public record ListRequest(boolean success, String message, String authToken) {
 }
