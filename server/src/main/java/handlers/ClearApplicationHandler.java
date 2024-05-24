@@ -9,7 +9,7 @@ import spark.Route;
 
 public class ClearApplicationHandler implements Route {
 
-    ClearApplicationService clearApplicationService = new ClearApplicationService();
+    private ClearApplicationService clearApplicationService = new ClearApplicationService();
 
     @Override
     public Object handle(Request request, Response response) {
@@ -22,7 +22,8 @@ public class ClearApplicationHandler implements Route {
             return "{}";
         } catch (Exception exception) {
             response.status(500);
-            return gson.toJson(new ClearResult("Error: Error returned from ClearApplicationsService.java"));
+            exception.printStackTrace();
+            return gson.toJson(new ClearResult("Error: " + exception));
         }
     }
 }

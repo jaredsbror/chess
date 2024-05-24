@@ -6,9 +6,9 @@ import dataAccess.user.MemoryUserDAO;
 
 // Service to clear the database of all data
 public class ClearApplicationService {
-    MemoryUserDAO memoryUserDAO = new MemoryUserDAO();
-    MemoryGameDAO memoryGameDAO = new MemoryGameDAO();
-    MemoryAuthDAO memoryAuthDao = new MemoryAuthDAO();
+    private MemoryUserDAO memoryUserDAO = new MemoryUserDAO();
+    private MemoryGameDAO memoryGameDAO = new MemoryGameDAO();
+    private MemoryAuthDAO memoryAuthDao = new MemoryAuthDAO();
 
     public void clearDatabase() {
         memoryAuthDao.clear();

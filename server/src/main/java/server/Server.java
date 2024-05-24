@@ -22,6 +22,9 @@ public class Server {
         // Clear Application
         Spark.delete("/db", clearApplicationHandler);
 
+        // Register user
+        Spark.post("/user", registerHandler);
+
         Spark.awaitInitialization();
         return Spark.port();
     }
