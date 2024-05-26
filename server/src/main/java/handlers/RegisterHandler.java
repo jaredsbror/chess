@@ -1,12 +1,12 @@
 package handlers;
 
 import com.google.gson.Gson;
+import dataAccess.exceptions.*;
 import model.ClearResult;
 import model.RegisterRequest;
+import model.RegisterResult;
 import service.RegisterService;
-import spark.Request;
-import spark.Response;
-import spark.Route;
+import spark.*;
 import spark.Spark;
 
 public class RegisterHandler implements Route {
@@ -14,19 +14,27 @@ public class RegisterHandler implements Route {
 
     @Override
     public Object handle(Request request, Response response) {
+        // Process the http .json input into an object
         Gson gson = new Gson();
         RegisterRequest registerRequest = gson.fromJson(request.body(), RegisterRequest.class);
         registerService = new RegisterService(registerRequest);
 
         try {
-            registerService.register();
-        } catch (Exception exception) {
+            response.status(200);
+            return gson.toJson(new RegisterResult(null, null, registerRequest.username(), registerService.register()));
+        } catch (FailureResponse400 exception) {
+            response.status(400);
+            exception.printStackTrace();
+            return gson.toJson(new RegisterResult(null, exception.getMessage(), null, null));
+        } catch (FailureResponse403 exception) {
+            response.status(403);
+            exception.printStackTrace();
+            return gson.toJson(new RegisterResult(null, exception.getMessage(), null, null));
+        } catch (FailureResponse500 exception) {
             response.status(500);
             exception.printStackTrace();
-            return gson.toJson(new ClearResult("Error: " + exception));
-            // Add custom exceptions probably
-            // Add into service method
+            return gson.toJson(new RegisterResult(null, exception.getMessage(), null, null));
         }
-        return "";
     }
 }
+
