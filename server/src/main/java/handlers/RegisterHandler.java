@@ -19,7 +19,7 @@ public class RegisterHandler implements Route {
         registerService = new RegisterService(registerRequest);
 
         try {
-
+            registerService.register();
         } catch (Exception exception) {
             response.status(500);
             exception.printStackTrace();
@@ -27,5 +27,6 @@ public class RegisterHandler implements Route {
             // Add custom exceptions probably
             // Add into service method
         }
+        return "";
     }
 }

@@ -9,7 +9,7 @@ import spark.Route;
 
 public class ClearApplicationHandler implements Route {
 
-    private ClearApplicationService clearApplicationService = new ClearApplicationService();
+    private final ClearApplicationService clearApplicationService = new ClearApplicationService();
 
     @Override
     public Object handle(Request request, Response response) {

@@ -19,5 +19,5 @@ public class RegisterService {
         }
     }
 
-    private MemoryAuthDAO
+//    private MemoryAuthDAO
 }

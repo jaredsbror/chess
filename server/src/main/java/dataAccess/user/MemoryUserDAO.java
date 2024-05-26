@@ -12,12 +12,11 @@ public class MemoryUserDAO implements UserDAO {
 //    public boolean verifyUser(AuthData authToken) {
 //        return user.containsValue(authToken);
 //    }
+    public UserData getUser(String username) {
+        return user.get(username);
+    }
 
     public void clear() {
         user.clear();
-    }
-
-    public UserData getUser(String username) {
-        return user.get(username);
     }
 }
