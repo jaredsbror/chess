@@ -15,6 +15,14 @@ public class RegisterHandler implements Route {
         // Process the http .json input into an object
         Gson gson = new Gson();
         RegisterRequest registerRequest = gson.fromJson(request.body(), RegisterRequest.class);
+        // Verify that there are no null or empty fields in the registerRequest
+        if (registerRequest == null || registerRequest.username() == null || registerRequest.password() == null || registerRequest.email() == null) {
+            response.status(400);
+            return gson.toJson(new RegisterResult(null, new FailureResponse400().getMessage(), null, null));
+        } else if (registerRequest.username().isEmpty() || registerRequest.password().isEmpty() || registerRequest.email().isEmpty()) {
+            response.status(400);
+            return gson.toJson(new RegisterResult(null, new FailureResponse400().getMessage(), null, null));
+        }
         registerService = new RegisterService(registerRequest);
 
         try {

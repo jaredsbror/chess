@@ -24,8 +24,8 @@ public class LoginService {
         // Get corresponding user data from userTable
         UserData tableData = memoryUserDAO.getUser(username);
         // Make sure the passwords match (after making sure tableData is not null)
-        if (tableData == null) throw new FailureResponse500("Error: user does not exist.");
-        if (!Objects.equals(this.password, tableData.password())) throw new FailureResponse500("Error: passwords do not match");
+        if (tableData == null) throw new FailureResponse401();
+        if (!Objects.equals(this.password, tableData.password())) throw new FailureResponse401();
         // Create a new authData entry in the authTable for the username
         // Return the generated authToken
         return memoryAuthDAO.createAuthToken(username).authToken();

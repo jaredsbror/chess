@@ -6,7 +6,7 @@ import java.util.*;
 
 // Contains and modifies User Authorization Data in the Chess application.
 public class MemoryAuthDAO implements AuthDAO {
-    private Map<String, AuthData> authTable = new HashMap<>();
+    private static Map<String, AuthData> authTable = new HashMap<>();
 
     public AuthData getAuthDataGivenUsername(String username) {
         return authTable.get(username);

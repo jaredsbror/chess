@@ -6,7 +6,7 @@ import java.util.*;
 
 // Contains and modifies UserData in Chess application
 public class MemoryUserDAO implements UserDAO {
-    Map<String, UserData> userTable = new HashMap<>();
+    private static Map<String, UserData> userTable = new HashMap<>();
 
     public UserData getUser(String username) {
         return userTable.get(username);

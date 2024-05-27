@@ -17,9 +17,12 @@ public class LogoutHandler implements Route {
     public Object handle(Request request, Response response) {
         // Process the http .json input into an object
         Gson gson = new Gson();
-        LogoutRequest logoutRequest = gson.fromJson(request.body(), LogoutRequest.class);
-        // If any of the request body parameters are null, return Error Message 401
-        if (logoutRequest == null) {
+        LogoutRequest logoutRequest = new LogoutRequest(request.headers("authorization"));
+        // If any of the request body parameters are null or empty, return Error Message 401
+        if (logoutRequest.authToken() == null) {
+            response.status(401);
+            return gson.toJson(new LogoutResult(null, new FailureResponse401().getMessage()));
+        } else if (logoutRequest.authToken().isEmpty()) {
             response.status(401);
             return gson.toJson(new LogoutResult(null, new FailureResponse401().getMessage()));
         }
