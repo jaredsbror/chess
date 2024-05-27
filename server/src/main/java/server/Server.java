@@ -33,6 +33,9 @@ public class Server {
         // Logout user
         Spark.delete("/session", logoutHandler);
 
+        // Create game
+        Spark.post("/game", createGameHandler);
+
         Spark.awaitInitialization();
         return Spark.port();
     }

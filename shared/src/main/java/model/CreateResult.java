@@ -1,4 +1,4 @@
 package model;
 
-public record CreateResult(String gameID) {
+public record CreateResult(Boolean success, String message, Integer gameID) {
 }
