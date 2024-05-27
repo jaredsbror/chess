@@ -29,14 +29,14 @@ public class JoinGameService {
         // Verify that there exists a corresponding AuthData object
         AuthData authData = memoryAuthDAO.getAuthDataGivenAuthToken(authToken);
         if (authData == null) throw new FailureResponse401();
-        // Verify that here exists a corresponding GameData object
+        // Verify that there exists a corresponding GameData object
         GameData gameData = memoryGameDAO.getGameData(gameID);
         if (gameData == null) throw new FailureResponse400();
         // Verify that the playerColor is not already taken
         if (Objects.equals(playerColor, "WHITE") || Objects.equals(playerColor, "white")) {
-            if (gameData.whiteUsername() != null) throw new FailureResponse400();
+            if (gameData.whiteUsername() != null) throw new FailureResponse403();
         } else if (Objects.equals(playerColor, "BLACK") || Objects.equals(playerColor, "black")){
-            if (gameData.blackUsername() != null) throw new FailureResponse400();
+            if (gameData.blackUsername() != null) throw new FailureResponse403();
         } else {
             throw new FailureResponse400();
         }

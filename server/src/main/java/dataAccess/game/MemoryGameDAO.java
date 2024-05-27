@@ -26,10 +26,10 @@ public class MemoryGameDAO implements GameDAO {
     public int insertGame(String gameName) {
         // Generate a random gameID
         Random random = new Random();
-        int gameID = random.nextInt();
+        int gameID = random.nextInt() + 1;
         // Make sure that the gameID does not already exist
         while (gameTable.get(gameID) != null) {
-            gameID = random.nextInt();
+            gameID = random.nextInt() + 1;
         }
         // Add the game to the gameTable and return the gameID
         gameTable.put(gameID, new GameData(gameID, null, null, gameName, new ChessGame()));
