@@ -2,12 +2,10 @@ package handlers;
 
 import com.google.gson.Gson;
 import dataAccess.exceptions.*;
-import model.ClearResult;
 import model.RegisterRequest;
 import model.RegisterResult;
 import service.RegisterService;
 import spark.*;
-import spark.Spark;
 
 public class RegisterHandler implements Route {
     private RegisterService registerService;

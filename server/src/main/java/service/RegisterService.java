@@ -31,4 +31,5 @@ public class RegisterService {
         return memoryAuthDAO.getAuthDataGivenUsername(username).authToken();
     }
 
+
 }

@@ -1,4 +1,38 @@
 package handlers;
 
-public class LoginHandler {
+import com.google.gson.Gson;
+import dataAccess.exceptions.FailureResponse401;
+import dataAccess.exceptions.FailureResponse500;
+import model.LoginRequest;
+import model.LoginResult;
+import model.RegisterRequest;
+import model.RegisterResult;
+import service.LoginService;
+import spark.Request;
+import spark.Response;
+import spark.Route;
+
+public class LoginHandler implements Route {
+    private LoginService loginService;
+
+    @Override
+    public Object handle(Request request, Response response) {
+        // Process the http .json input into an object
+        Gson gson = new Gson();
+        LoginRequest loginRequest = gson.fromJson(request.body(), LoginRequest.class);
+        loginService = new LoginService(loginRequest);
+
+        try {
+            response.status(200);
+            return gson.toJson(new LoginResult(null, null, loginRequest.username(), loginService.login()));
+        } catch (FailureResponse401 exception) {
+            response.status(403);
+            exception.printStackTrace();
+            return gson.toJson(new LoginResult(null, exception.getMessage(), null, null));
+        } catch (FailureResponse500 exception) {
+            response.status(500);
+            exception.printStackTrace();
+            return gson.toJson(new LoginResult(null, exception.getMessage(), null, null));
+        }
+    }
 }
