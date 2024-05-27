@@ -5,10 +5,7 @@ import dataAccess.GameDAO;
 import model.GameData;
 import model.RegisterResult;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Random;
-import java.util.UUID;
+import java.util.*;
 
 // Contains and modifies GameData in Chess application
 public class MemoryGameDAO implements GameDAO {
@@ -51,5 +48,15 @@ public class MemoryGameDAO implements GameDAO {
         } else {
             gameTable.put(gameID, new GameData(gameID, null, username, gameData.gameName(), gameData.game()));
         }
+    }
+
+    public ArrayList<GameData> getGameArrayList() {
+        // Convert the gameTable map to a list
+        ArrayList<GameData> gameDataArrayList = new ArrayList<>();
+        for (var gameData: gameTable.entrySet()) {
+            gameDataArrayList.add(gameData.getValue());
+        }
+        // Return the final list
+        return gameDataArrayList;
     }
 }

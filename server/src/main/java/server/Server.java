@@ -39,6 +39,9 @@ public class Server {
         // Join game
         Spark.put("/game", joinGameHandler);
 
+        // List games
+        Spark.get("/game", listGamesHandler);
+
         Spark.awaitInitialization();
         return Spark.port();
     }
