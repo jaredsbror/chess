@@ -36,6 +36,9 @@ public class Server {
         // Create game
         Spark.post("/game", createGameHandler);
 
+        // Join game
+        Spark.put("/game", joinGameHandler);
+
         Spark.awaitInitialization();
         return Spark.port();
     }

@@ -1,6 +1,4 @@
 package model;
 
-import java.util.ArrayList;
-
-public record JoinResult(boolean success, String message) {
+public record JoinResult(Boolean success, String message) {
 }
