@@ -18,8 +18,8 @@ import java.util.UUID;
 public class CreateGameService {
     private MemoryAuthDAO memoryAuthDAO = new MemoryAuthDAO();
     private MemoryGameDAO memoryGameDAO = new MemoryGameDAO();
-    private final String authToken;
-    private final String gameName;
+    private String authToken;
+    private String gameName;
 
     public CreateGameService(CreateRequest createRequest) {
         authToken = createRequest.authToken();

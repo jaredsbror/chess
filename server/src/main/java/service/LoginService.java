@@ -7,13 +7,12 @@ import dataAccess.user.MemoryUserDAO;
 import model.LoginRequest;
 import model.UserData;
 
-import java.util.Objects;
 
 public class LoginService {
     private MemoryAuthDAO memoryAuthDAO = new MemoryAuthDAO();
     private MemoryUserDAO memoryUserDAO = new MemoryUserDAO();
-    private final String username;
-    private final String password;
+    private String username;
+    private String password;
 
     public LoginService(LoginRequest loginRequest) {
         this.username = loginRequest.username();
@@ -25,11 +24,11 @@ public class LoginService {
         UserData tableData = memoryUserDAO.getUser(username);
         // Make sure the passwords match (after making sure tableData is not null)
         if (tableData == null) throw new FailureResponse401();
-        if (!Objects.equals(this.password, tableData.password())) throw new FailureResponse401();
+        if (!this.password.equals(tableData.password())) throw new FailureResponse401();
         // Create a new authData entry in the authTable for the username
-
+        String authToken = memoryAuthDAO.createAuthToken(username).authToken();
         // Return the generated authToken
-        return memoryAuthDAO.createAuthToken(username).authToken();
+        return authToken;
     }
 
 }

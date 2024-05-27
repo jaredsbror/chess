@@ -8,9 +8,9 @@ import model.RegisterRequest;
 public class RegisterService {
     private MemoryAuthDAO memoryAuthDAO = new MemoryAuthDAO();
     private MemoryUserDAO memoryUserDAO = new MemoryUserDAO();
-    private final String username;
-    private final String password;
-    private final String email;
+    private String username;
+    private String password;
+    private String email;
 
     public RegisterService(RegisterRequest registerRequest) {
         this.username = registerRequest.username();

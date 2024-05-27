@@ -10,6 +10,7 @@ import java.util.*;
 // Contains and modifies GameData in Chess application
 public class MemoryGameDAO implements GameDAO {
     private static Map<Integer, GameData> gameTable = new HashMap<>();
+    private static int newGameID = 1;
 
     public void clear() {
         gameTable.clear();
@@ -21,12 +22,11 @@ public class MemoryGameDAO implements GameDAO {
     }
 
     public int insertGame(String gameName) {
-        // Generate a random gameID
-        Random random = new Random();
-        int gameID = random.nextInt() + 1;
+        // Generate a new gameID
+        newGameID++;
         // Add the game to the gameTable and return the gameID
-        gameTable.put(gameID, new GameData(gameID, null, null, gameName, new ChessGame()));
-        return gameID;
+        gameTable.put(newGameID, new GameData(newGameID, null, null, gameName, new ChessGame()));
+        return newGameID;
     }
 
     public GameData getGameData(int gameID) {

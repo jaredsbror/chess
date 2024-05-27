@@ -3,16 +3,12 @@ package service;
 import dataAccess.auth.MemoryAuthDAO;
 import dataAccess.exceptions.FailureResponse401;
 import dataAccess.exceptions.FailureResponse500;
-import dataAccess.user.MemoryUserDAO;
-import model.LoginRequest;
 import model.LogoutRequest;
-import model.UserData;
 
-import java.util.Objects;
 
 public class LogoutService {
     private MemoryAuthDAO memoryAuthDAO = new MemoryAuthDAO();
-    private final String authToken;
+    private String authToken;
 
     public LogoutService(LogoutRequest logoutRequest) {
         authToken = logoutRequest.authToken();
