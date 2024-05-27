@@ -8,9 +8,6 @@ import java.util.*;
 public class MemoryUserDAO implements UserDAO {
     Map<String, UserData> userTable = new HashMap<>();
 
-//    public boolean verifyUser(AuthData authToken) {
-//        return user.containsValue(authToken);
-//    }
     public UserData getUser(String username) {
         return userTable.get(username);
     }

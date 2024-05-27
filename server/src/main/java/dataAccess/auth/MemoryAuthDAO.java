@@ -27,6 +27,16 @@ public class MemoryAuthDAO implements AuthDAO {
         return authTable.put(username, new AuthData(authToken, username));
     }
 
+    public Boolean verifyUser(String authToken) {
+        // Iterate over the hashmap to locate the correct AuthData object
+        for (var authDataEntry : authTable.entrySet()) {
+            if (authDataEntry.getValue().authToken().equals(authToken)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public AuthData deleteAuthDataGivenUsername(String username) {
         return authTable.remove(username);
     }

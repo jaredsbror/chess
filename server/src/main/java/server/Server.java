@@ -13,7 +13,6 @@ public class Server {
     private LoginHandler loginHandler = new LoginHandler();
     private LogoutHandler logoutHandler = new LogoutHandler();
     private RegisterHandler registerHandler = new RegisterHandler();
-    public DataBase dataBase = new DataBase();
 
 
     public int run(int desiredPort) {
@@ -30,6 +29,9 @@ public class Server {
 
         // Login user
         Spark.post("/session", loginHandler);
+
+        // Logout user
+        Spark.delete("/session", logoutHandler);
 
         Spark.awaitInitialization();
         return Spark.port();
