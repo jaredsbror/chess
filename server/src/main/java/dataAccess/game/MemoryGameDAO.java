@@ -24,10 +24,6 @@ public class MemoryGameDAO implements GameDAO {
         // Generate a random gameID
         Random random = new Random();
         int gameID = random.nextInt() + 1;
-        // Make sure that the gameID does not already exist
-        while (gameTable.get(gameID) != null) {
-            gameID = random.nextInt() + 1;
-        }
         // Add the game to the gameTable and return the gameID
         gameTable.put(gameID, new GameData(gameID, null, null, gameName, new ChessGame()));
         return gameID;
@@ -44,15 +40,18 @@ public class MemoryGameDAO implements GameDAO {
         gameTable.remove(gameID);
         // Update the corresponding game depending on the team color
         if (playerColor.equals("white")) {
-            gameTable.put(gameID, new GameData(gameID, username, null, gameData.gameName(), gameData.game()));
+            gameTable.put(gameID, new GameData(gameID, username, gameData.blackUsername(), gameData.gameName(), gameData.game()));
         } else {
-            gameTable.put(gameID, new GameData(gameID, null, username, gameData.gameName(), gameData.game()));
+            gameTable.put(gameID, new GameData(gameID, gameData.whiteUsername(), username, gameData.gameName(), gameData.game()));
         }
     }
 
     public ArrayList<GameData> getGameArrayList() {
         // Convert the gameTable map to a list
         ArrayList<GameData> gameDataArrayList = new ArrayList<>();
+        // Make sure the gameTable is not empty before continuing
+        if (gameTable.isEmpty()) return gameDataArrayList;
+        // Iterate over the gameTable and add each gameData to the new list
         for (var gameData: gameTable.entrySet()) {
             gameDataArrayList.add(gameData.getValue());
         }

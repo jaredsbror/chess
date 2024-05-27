@@ -33,9 +33,9 @@ public class JoinGameService {
         GameData gameData = memoryGameDAO.getGameData(gameID);
         if (gameData == null) throw new FailureResponse400();
         // Verify that the playerColor is not already taken
-        if (Objects.equals(playerColor, "WHITE") || Objects.equals(playerColor, "white")) {
+        if (playerColor.equalsIgnoreCase("white")) {
             if (gameData.whiteUsername() != null) throw new FailureResponse403();
-        } else if (Objects.equals(playerColor, "BLACK") || Objects.equals(playerColor, "black")){
+        } else if (playerColor.equalsIgnoreCase("black")){
             if (gameData.blackUsername() != null) throw new FailureResponse403();
         } else {
             throw new FailureResponse400();
