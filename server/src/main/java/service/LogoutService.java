@@ -16,7 +16,7 @@ public class LogoutService {
 
     public void logout() throws FailureResponse401, FailureResponse500 {
         // Verify that the authToken is valid
-        if (!memoryAuthDAO.verifyUser(authToken)) throw new FailureResponse401();
+        if (!memoryAuthDAO.verifyAuthToken(authToken)) throw new FailureResponse401();
         // Delete the authToken from the database
         memoryAuthDAO.deleteAuthDataGivenAuthToken(authToken);
     }

@@ -8,50 +8,38 @@ import java.util.*;
 public class MemoryAuthDAO implements AuthDAO {
     private static Map<String, AuthData> authTable = new HashMap<>();
 
-    public AuthData getAuthDataGivenUsername(String username) {
-        return authTable.get(username);
-    }
-
     public AuthData getAuthDataGivenAuthToken(String authToken) {
-        // Iterate over the hashmap to locate and return the correct AuthData object
-        for (var authDataEntry : authTable.entrySet()) {
-            if (authDataEntry.getValue().authToken().equals(authToken)) {
-                return authDataEntry.getValue();
-            }
-        }
-        return null;
+        return authTable.get(authToken);
     }
 
-    public AuthData createAuthToken(String username) {
+    public String createAuthToken(String username) {
         String authToken = UUID.randomUUID().toString();
-        return authTable.put(username, new AuthData(authToken, username));
+        authTable.put(authToken, new AuthData(authToken, username));
+        return authToken;
     }
 
-    public Boolean verifyUser(String authToken) {
-        // Iterate over the hashmap to locate the correct AuthData object
-        for (var authDataEntry : authTable.entrySet()) {
-            if (authDataEntry.getValue().authToken().equals(authToken)) {
-                return true;
-            }
-        }
-        return false;
+    // Verify that an authToken exists in the authTable
+    public Boolean verifyAuthToken(String authToken) {
+        return authTable.get(authToken) != null;
     }
 
     public AuthData deleteAuthDataGivenUsername(String username) {
-        return authTable.remove(username);
-    }
-
-    public AuthData deleteAuthDataGivenAuthToken(String authToken) {
         // Create a temporary string to store the key for authTable removal.
         String keyToRemove = null;
         // Iterate over the hashmap to locate the correct authTable entry.
         for (var authDataEntry : authTable.entrySet()) {
-            if (authDataEntry.getValue().authToken().equals(authToken)) {
+            String tableUsername = authDataEntry.getValue().username();
+            if (username.equals(tableUsername)) {
                 keyToRemove = authDataEntry.getKey();
                 break;
             }
         }
-        return authTable.remove(keyToRemove);  // Remove the table entry.
+        // Remove the table entry.
+        return authTable.remove(keyToRemove);
+    }
+
+    public AuthData deleteAuthDataGivenAuthToken(String authToken) {
+        return authTable.remove(authToken);
     }
 
     public void clear() {

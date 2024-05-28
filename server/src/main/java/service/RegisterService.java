@@ -20,15 +20,12 @@ public class RegisterService {
 
     public String register() throws FailureResponse400, FailureResponse403, FailureResponse500 {
         // Verify that the user does not exist
-        if (memoryUserDAO.getUser(username) != null) {
-            throw new FailureResponse403();
-        }
+        if (memoryUserDAO.getUser(username) != null) throw new FailureResponse403();
         // Add UserData into userTable
         memoryUserDAO.insertUser(username, password, email);
         // Add AuthData into authTable
-        memoryAuthDAO.createAuthToken(username);
         // Return the generated authToken
-        return memoryAuthDAO.getAuthDataGivenUsername(username).authToken();
+        return memoryAuthDAO.createAuthToken(username);
     }
 
 

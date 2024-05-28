@@ -25,10 +25,10 @@ public class LoginService {
         // Make sure the passwords match (after making sure tableData is not null)
         if (tableData == null) throw new FailureResponse401();
         if (!this.password.equals(tableData.password())) throw new FailureResponse401();
+        // Eliminate
         // Create a new authData entry in the authTable for the username
-        String authToken = memoryAuthDAO.createAuthToken(username).authToken();
         // Return the generated authToken
-        return authToken;
+        return memoryAuthDAO.createAuthToken(username);
     }
 
 }
