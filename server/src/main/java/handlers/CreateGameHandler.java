@@ -17,7 +17,8 @@ public class CreateGameHandler implements Route {
     public Object handle(Request request, Response response) {
         // Process the http .json input into an object
         Gson gson = new Gson();
-        CreateRequest createRequest = new CreateRequest(request.headers("authorization"), request.body());
+        CreateRequest draftCreateRequest = gson.fromJson(request.body(), CreateRequest.class);
+        CreateRequest createRequest = new CreateRequest(request.headers("authorization"), draftCreateRequest.gameName());
         // If any of the request head or body parameters are null, return Error Message 401
         if (createRequest.gameName() == null) {
             response.status(400);

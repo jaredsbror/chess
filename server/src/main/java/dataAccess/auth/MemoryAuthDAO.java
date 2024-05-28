@@ -46,7 +46,7 @@ public class MemoryAuthDAO implements AuthDAO {
         authTable.clear();
     }
 
-    public boolean isEmpty() {
+    public Boolean isEmpty() {
         return authTable.isEmpty();
     }
 

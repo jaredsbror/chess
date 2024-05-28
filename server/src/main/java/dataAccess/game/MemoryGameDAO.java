@@ -39,7 +39,7 @@ public class MemoryGameDAO implements GameDAO {
         GameData gameData = gameTable.get(gameID);
         gameTable.remove(gameID);
         // Update the corresponding game depending on the team color
-        if (playerColor.equals("white")) {
+        if (playerColor.equalsIgnoreCase("white")) {
             gameTable.put(gameID, new GameData(gameID, username, gameData.blackUsername(), gameData.gameName(), gameData.game()));
         } else {
             gameTable.put(gameID, new GameData(gameID, gameData.whiteUsername(), username, gameData.gameName(), gameData.game()));
