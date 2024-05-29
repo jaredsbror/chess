@@ -18,25 +18,25 @@ public class RegisterHandler implements Route {
         // Verify that there are no null or empty fields in the registerRequest
         if (registerRequest == null || registerRequest.username() == null || registerRequest.password() == null || registerRequest.email() == null) {
             response.status(400);
-            return gson.toJson(new RegisterResult(null, new FailureResponse400().getMessage(), null, null));
+            return gson.toJson(new RegisterResult(null, new Error400BadRequest().getMessage(), null, null));
         } else if (registerRequest.username().isEmpty() || registerRequest.password().isEmpty() || registerRequest.email().isEmpty()) {
             response.status(400);
-            return gson.toJson(new RegisterResult(null, new FailureResponse400().getMessage(), null, null));
+            return gson.toJson(new RegisterResult(null, new Error400BadRequest().getMessage(), null, null));
         }
         registerService = new RegisterService(registerRequest);
 
         try {
             response.status(200);
             return gson.toJson(new RegisterResult(null, null, registerRequest.username(), registerService.register()));
-        } catch (FailureResponse400 exception) {
+        } catch (Error400BadRequest exception) {
             response.status(400);
             exception.printStackTrace();
             return gson.toJson(new RegisterResult(null, exception.getMessage(), null, null));
-        } catch (FailureResponse403 exception) {
+        } catch (Error403AlreadyTaken exception) {
             response.status(403);
             exception.printStackTrace();
             return gson.toJson(new RegisterResult(null, exception.getMessage(), null, null));
-        } catch (FailureResponse500 exception) {
+        } catch (Error500Internal exception) {
             response.status(500);
             exception.printStackTrace();
             return gson.toJson(new RegisterResult(null, exception.getMessage(), null, null));

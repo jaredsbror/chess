@@ -1,8 +1,8 @@
 package dataaccess.exceptions;
 
-public class FailureResponse400 extends Exception {
+public class Error400BadRequest extends Exception {
     // Default constructor
-    public FailureResponse400() {
+    public Error400BadRequest() {
         super("Error: bad request");
     }
 }

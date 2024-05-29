@@ -1,8 +1,8 @@
 package handlers;
 
 import com.google.gson.Gson;
-import dataaccess.exceptions.FailureResponse401;
-import dataaccess.exceptions.FailureResponse500;
+import dataaccess.exceptions.Error401Unauthorized;
+import dataaccess.exceptions.Error500Internal;
 import model.custom.JoinResult;
 import model.custom.ListRequest;
 import model.custom.ListResult;
@@ -22,7 +22,7 @@ public class ListGamesHandler implements Route {
         // Verify that authToken is not missing (401)
         if (listRequest.authToken() == null) {
             response.status(401);
-            return gson.toJson(new ListResult(null, new FailureResponse401().getMessage(), null));
+            return gson.toJson(new ListResult(null, new Error401Unauthorized().getMessage(), null));
         }
         listGamesService = new ListGamesService(listRequest);
 
@@ -30,11 +30,11 @@ public class ListGamesHandler implements Route {
         try {
             response.status(200);
             return gson.toJson(new ListResult(null, null, listGamesService.getGameList()));
-        }  catch (FailureResponse401 exception) {
+        }  catch (Error401Unauthorized exception) {
             response.status(401);
             exception.printStackTrace();
             return gson.toJson(new JoinResult(null, exception.getMessage()));
-        } catch (FailureResponse500 exception) {
+        } catch (Error500Internal exception) {
             response.status(500);
             exception.printStackTrace();
             return gson.toJson(new JoinResult(null, exception.getMessage()));

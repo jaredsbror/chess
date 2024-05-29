@@ -1,7 +1,7 @@
 package service;
 
-import dataaccess.exceptions.FailureResponse400;
-import dataaccess.exceptions.FailureResponse401;
+import dataaccess.exceptions.Error400BadRequest;
+import dataaccess.exceptions.Error401Unauthorized;
 import model.custom.CreateRequest;
 import model.custom.JoinRequest;
 import model.custom.LoginRequest;
@@ -95,7 +95,7 @@ class JoinGameServiceTest {
             assert false : "Error: Should not have joined game in JoinGameServiceTest.joinGameWithInvalidID()";
         } catch (Exception exception) {
             exception.printStackTrace();
-            assert exception instanceof FailureResponse400;
+            assert exception instanceof Error400BadRequest;
         }
     }
 
@@ -139,7 +139,7 @@ class JoinGameServiceTest {
             assert false : "Error: Should not have joined game in JoinGameServiceTest.joinGameWithInvalidAuthToken()";
         } catch (Exception exception) {
             exception.printStackTrace();
-            assert exception instanceof FailureResponse401;
+            assert exception instanceof Error401Unauthorized;
         }
     }
 }

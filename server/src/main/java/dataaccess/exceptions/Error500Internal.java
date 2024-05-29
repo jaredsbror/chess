@@ -1,13 +1,13 @@
 package dataaccess.exceptions;
 
-public class FailureResponse500 extends Exception {
+public class Error500Internal extends Exception {
     // Default constructor
-    public FailureResponse500() {
+    public Error500Internal() {
         super();
     }
 
     // Constructor that takes in a message
-    public FailureResponse500(String message) {
+    public Error500Internal(String message) {
         super(message);
     }
 }

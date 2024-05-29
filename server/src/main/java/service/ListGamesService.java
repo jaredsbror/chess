@@ -1,8 +1,8 @@
 package service;
 
 import dataaccess.auth.MemoryAuthDAO;
-import dataaccess.exceptions.FailureResponse401;
-import dataaccess.exceptions.FailureResponse500;
+import dataaccess.exceptions.Error401Unauthorized;
+import dataaccess.exceptions.Error500Internal;
 import dataaccess.game.MemoryGameDAO;
 import model.original.GameData;
 import model.custom.ListRequest;
@@ -18,9 +18,9 @@ public class ListGamesService {
         authToken = listRequest.authToken();
     }
 
-    public ArrayList<GameData> getGameList() throws FailureResponse401, FailureResponse500 {
+    public ArrayList<GameData> getGameList() throws Error401Unauthorized, Error500Internal {
         // Verify that the authToken already exists
-        if (!memoryAuthDAO.verifyAuthToken(authToken)) throw new FailureResponse401();
+        if (!memoryAuthDAO.verifyAuthToken(authToken)) throw new Error401Unauthorized();
         // Return the list of games
         return memoryGameDAO.getGameArrayList();
     }

@@ -1,8 +1,8 @@
 package handlers;
 
 import com.google.gson.Gson;
-import dataaccess.exceptions.FailureResponse401;
-import dataaccess.exceptions.FailureResponse500;
+import dataaccess.exceptions.Error401Unauthorized;
+import dataaccess.exceptions.Error500Internal;
 import model.custom.LogoutRequest;
 import model.custom.LogoutResult;
 import service.LogoutService;
@@ -21,10 +21,10 @@ public class LogoutHandler implements Route {
         // If any of the request body parameters are null or empty, return Error Message 401
         if (logoutRequest.authToken() == null) {
             response.status(401);
-            return gson.toJson(new LogoutResult(null, new FailureResponse401().getMessage()));
+            return gson.toJson(new LogoutResult(null, new Error401Unauthorized().getMessage()));
         } else if (logoutRequest.authToken().isEmpty()) {
             response.status(401);
-            return gson.toJson(new LogoutResult(null, new FailureResponse401().getMessage()));
+            return gson.toJson(new LogoutResult(null, new Error401Unauthorized().getMessage()));
         }
         logoutService = new LogoutService(logoutRequest);
 
@@ -32,11 +32,11 @@ public class LogoutHandler implements Route {
             response.status(200);
             logoutService.logout();
             return gson.toJson(new LogoutResult(null, null));
-        } catch (FailureResponse401 exception) {
+        } catch (Error401Unauthorized exception) {
             response.status(401);
             exception.printStackTrace();
             return gson.toJson(new LogoutResult(null, exception.getMessage()));
-        } catch (FailureResponse500 exception) {
+        } catch (Error500Internal exception) {
             response.status(500);
             exception.printStackTrace();
             return gson.toJson(new LogoutResult(null, exception.getMessage()));

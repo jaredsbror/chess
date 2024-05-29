@@ -1,6 +1,6 @@
 package service;
 
-import dataaccess.exceptions.FailureResponse403;
+import dataaccess.exceptions.Error403AlreadyTaken;
 import model.custom.RegisterRequest;
 import org.junit.jupiter.api.Test;
 
@@ -43,7 +43,7 @@ class RegisterServiceTest {
             assert false : "Error: Should not have reregistered user in RegisterServiceTest.registerUserAgain()";
         } catch (Exception exception) {
             exception.printStackTrace();
-            assert exception instanceof FailureResponse403;
+            assert exception instanceof Error403AlreadyTaken;
         }
     }
 

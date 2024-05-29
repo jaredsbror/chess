@@ -18,9 +18,9 @@ public class RegisterService {
         this.email = registerRequest.email();
     }
 
-    public String register() throws FailureResponse400, FailureResponse403, FailureResponse500 {
+    public String register() throws Error400BadRequest, Error403AlreadyTaken, Error500Internal {
         // Verify that the user does not exist
-        if (memoryUserDAO.getUser(username) != null) throw new FailureResponse403();
+        if (memoryUserDAO.getUser(username) != null) throw new Error403AlreadyTaken();
         // Add UserData into userTable
         memoryUserDAO.insertUser(username, password, email);
         // Add AuthData into authTable

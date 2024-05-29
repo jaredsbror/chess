@@ -1,8 +1,8 @@
 package service;
 
 import dataaccess.auth.MemoryAuthDAO;
-import dataaccess.exceptions.FailureResponse401;
-import dataaccess.exceptions.FailureResponse500;
+import dataaccess.exceptions.Error401Unauthorized;
+import dataaccess.exceptions.Error500Internal;
 import model.custom.LogoutRequest;
 
 
@@ -14,9 +14,9 @@ public class LogoutService {
         authToken = logoutRequest.authToken();
     }
 
-    public void logout() throws FailureResponse401, FailureResponse500 {
+    public void logout() throws Error401Unauthorized, Error500Internal {
         // Verify that the authToken is valid
-        if (!memoryAuthDAO.verifyAuthToken(authToken)) throw new FailureResponse401();
+        if (!memoryAuthDAO.verifyAuthToken(authToken)) throw new Error401Unauthorized();
         // Delete the authToken from the database
         memoryAuthDAO.deleteAuthDataGivenAuthToken(authToken);
     }

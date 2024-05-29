@@ -1,9 +1,9 @@
 package handlers;
 
 import com.google.gson.Gson;
-import dataaccess.exceptions.FailureResponse400;
-import dataaccess.exceptions.FailureResponse401;
-import dataaccess.exceptions.FailureResponse500;
+import dataaccess.exceptions.Error400BadRequest;
+import dataaccess.exceptions.Error401Unauthorized;
+import dataaccess.exceptions.Error500Internal;
 import model.custom.CreateRequest;
 import model.custom.CreateResult;
 import service.CreateGameService;
@@ -23,25 +23,25 @@ public class CreateGameHandler implements Route {
         // If any of the request head or body parameters are null, return Error Message 401
         if (createRequest.gameName() == null) {
             response.status(400);
-            return gson.toJson(new CreateResult(null, new FailureResponse400().getMessage(), null));
+            return gson.toJson(new CreateResult(null, new Error400BadRequest().getMessage(), null));
         }  else if (createRequest.authToken() == null) {
             response.status(401);
-            return gson.toJson(new CreateResult(null, new FailureResponse401().getMessage(), null));
+            return gson.toJson(new CreateResult(null, new Error401Unauthorized().getMessage(), null));
         }
         createGameService = new CreateGameService(createRequest);
 
         try {
             response.status(200);
             return gson.toJson(new CreateResult(null, null, createGameService.createGame()));
-        } catch (FailureResponse400 exception) {
+        } catch (Error400BadRequest exception) {
             response.status(400);
             exception.printStackTrace();
             return gson.toJson(new CreateResult(null, exception.getMessage(), null));
-        } catch (FailureResponse401 exception) {
+        } catch (Error401Unauthorized exception) {
             response.status(401);
             exception.printStackTrace();
             return gson.toJson(new CreateResult(null, exception.getMessage(), null));
-        } catch (FailureResponse500 exception) {
+        } catch (Error500Internal exception) {
             response.status(500);
             exception.printStackTrace();
             return gson.toJson(new CreateResult(null, exception.getMessage(), null));

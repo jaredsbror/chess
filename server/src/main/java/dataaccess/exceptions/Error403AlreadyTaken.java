@@ -1,8 +1,8 @@
 package dataaccess.exceptions;
 
-public class FailureResponse403 extends Exception {
+public class Error403AlreadyTaken extends Exception {
     // Default constructor
-    public FailureResponse403() {
+    public Error403AlreadyTaken() {
         super("Error: already taken");
     }
 }

@@ -1,6 +1,6 @@
 package service;
 
-import dataaccess.exceptions.FailureResponse401;
+import dataaccess.exceptions.Error401Unauthorized;
 import model.custom.CreateRequest;
 import model.custom.ListRequest;
 import model.custom.LoginRequest;
@@ -97,7 +97,7 @@ class ListGamesServiceTest {
             assert false : "Error: Should not list games in ListGamesServiceTest.listGamesWithInvalidAuthToken";
         } catch (Exception exception) {
             exception.printStackTrace();
-            assert exception instanceof FailureResponse401;
+            assert exception instanceof Error401Unauthorized;
         }
     }
 }

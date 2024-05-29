@@ -1,6 +1,6 @@
 package service;
 
-import dataaccess.exceptions.FailureResponse401;
+import dataaccess.exceptions.Error401Unauthorized;
 import model.custom.LoginRequest;
 import model.custom.RegisterRequest;
 import org.junit.jupiter.api.Test;
@@ -43,7 +43,7 @@ class LoginServiceTest {
             assert false : "Error: Should not have reregistered user in RegisterServiceTest.logInWithoutRegistering()";
         } catch (Exception exception) {
             exception.printStackTrace();
-            assert exception instanceof FailureResponse401;
+            assert exception instanceof Error401Unauthorized;
         }
     }
 }

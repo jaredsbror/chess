@@ -1,8 +1,8 @@
 package service;
 
 import dataaccess.auth.MemoryAuthDAO;
-import dataaccess.exceptions.FailureResponse401;
-import dataaccess.exceptions.FailureResponse500;
+import dataaccess.exceptions.Error401Unauthorized;
+import dataaccess.exceptions.Error500Internal;
 import dataaccess.user.MemoryUserDAO;
 import model.custom.LoginRequest;
 import model.original.UserData;
@@ -19,12 +19,12 @@ public class LoginService {
         this.password = loginRequest.password();
     }
 
-    public String login() throws FailureResponse401, FailureResponse500 {
+    public String login() throws Error401Unauthorized, Error500Internal {
         // Get corresponding user data from userTable
         UserData tableData = memoryUserDAO.getUser(username);
         // Make sure the passwords match (after making sure tableData is not null)
-        if (tableData == null) throw new FailureResponse401();
-        if (!this.password.equals(tableData.password())) throw new FailureResponse401();
+        if (tableData == null) throw new Error401Unauthorized();
+        if (!this.password.equals(tableData.password())) throw new Error401Unauthorized();
         // Eliminate
         // Create a new authData entry in the authTable for the username
         // Return the generated authToken

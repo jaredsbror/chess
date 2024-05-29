@@ -1,8 +1,8 @@
 package dataaccess.exceptions;
 
-public class FailureResponse401 extends Exception {
+public class Error401Unauthorized extends Exception {
     // Default constructor
-    public FailureResponse401() {
+    public Error401Unauthorized() {
         super("Error: unauthorized");
     }
 }

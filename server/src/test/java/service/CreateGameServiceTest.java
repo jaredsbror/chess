@@ -1,6 +1,6 @@
 package service;
 
-import dataaccess.exceptions.FailureResponse401;
+import dataaccess.exceptions.Error401Unauthorized;
 import model.custom.CreateRequest;
 import model.custom.LoginRequest;
 import model.custom.RegisterRequest;
@@ -71,7 +71,7 @@ class CreateGameServiceTest {
             assert false : "Error: Should not have created game in CreateGameServiceTest.createGameWithInvalidAuthToken()";
         } catch (Exception exception) {
             exception.printStackTrace();
-            assert exception instanceof FailureResponse401;
+            assert exception instanceof Error401Unauthorized;
         }
     }
 }
