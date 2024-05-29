@@ -127,7 +127,6 @@ public class ChessGame {
         return actualValidMoves;
     }
 
-
     /**
      * Makes a move in a chess game
      * DOES NOT restore the board to its original state if a move puts the king in check
@@ -172,30 +171,6 @@ public class ChessGame {
         gameTeamColor = (gameTeamColor == TeamColor.WHITE ? TeamColor.BLACK : TeamColor.WHITE);
     }
 
-    // Check if a piece is in danger on the current board
-    private boolean isInDanger(ChessPosition position, TeamColor teamColor) {
-        /// Iterate over each opponent's piece in the board and determine their valid moves.
-        // Iterate over the chessboard rows...
-        for (int row = Constants.BOARD_MIN_ONE_INDEX; row <= Constants.BOARD_MAX_ONE_INDEX; row++) {
-            // Iterate over the chessboard columns...
-            for (int col = Constants.BOARD_MIN_ONE_INDEX; col <= Constants.BOARD_MAX_ONE_INDEX; col++) {
-                // If a piece does not exist, skip this loop iteration
-                if (chessBoard.doesNotExistPiece(row, col)) continue;
-                // If the piece is the current's team color, skip this loop iteration
-                if (chessBoard.doesFriendlyPieceExist(row, col, teamColor)) continue;
-                // Fill a new validMoves array with valid moves
-                Collection<ChessMove> validMoves = chessBoard.getPiece(row ,col).pieceMoves(chessBoard, new ChessPosition(row, col));
-                // Iterate over the validMoves
-                for (var move : validMoves) {
-                    // If any of those valid moves include the current player's king, return true
-                    if (move.getEndPosition().equals(position)) return true;
-                }
-            }
-        }
-        // Otherwise return false
-        return false;
-    }
-
     // Check if a piece is in danger on another board
     private boolean isInDanger(ChessBoard board, ChessPosition position, TeamColor teamColor) {
         /// Iterate over each opponent's piece in the board and determine their valid moves.
@@ -218,39 +193,6 @@ public class ChessGame {
         }
         // Otherwise return false
         return false;
-    }
-
-    /**
-     * Determines if the given team is in check
-     * @param teamColor which team to check for check
-     * @return True if the specified team is in check
-     */
-    public boolean isInCheck(TeamColor teamColor) {
-        /// Get the location of the current team's King
-        ChessPosition currentKingPosition = new ChessPosition(0,0);
-        boolean foundKing = false;
-        // Iterate over the chessboard rows...
-        for (int row = Constants.BOARD_MIN_ONE_INDEX; row <= Constants.BOARD_MAX_ONE_INDEX; row++) {
-            // Iterate over the chessboard columns...
-            for (int col = Constants.BOARD_MIN_ONE_INDEX; col <= Constants.BOARD_MAX_ONE_INDEX; col++) {
-                // If a friendly chess piece does not exist, skip this loop iteration
-                if (!chessBoard.doesFriendlyPieceExist(row, col, teamColor)) continue;
-                // If the piece is the current king, save its position
-                if (chessBoard.getPiece(row, col).getPieceType() == ChessPiece.PieceType.KING) {
-                    currentKingPosition = new ChessPosition(row, col);
-                    foundKing = true;
-                }
-            }
-        }
-        // If there is no friendly king, throw an error
-        if (!foundKing) {
-            System.out.println("Board in ChessGame.isInCheck()");
-            chessBoard.printBoard();
-            System.out.println("Unable to find friendly King in ChessGame.isInCheck() on " + chessBoard.toString());
-            return false;
-        }
-        // Return whether any opponent moves include the King as their last position
-        return isInDanger(currentKingPosition, teamColor);
     }
 
     /**
@@ -286,15 +228,16 @@ public class ChessGame {
     }
 
     /**
-     * Determines if the given team is in checkmate
-     * @param teamColor which team to check for checkmate
-     * @return True if the specified team is in checkmate
+     * Determines if the given team is in check
+     * @param teamColor which team to check for check
+     * @return True if the specified team is in check
      */
-    public boolean isInCheckmate(TeamColor teamColor) {
-        // If the team is not in check, return false
-        if (!isInCheck(teamColor)) return false;
+    public boolean isInCheck(TeamColor teamColor) {
+        return isInCheck(chessBoard, teamColor);
+    }
 
-        /// Return true if there are no possible valid moves for the friendly team
+    // Return true if there are no possible valid moves for the friendly team
+    private boolean doesExistMovesForFriendlyTeam(TeamColor teamColor) {
         // Iterate over the chessboard rows...
         for (int row = Constants.BOARD_MIN_ONE_INDEX; row <= Constants.BOARD_MAX_ONE_INDEX; row++) {
             // Iterate over the chessboard columns...
@@ -313,6 +256,17 @@ public class ChessGame {
     }
 
     /**
+     * Determines if the given team is in checkmate
+     * @param teamColor which team to check for checkmate
+     * @return True if the specified team is in checkmate
+     */
+    public boolean isInCheckmate(TeamColor teamColor) {
+        // If the team is not in check, return false
+        if (!isInCheck(teamColor)) return false;
+        return doesExistMovesForFriendlyTeam(teamColor);
+    }
+
+    /**
      * Determines if the given team is in stalemate, which here is defined as having
      * no valid moves
      * @param teamColor which team to check for stalemate
@@ -321,22 +275,7 @@ public class ChessGame {
     public boolean isInStalemate(TeamColor teamColor) {
         // If the team is in check, return false
         if (isInCheck(teamColor)) return false;
-        /// Return true if there are no possible valid moves for the friendly team
-        // Iterate over the chessboard rows...
-        for (int row = Constants.BOARD_MIN_ONE_INDEX; row <= Constants.BOARD_MAX_ONE_INDEX; row++) {
-            // Iterate over the chessboard columns...
-            for (int col = Constants.BOARD_MIN_ONE_INDEX; col <= Constants.BOARD_MAX_ONE_INDEX; col++) {
-                // If a friendly chess piece exists,
-                if (chessBoard.doesFriendlyPieceExist(row, col, teamColor)) {
-                    Collection<ChessMove> validMoves = validMoves(new ChessPosition(row, col));
-                    // If validMoves is null, continue
-                    if (validMoves == null) continue;
-                    // If validMoves is NOT empty, return false
-                    if (!validMoves.isEmpty()) return false;
-                }
-            }
-        }
-        return true;
+        return doesExistMovesForFriendlyTeam(teamColor);
     }
 
     /**
