@@ -16,7 +16,6 @@ public class MemoryUserDAO implements UserDAO {
         userTable.put(username, new UserData(username, password, email));
     }
 
-
     public void clear() {
         userTable.clear();
     }

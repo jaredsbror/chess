@@ -23,21 +23,6 @@ public class MemoryAuthDAO implements AuthDAO {
         return authTable.get(authToken) != null;
     }
 
-    public AuthData deleteAuthDataGivenUsername(String username) {
-        // Create a temporary string to store the key for authTable removal.
-        String keyToRemove = null;
-        // Iterate over the hashmap to locate the correct authTable entry.
-        for (var authDataEntry : authTable.entrySet()) {
-            String tableUsername = authDataEntry.getValue().username();
-            if (username.equals(tableUsername)) {
-                keyToRemove = authDataEntry.getKey();
-                break;
-            }
-        }
-        // Remove the table entry.
-        return authTable.remove(keyToRemove);
-    }
-
     public AuthData deleteAuthDataGivenAuthToken(String authToken) {
         return authTable.remove(authToken);
     }

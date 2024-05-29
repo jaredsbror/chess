@@ -15,11 +15,6 @@ public class MemoryGameDAO implements GameDAO {
         gameTable.clear();
     }
 
-    // Verify that a gameID already exists.
-    public boolean verifyGameID(int gameID) {
-        return gameTable.get(gameID) != null;
-    }
-
     public int insertGame(String gameName) {
         // Generate a new gameID
         newGameID++;
