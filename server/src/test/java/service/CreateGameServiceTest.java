@@ -6,6 +6,8 @@ import model.custom.LoginRequest;
 import model.custom.RegisterRequest;
 import org.junit.jupiter.api.Test;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+
 class CreateGameServiceTest {
     @Test
     public void createGameWithValidAuthToken() {
@@ -17,17 +19,13 @@ class CreateGameServiceTest {
         clearApplicationService.clearDatabase();
         String authToken = null;
         // Register the new user
-        try {
+        assertDoesNotThrow(() -> {
             registerService.register();
-        } catch (Exception exception) {
-            exception.printStackTrace();
-            assert false : "Error: Failed to register new user in CreateGameServiceTest.createGameWithValidAuthToken()";
-        }
+        }, "Error: Failed to register new user in CreateGameServiceTest.createGameWithValidAuthToken()");
         // Log in as user and save authToken
         try {
             authToken = loginService.login();
         } catch (Exception exception) {
-            exception.printStackTrace();
             assert false : "Error: Failed to log in user in CreateGameServiceTest.createGameWithValidAuthToken()";
         }
         // Create a new game using previous authToken
@@ -36,7 +34,6 @@ class CreateGameServiceTest {
             createGameService.createGame();
             assert true;
         } catch (Exception exception) {
-            exception.printStackTrace();
             assert false : "Error: Failed to create game in CreateGameServiceTest.createGameWithValidAuthToken()";
         }
     }
@@ -51,17 +48,13 @@ class CreateGameServiceTest {
         clearApplicationService.clearDatabase();
         String authToken = null;
         // Register the new user
-        try {
+        assertDoesNotThrow(() -> {
             registerService.register();
-        } catch (Exception exception) {
-            exception.printStackTrace();
-            assert false : "Error: Failed to register new user in CreateGameServiceTest.createGameWithInvalidAuthToken()";
-        }
+        }, "Error: Failed to register new user in CreateGameServiceTest.createGameWithInvalidAuthToken()");
         // Log in as user and save authToken
         try {
             authToken = loginService.login();
         } catch (Exception exception) {
-            exception.printStackTrace();
             assert false : "Error: Failed to log in user in CreateGameServiceTest.createGameWithInvalidAuthToken()";
         }
         // Create a new game using an invalid authToken
@@ -70,7 +63,6 @@ class CreateGameServiceTest {
             createGameService.createGame();
             assert false : "Error: Should not have created game in CreateGameServiceTest.createGameWithInvalidAuthToken()";
         } catch (Exception exception) {
-            exception.printStackTrace();
             assert exception instanceof Error401Unauthorized;
         }
     }

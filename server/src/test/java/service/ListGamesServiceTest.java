@@ -9,6 +9,8 @@ import org.junit.jupiter.api.Test;
 
 import java.util.UUID;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+
 class ListGamesServiceTest {
 
     @Test
@@ -22,17 +24,13 @@ class ListGamesServiceTest {
         clearApplicationService.clearDatabase();
         String authToken = null;
         // Register the new user
-        try {
+        assertDoesNotThrow(() -> {
             registerService.register();
-        } catch (Exception exception) {
-            exception.printStackTrace();
-            assert false : "Error: Failed to register new user in ListGamesServiceTest.listGamesWithValidAuthToken";
-        }
+        }, "Error: Failed to register new user in ListGamesServiceTest.listGamesWithValidAuthToken");
         // Log in as user and save authToken
         try {
             authToken = loginService.login();
         } catch (Exception exception) {
-            exception.printStackTrace();
             assert false : "Error: Failed to log in user in ListGamesServiceTest.listGamesWithValidAuthToken";
         }
         // Create three new games using previous authToken
@@ -41,7 +39,6 @@ class ListGamesServiceTest {
                 createGameService = new CreateGameService(new CreateRequest(authToken, UUID.randomUUID().toString()));
                 createGameService.createGame();
             } catch (Exception exception) {
-                exception.printStackTrace();
                 assert false : "Error: Failed to create game in ListGamesServiceTest.listGamesWithValidAuthToken";
             }
         }
@@ -51,7 +48,6 @@ class ListGamesServiceTest {
             listGamesService.getGameList();
             assert true;
         } catch (Exception exception) {
-            exception.printStackTrace();
             assert false : "Error: Failed to list games in ListGamesServiceTest.listGamesWithValidAuthToken";
         }
     }
@@ -67,17 +63,13 @@ class ListGamesServiceTest {
         clearApplicationService.clearDatabase();
         String authToken = null;
         // Register the new user
-        try {
+        assertDoesNotThrow(() -> {
             registerService.register();
-        } catch (Exception exception) {
-            exception.printStackTrace();
-            assert false : "Error: Failed to register new user in ListGamesServiceTest.listGamesWithInvalidAuthToken";
-        }
+        }, "Error: Failed to register new user in ListGamesServiceTest.listGamesWithInvalidAuthToken");
         // Log in as user and save authToken
         try {
             authToken = loginService.login();
         } catch (Exception exception) {
-            exception.printStackTrace();
             assert false : "Error: Failed to log in user in ListGamesServiceTest.listGamesWithInvalidAuthToken";
         }
         // Create three new games using previous authToken
@@ -86,7 +78,6 @@ class ListGamesServiceTest {
                 createGameService = new CreateGameService(new CreateRequest(authToken, UUID.randomUUID().toString()));
                 createGameService.createGame();
             } catch (Exception exception) {
-                exception.printStackTrace();
                 assert false : "Error: Failed to create game in ListGamesServiceTest.listGamesWithInvalidAuthToken";
             }
         }
@@ -96,7 +87,6 @@ class ListGamesServiceTest {
             listGamesService.getGameList();
             assert false : "Error: Should not list games in ListGamesServiceTest.listGamesWithInvalidAuthToken";
         } catch (Exception exception) {
-            exception.printStackTrace();
             assert exception instanceof Error401Unauthorized;
         }
     }

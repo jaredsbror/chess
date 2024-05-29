@@ -5,6 +5,8 @@ import model.custom.LoginRequest;
 import model.custom.RegisterRequest;
 import org.junit.jupiter.api.Test;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+
 class LoginServiceTest {
 
     @Test
@@ -15,12 +17,9 @@ class LoginServiceTest {
         ClearApplicationService clearApplicationService = new ClearApplicationService();
         clearApplicationService.clearDatabase();
         // Register the new user
-        try {
+        assertDoesNotThrow(() -> {
             registerService.register();
-        } catch (Exception exception) {
-            exception.printStackTrace();
-            assert false : "Error: Failed to register new user in LoginServiceTest.logInAfterRegistering()";
-        }
+        }, "Error: Failed to register new user in LoginServiceTest.logInAfterRegistering()");
         // Log in as user
         try {
             loginService.login();

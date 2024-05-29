@@ -4,6 +4,9 @@ import dataaccess.exceptions.Error403AlreadyTaken;
 import model.custom.RegisterRequest;
 import org.junit.jupiter.api.Test;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 class RegisterServiceTest {
 
 
@@ -14,13 +17,9 @@ class RegisterServiceTest {
         ClearApplicationService clearApplicationService = new ClearApplicationService();
         clearApplicationService.clearDatabase();
         // Register the new user
-        try {
+        assertDoesNotThrow(() -> {
             registerService.register();
-            assert true;
-        } catch (Exception exception) {
-            exception.printStackTrace();
-            assert false : "Error: Failed to register new user in RegisterServiceTest.registerNewUser()";
-        }
+        }, "Error: Failed to register new user in RegisterServiceTest.registerNewUser()");
     }
 
     @Test
@@ -30,21 +29,11 @@ class RegisterServiceTest {
         ClearApplicationService clearApplicationService = new ClearApplicationService();
         clearApplicationService.clearDatabase();
         // Register the new user
-        try {
+        assertDoesNotThrow(() -> {
             registerService.register();
-            assert true;
-        } catch (Exception exception) {
-            exception.printStackTrace();
-            assert false : "Error: Failed to register new user in RegisterServiceTest.registerUserAgain()";
-        }
+        }, "Error: Failed to register new user in RegisterServiceTest.registerUserAgain()");
         // Register the user again (403)
-        try {
-            registerService.register();
-            assert false : "Error: Should not have reregistered user in RegisterServiceTest.registerUserAgain()";
-        } catch (Exception exception) {
-            exception.printStackTrace();
-            assert exception instanceof Error403AlreadyTaken;
-        }
+        assertThrows(Error403AlreadyTaken.class, registerService::register, "Error: Should not have reregistered user in RegisterServiceTest.registerUserAgain()");
     }
 
 }

@@ -3,7 +3,8 @@ package service;
 import model.custom.RegisterRequest;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class ClearApplicationServiceTest {
 
@@ -23,12 +24,9 @@ class ClearApplicationServiceTest {
         ClearApplicationService clearApplicationService = new ClearApplicationService();
         RegisterService registerService = new RegisterService(new RegisterRequest(service.Test.username, service.Test.password,service.Test.email));
         // Register new user
-        try {
+        assertDoesNotThrow(() -> {
             registerService.register();
-        } catch (Exception exception) {
-            exception.printStackTrace();
-            assert false : "Error: Failed to register new user in ClearApplicationServiceTest.clearPopulatedDatabase()";
-        }
+        }, "Error: Failed to register new user in ClearApplicationServiceTest.clearPopulatedDatabase()");
         // Clear the database
         clearApplicationService.clearDatabase();
         // Assert that the database is empty

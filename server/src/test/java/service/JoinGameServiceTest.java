@@ -8,6 +8,8 @@ import model.custom.LoginRequest;
 import model.custom.RegisterRequest;
 import org.junit.jupiter.api.Test;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+
 class JoinGameServiceTest {
 
     @Test
@@ -22,17 +24,13 @@ class JoinGameServiceTest {
         String authToken = null;
         int gameID = 0;
         // Register the new user
-        try {
+        assertDoesNotThrow(() -> {
             registerService.register();
-        } catch (Exception exception) {
-            exception.printStackTrace();
-            assert false : "Error: Failed to register new user in JoinGameServiceTest.joinGameWithValidID()";
-        }
+        }, "Error: Failed to register new user in JoinGameServiceTest.joinGameWithValidID()");
         // Log in as user and save authToken
         try {
             authToken = loginService.login();
         } catch (Exception exception) {
-            exception.printStackTrace();
             assert false : "Error: Failed to log in user in JoinGameServiceTest.joinGameWithValidID()";
         }
         // Create a new game using previous authToken
@@ -41,7 +39,6 @@ class JoinGameServiceTest {
             gameID = createGameService.createGame();
             assert true;
         } catch (Exception exception) {
-            exception.printStackTrace();
             assert false : "Error: Failed to create game in JoinGameServiceTest.joinGameWithValidID()";
         }
         // Join a game using previous authToken and gameID
@@ -50,7 +47,6 @@ class JoinGameServiceTest {
             joinGameService.joinGame();
             assert true;
         } catch (Exception exception) {
-            exception.printStackTrace();
             assert false : "Error: Failed to join game in JoinGameServiceTest.joinGameWithValidID()";
         }
     }
@@ -66,17 +62,13 @@ class JoinGameServiceTest {
         String authToken = null;
         int gameID = 0;
         // Register the new user
-        try {
+        assertDoesNotThrow(() -> {
             registerService.register();
-        } catch (Exception exception) {
-            exception.printStackTrace();
-            assert false : "Error: Failed to register new user in JoinGameServiceTest.joinGameWithInvalidID()";
-        }
+        }, "Error: Failed to register new user in JoinGameServiceTest.joinGameWithInvalidID()");
         // Log in as user and save authToken
         try {
             authToken = loginService.login();
         } catch (Exception exception) {
-            exception.printStackTrace();
             assert false : "Error: Failed to log in user in JoinGameServiceTest.joinGameWithInvalidID()";
         }
         // Create a new game using previous authToken
@@ -85,7 +77,6 @@ class JoinGameServiceTest {
             gameID = createGameService.createGame();
             assert true;
         } catch (Exception exception) {
-            exception.printStackTrace();
             assert false : "Error: Failed to create game in JoinGameServiceTest.joinGameWithInvalidID()";
         }
         // Join a game using valid authToken and invalid gameID
@@ -94,7 +85,6 @@ class JoinGameServiceTest {
             joinGameService.joinGame();
             assert false : "Error: Should not have joined game in JoinGameServiceTest.joinGameWithInvalidID()";
         } catch (Exception exception) {
-            exception.printStackTrace();
             assert exception instanceof Error400BadRequest;
         }
     }
@@ -110,17 +100,13 @@ class JoinGameServiceTest {
         String authToken = null;
         int gameID = 0;
         // Register the new user
-        try {
+        assertDoesNotThrow(() -> {
             registerService.register();
-        } catch (Exception exception) {
-            exception.printStackTrace();
-            assert false : "Error: Failed to register new user in JoinGameServiceTest.joinGameWithInvalidAuthToken()";
-        }
+        }, "Error: Failed to register new user in JoinGameServiceTest.joinGameWithInvalidAuthToken()");
         // Log in as user and save authToken
         try {
             authToken = loginService.login();
         } catch (Exception exception) {
-            exception.printStackTrace();
             assert false : "Error: Failed to log in user in JoinGameServiceTest.joinGameWithInvalidAuthToken()";
         }
         // Create a new game using previous authToken
@@ -129,7 +115,6 @@ class JoinGameServiceTest {
             gameID = createGameService.createGame();
             assert true;
         } catch (Exception exception) {
-            exception.printStackTrace();
             assert false : "Error: Failed to create game in JoinGameServiceTest.joinGameWithInvalidAuthToken()";
         }
         // Join a game using valid authToken and invalid gameID
@@ -138,7 +123,6 @@ class JoinGameServiceTest {
             joinGameService.joinGame();
             assert false : "Error: Should not have joined game in JoinGameServiceTest.joinGameWithInvalidAuthToken()";
         } catch (Exception exception) {
-            exception.printStackTrace();
             assert exception instanceof Error401Unauthorized;
         }
     }

@@ -237,7 +237,7 @@ public class ChessGame {
     }
 
     // Return true if there are no possible valid moves for the friendly team
-    private boolean doesExistMovesForFriendlyTeam(TeamColor teamColor) {
+    private boolean doesNotExistMovesForFriendlyTeam(TeamColor teamColor) {
         // Iterate over the chessboard rows...
         for (int row = Constants.BOARD_MIN_ONE_INDEX; row <= Constants.BOARD_MAX_ONE_INDEX; row++) {
             // Iterate over the chessboard columns...
@@ -263,7 +263,7 @@ public class ChessGame {
     public boolean isInCheckmate(TeamColor teamColor) {
         // If the team is not in check, return false
         if (!isInCheck(teamColor)) return false;
-        return doesExistMovesForFriendlyTeam(teamColor);
+        return doesNotExistMovesForFriendlyTeam(teamColor);
     }
 
     /**
@@ -275,7 +275,7 @@ public class ChessGame {
     public boolean isInStalemate(TeamColor teamColor) {
         // If the team is in check, return false
         if (isInCheck(teamColor)) return false;
-        return doesExistMovesForFriendlyTeam(teamColor);
+        return doesNotExistMovesForFriendlyTeam(teamColor);
     }
 
     /**

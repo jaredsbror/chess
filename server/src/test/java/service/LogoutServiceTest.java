@@ -6,6 +6,9 @@ import model.custom.LogoutRequest;
 import model.custom.RegisterRequest;
 import org.junit.jupiter.api.Test;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 class LogoutServiceTest {
 
     @Test
@@ -18,12 +21,9 @@ class LogoutServiceTest {
         clearApplicationService.clearDatabase();
         String authToken = null;
         // Register the new user
-        try {
+        assertDoesNotThrow(() -> {
             registerService.register();
-        } catch (Exception exception) {
-            exception.printStackTrace();
-            assert false : "Error: Failed to register new user in LogoutServiceTest.logoutExistingUser()";
-        }
+        }, "Error: Failed to register new user in LogoutServiceTest.logoutExistingUser()");
         // Log in as user and save authToken
         try {
             authToken = loginService.login();
@@ -50,12 +50,6 @@ class LogoutServiceTest {
         ClearApplicationService clearApplicationService = new ClearApplicationService();
         clearApplicationService.clearDatabase();
         // Logout user
-        try {
-            logoutService.logout();
-            assert false : "Error: Should not logout user in LogoutServiceTest.logoutNonexistentUser()";
-        } catch (Exception exception) {
-            exception.printStackTrace();
-            assert exception instanceof Error401Unauthorized;
-        }
+        assertThrows(Error401Unauthorized.class, logoutService::logout, "Error: Should not logout user in LogoutServiceTest.logoutNonexistentUser()");
     }
 }

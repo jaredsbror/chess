@@ -109,7 +109,7 @@ public class PawnMovesCalculator implements PieceMovesCalculator {
     // Assuming
     public void processValidMoves(ChessBoard board, ChessPosition position, ChessGame.TeamColor color) {
         // Optional debug
-        if (Constants.DEBUG_GLOBAL || Constants.DEBUG_PAWN_MOVES_CALCULATOR) System.out.println("Complex Valid Moves White");
+        if (Constants.DEBUG_GLOBAL || Constants.DEBUG_PAWN_MOVES_CALCULATOR) System.out.println("Process valid moves");
         // Case #1 - Pawn is up for promotion
         if (possibleRow == (color == ChessGame.TeamColor.WHITE ? Constants.BOARD_MAX_ONE_INDEX : Constants.BOARD_MIN_ONE_INDEX)) {
             // Add all variants of promotions to default move
