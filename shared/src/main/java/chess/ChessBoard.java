@@ -1,10 +1,6 @@
 package chess;
 
-import java.awt.color.ColorSpace;
-import java.lang.reflect.Type;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 
 /**
  * A chessboard that can hold and rearrange chess pieces.
@@ -71,15 +67,6 @@ public class ChessBoard {
     }
 
     // Set a position to null
-    public void addNull(ChessPosition position) {
-        int row = position.getRow() - 1;
-        int column = position.getColumn() - 1;
-        // Optional debug
-        if (Constants.DEBUG_GLOBAL || Constants.DEBUG_CHESS_BOARD) System.out.println("Adding null to (" + row + "," + column + ")");
-        board[row][column] = null;
-    }
-
-    // Set a position to null
     public void addNull(int row, int column) {
         board[row - 1][column - 1] = null;
         // Optional debug
@@ -133,14 +120,6 @@ public class ChessBoard {
         // Optional debug
         if (Constants.DEBUG_GLOBAL || Constants.DEBUG_CHESS_BOARD) System.out.println("Ally does" + (getPieceTeamColor(row, column) == friendlyTeamColor ? " not " : " ") + "exist at (" + row + "," + column + ")");
         return getPieceTeamColor(row, column) == friendlyTeamColor;
-    }
-
-    // Return true if there is a piece at a certain position
-    public boolean doesOpponentPieceExist(ChessPosition position, ChessGame.TeamColor opponentTeamColor) {
-        if (doesNotExistPiece(position)) return false;
-        // Optional debug
-        if (Constants.DEBUG_GLOBAL || Constants.DEBUG_CHESS_BOARD) System.out.println("Opponent does" + (getPieceTeamColor(position) == opponentTeamColor ? " not " : " ") + "exist at " + position.toString());
-        return getPieceTeamColor(position) == opponentTeamColor;
     }
 
     // Return true if there is a piece at a certain position

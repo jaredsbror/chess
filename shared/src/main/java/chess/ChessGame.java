@@ -57,13 +57,6 @@ public class ChessGame {
         return (row < Constants.BOARD_MIN_ONE_INDEX || row > Constants.BOARD_MAX_ONE_INDEX || column < Constants.BOARD_MIN_ONE_INDEX || column > Constants.BOARD_MAX_ONE_INDEX);
     }
 
-
-    // Check if a position is on the board is valid
-    private boolean isNotWithinBounds(int row, int column) {
-        return (row < Constants.BOARD_MIN_ONE_INDEX || row > Constants.BOARD_MAX_ONE_INDEX || column < Constants.BOARD_MIN_ONE_INDEX || column > Constants.BOARD_MAX_ONE_INDEX);
-    }
-
-
     /**
      * Gets a valid moves for a piece at the given location
      * @param startPosition the piece to get valid moves for
@@ -82,7 +75,7 @@ public class ChessGame {
         ChessPiece chessPiece = chessBoard.getPiece(startPosition);
 
         Collection<ChessMove> possibleValidMoves = chessPiece.pieceMoves(chessBoard, startPosition);
-        Collection<ChessMove> actualValidMoves = new ArrayList<ChessMove>();    // ???
+        Collection<ChessMove> actualValidMoves = new ArrayList<>();    // ???
 
         /// Check for moves that don't put the friendly King in check and add them.
         // Iterate over the Collection of valid moves
@@ -288,7 +281,7 @@ public class ChessGame {
             board.printBoard();
             return false;
         }
-        // Return whether or not any opponent moves include the King as their last position
+        // Return whether any opponent moves include the King as their last position
         return isInDanger(board, currentKingPosition, teamColor);
     }
 
@@ -313,7 +306,7 @@ public class ChessGame {
                     if (validMoves == null) continue;
                     // If validMoves is NOT empty, return false
                     if (!validMoves.isEmpty()) return false;
-                };
+                }
             }
         }
         return true;
@@ -340,7 +333,7 @@ public class ChessGame {
                     if (validMoves == null) continue;
                     // If validMoves is NOT empty, return false
                     if (!validMoves.isEmpty()) return false;
-                };
+                }
             }
         }
         return true;

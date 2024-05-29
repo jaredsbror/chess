@@ -34,9 +34,6 @@ public class ChessPosition {
      */
     public int getColumn() { return column; }
 
-    // Set the column
-    public void setColumn(int column) { this.column = column; }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

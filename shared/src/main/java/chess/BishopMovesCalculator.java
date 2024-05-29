@@ -20,7 +20,7 @@ public class BishopMovesCalculator implements PieceMovesCalculator {
         possibleRow = 0;
         possibleColumn = 0;
         // Optional debug
-        if (Constants.DEBUG_GLOBAL || Constants.DEBUG_BISHOP_MOVES_CALCULATOR) System.out.println("Creating " + toString());
+        if (Constants.DEBUG_GLOBAL || Constants.DEBUG_BISHOP_MOVES_CALCULATOR) System.out.println("Creating " + this);
     }
 
     // Collection to hold resulting valid moves
@@ -33,22 +33,6 @@ public class BishopMovesCalculator implements PieceMovesCalculator {
     private int currentColumn;
     private int possibleRow;
     private int possibleColumn;
-
-    // Get current team color
-    public ChessGame.TeamColor getCurrentTeamColor() {
-        return currentTeamColor;
-    }
-
-    // Get opponent team color
-    public ChessGame.TeamColor getOpponentTeamColor() {
-        return opponentTeamColor;
-    }
-
-    // Set current (and opponent) team color
-    public void setCurrentTeamColor(ChessGame.TeamColor currentTeamColor) {
-        this.currentTeamColor = currentTeamColor;
-        opponentTeamColor = (currentTeamColor == ChessGame.TeamColor.WHITE ? ChessGame.TeamColor.BLACK : ChessGame.TeamColor.WHITE);
-    }
 
     // Check if a position is on the board
     private boolean isWithinBounds() {

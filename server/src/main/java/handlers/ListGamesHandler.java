@@ -15,7 +15,7 @@ public class ListGamesHandler implements Route {
     private ListGamesService listGamesService;
 
     @Override
-    public Object handle(Request request, Response response) throws Exception {
+    public Object handle(Request request, Response response) {
         // Process the http .json input into an object
         Gson gson = new Gson();
         ListRequest listRequest = new ListRequest(request.headers("authorization"));
