@@ -23,11 +23,14 @@ public class PawnMovesCalculator implements PieceMovesCalculator {
         if (Constants.DEBUG_GLOBAL || Constants.DEBUG_PAWN_MOVES_CALCULATOR) System.out.println("Creating " + this);
     }
 
+    // Pawn
     // Collection to hold resulting valid moves
     private List<ChessMove> validMoves;
+    // Pawn
     // Current and opponent team color
     private ChessGame.TeamColor currentTeamColor;
     private ChessGame.TeamColor opponentTeamColor;
+    // Pawn
     // Various row and column variables for the current player
     private int currentRow;
     private int currentColumn;
@@ -56,21 +59,21 @@ public class PawnMovesCalculator implements PieceMovesCalculator {
             possibleColumn = currentColumn - 1;
             // If the position is valid, add it to the output collection of valid moves
             if (isWithinBounds() && board.doesOpponentPieceExist(possibleRow, possibleColumn, opponentTeamColor)) {
-                complexValidMovesWhite(board, position);
+                processValidMoves(board, position, ChessGame.TeamColor.WHITE);
             }
 
             // Move #2: row + 1, column
             possibleColumn = currentColumn;
             // If the position is valid, add it to the output collection of valid moves
             if (isWithinBounds() && board.doesNotExistPiece(possibleRow, possibleColumn)) {
-                complexValidMovesWhite(board, position);
+                processValidMoves(board, position, ChessGame.TeamColor.WHITE);
             }
 
             // Move #3: row + 1, column + 1
             possibleColumn = currentColumn + 1;
             // If the position is valid, add it to the output collection of valid moves
             if (isWithinBounds() && board.doesOpponentPieceExist(possibleRow, possibleColumn, opponentTeamColor)) {
-                complexValidMovesWhite(board, position);
+                processValidMoves(board, position, ChessGame.TeamColor.WHITE);
             }
         } else {    // Current team color is black
             /// Check three possible moves
@@ -79,21 +82,21 @@ public class PawnMovesCalculator implements PieceMovesCalculator {
             possibleColumn = currentColumn - 1;
             // If the position is valid, add it to the output collection of valid moves
             if (isWithinBounds() && board.doesOpponentPieceExist(possibleRow, possibleColumn, opponentTeamColor)) {
-                complexValidMovesBlack(board, position);
+                processValidMoves(board, position, ChessGame.TeamColor.BLACK);
             }
 
             // Move #2: row - 1, column
             possibleColumn = currentColumn;
             // If the position is valid, add it to the output collection of valid moves
             if (isWithinBounds() && board.doesNotExistPiece(possibleRow, possibleColumn)) {
-                complexValidMovesBlack(board, position);
+                processValidMoves(board, position, ChessGame.TeamColor.BLACK);
             }
 
             // Move #3: row - 1, column + 1
             possibleColumn = currentColumn + 1;
             // If the position is valid, add it to the output collection of valid moves
             if (isWithinBounds() && board.doesOpponentPieceExist(possibleRow, possibleColumn, opponentTeamColor)) {
-                complexValidMovesBlack(board, position);
+                processValidMoves(board, position, ChessGame.TeamColor.BLACK);
             }
         }
         // Optional debug
@@ -102,11 +105,11 @@ public class PawnMovesCalculator implements PieceMovesCalculator {
     }
 
     // Assuming
-    public void complexValidMovesWhite(ChessBoard board, ChessPosition position) {
+    public void processValidMoves(ChessBoard board, ChessPosition position, ChessGame.TeamColor color) {
         // Optional debug
         if (Constants.DEBUG_GLOBAL || Constants.DEBUG_PAWN_MOVES_CALCULATOR) System.out.println("Complex Valid Moves White");
         // Case #1 - Pawn is up for promotion
-        if (possibleRow == Constants.BOARD_MAX_ONE_INDEX) {
+        if (possibleRow == (color == ChessGame.TeamColor.WHITE ? Constants.BOARD_MAX_ONE_INDEX : Constants.BOARD_MIN_ONE_INDEX)) {
             // Add all variants of promotions to default move
             validMoves.add(new ChessMove(position, new ChessPosition(possibleRow, possibleColumn), ChessPiece.PieceType.QUEEN));
             validMoves.add(new ChessMove(position, new ChessPosition(possibleRow, possibleColumn), ChessPiece.PieceType.BISHOP));
@@ -114,39 +117,11 @@ public class PawnMovesCalculator implements PieceMovesCalculator {
             validMoves.add(new ChessMove(position, new ChessPosition(possibleRow, possibleColumn), ChessPiece.PieceType.KNIGHT));
         }
         // Case #2 - Pawn initial move of 2 spaces
-        else if (currentRow == (Constants.WHITE_PAWN_ROW + 1) && currentColumn == possibleColumn) {
+        else if (currentRow == ((color == ChessGame.TeamColor.WHITE ? Constants.WHITE_PAWN_ROW : Constants.BLACK_PAWN_ROW) + 1) && currentColumn == possibleColumn) {
             // Add default chess move
             validMoves.add(new ChessMove(position, new ChessPosition(possibleRow, possibleColumn), null));
             // Test extra move of one space
-            possibleRow += 1;
-            // If the position is valid, add it to the output collection of valid moves
-            if (isWithinBounds() && board.doesNotExistPiece(possibleRow, possibleColumn)) {
-                validMoves.add(new ChessMove(position, new ChessPosition(possibleRow, possibleColumn), null));
-            }
-        // Case #3 - Default move with null promotion
-        } else {
-            // Add default chess move
-            validMoves.add(new ChessMove(position, new ChessPosition(possibleRow, possibleColumn), null));
-        }
-    }
-
-    public void complexValidMovesBlack(ChessBoard board, ChessPosition position) {
-        // Optional debug
-        if (Constants.DEBUG_GLOBAL || Constants.DEBUG_PAWN_MOVES_CALCULATOR) System.out.println("Complex Valid Moves Black");
-        // Case #1 - Pawn is up for promotion
-        if (possibleRow == Constants.BOARD_MIN_ONE_INDEX) {
-            // Add all variants of promotions to default move
-            validMoves.add(new ChessMove(position, new ChessPosition(possibleRow, possibleColumn), ChessPiece.PieceType.QUEEN));
-            validMoves.add(new ChessMove(position, new ChessPosition(possibleRow, possibleColumn), ChessPiece.PieceType.BISHOP));
-            validMoves.add(new ChessMove(position, new ChessPosition(possibleRow, possibleColumn), ChessPiece.PieceType.ROOK));
-            validMoves.add(new ChessMove(position, new ChessPosition(possibleRow, possibleColumn), ChessPiece.PieceType.KNIGHT));
-        }
-        // Case #2 - Pawn initial move of 2 spaces
-        else if (currentRow == (Constants.BLACK_PAWN_ROW + 1) && currentColumn == possibleColumn) {
-            // Add default chess move
-            validMoves.add(new ChessMove(position, new ChessPosition(possibleRow, possibleColumn), null));
-            // Test extra move of one space
-            possibleRow -= 1;
+            possibleRow = (color == ChessGame.TeamColor.WHITE ? possibleRow + 1 : possibleRow - 1);
             // If the position is valid, add it to the output collection of valid moves
             if (isWithinBounds() && board.doesNotExistPiece(possibleRow, possibleColumn)) {
                 validMoves.add(new ChessMove(position, new ChessPosition(possibleRow, possibleColumn), null));

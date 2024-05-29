@@ -23,11 +23,14 @@ public class KnightMovesCalculator implements PieceMovesCalculator {
         if (Constants.DEBUG_GLOBAL || Constants.DEBUG_KNIGHT_MOVES_CALCULATOR) System.out.println("Creating " + this);
     }
 
+    // Knight
     // Collection to hold resulting valid moves
     private List<ChessMove> validMoves;
+    // Knight
     // Current and opponent team color
     private ChessGame.TeamColor currentTeamColor;
     private ChessGame.TeamColor opponentTeamColor;
+    // Knight
     // Various row and column variables for the current player
     private int currentRow;
     private int currentColumn;

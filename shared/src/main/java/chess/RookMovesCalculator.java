@@ -23,11 +23,14 @@ public class RookMovesCalculator implements PieceMovesCalculator {
         if (Constants.DEBUG_GLOBAL || Constants.DEBUG_ROOK_MOVES_CALCULATOR) System.out.println("Creating " + this);
     }
 
+    // Rook
     // Collection to hold resulting valid moves
     private List<ChessMove> validMoves;
+    // Rook
     // Current and opponent team color
     private ChessGame.TeamColor currentTeamColor;
     private ChessGame.TeamColor opponentTeamColor;
+    // Rook
     // Various row and column variables for the current player
     private int currentRow;
     private int currentColumn;

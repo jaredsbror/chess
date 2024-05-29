@@ -23,11 +23,14 @@ public class BishopMovesCalculator implements PieceMovesCalculator {
         if (Constants.DEBUG_GLOBAL || Constants.DEBUG_BISHOP_MOVES_CALCULATOR) System.out.println("Creating " + this);
     }
 
+    // Bishop
     // Collection to hold resulting valid moves
     private List<ChessMove> validMoves;
+    // Bishop
     // Current and opponent team color
     private ChessGame.TeamColor currentTeamColor;
     private ChessGame.TeamColor opponentTeamColor;
+    // Bishop
     // Various row and column variables for the current player
     private int currentRow;
     private int currentColumn;

@@ -23,11 +23,14 @@ public class KingMovesCalculator implements PieceMovesCalculator {
         if (Constants.DEBUG_GLOBAL || Constants.DEBUG_KING_MOVES_CALCULATOR) System.out.println("Creating " + this);
     }
 
+    // King
     // Collection to hold resulting valid moves
     private List<ChessMove> validMoves;
+    // King
     // Current and opponent team color
     private ChessGame.TeamColor currentTeamColor;
     private ChessGame.TeamColor opponentTeamColor;
+    // King
     // Various row and column variables for the current player
     private int currentRow;
     private int currentColumn;
