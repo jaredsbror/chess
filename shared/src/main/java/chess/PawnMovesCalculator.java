@@ -37,11 +37,7 @@ public class PawnMovesCalculator implements PieceMovesCalculator {
     private int possibleRow;
     private int possibleColumn;
 
-    // Check if a position is on the board
-    private boolean isWithinBounds() {
-        return (possibleRow >= Constants.BOARD_MIN_ONE_INDEX && possibleRow <= Constants.BOARD_MAX_ONE_INDEX && possibleColumn >= Constants.BOARD_MIN_ONE_INDEX && possibleColumn <= Constants.BOARD_MAX_ONE_INDEX);
-    }
-
+    // Pawn
     @Override
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition position) {
         // Collection to hold resulting valid moves
@@ -102,6 +98,12 @@ public class PawnMovesCalculator implements PieceMovesCalculator {
         // Optional debug
         if (Constants.DEBUG_GLOBAL || Constants.DEBUG_PAWN_MOVES_CALCULATOR) System.out.println("(PawnCalculator) Found moves from (" + position.getRow() + "," + position.getColumn() + ") for " + board.getPiece(position).toString() + ":-> " + validMoves.toString());
         return validMoves;
+    }
+
+    // Pawn
+    // Check if a position is on the board
+    private boolean isWithinBounds() {
+        return (possibleRow >= Constants.BOARD_MIN_ONE_INDEX && possibleRow <= Constants.BOARD_MAX_ONE_INDEX && possibleColumn >= Constants.BOARD_MIN_ONE_INDEX && possibleColumn <= Constants.BOARD_MAX_ONE_INDEX);
     }
 
     // Assuming

@@ -37,11 +37,13 @@ public class KnightMovesCalculator implements PieceMovesCalculator {
     private int possibleRow;
     private int possibleColumn;
 
+    // Knight
     // Check if a position is on the board
     private boolean isWithinBounds() {
         return (possibleRow >= Constants.BOARD_MIN_ONE_INDEX && possibleRow <= Constants.BOARD_MAX_ONE_INDEX && possibleColumn >= Constants.BOARD_MIN_ONE_INDEX && possibleColumn <= Constants.BOARD_MAX_ONE_INDEX);
     }
 
+    // Knight
     @Override
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition position) {
         // Collection to hold resulting valid moves
