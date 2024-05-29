@@ -48,8 +48,7 @@ public class RookMovesCalculator implements PieceMovesCalculator {
         // The position is valid, add it to the output collection of valid moves
         validMoves.add(new ChessMove(position, new ChessPosition(possibleRow, possibleColumn), null));
         // If there is an opponent's piece there, break out of the loop after adding a valid move
-        if (board.doesOpponentPieceExist(possibleRow, possibleColumn, opponentTeamColor)) return true;
-        return false;
+        return board.doesOpponentPieceExist(possibleRow, possibleColumn, opponentTeamColor);
     }
 
     @Override
