@@ -18,28 +18,19 @@ class LogoutServiceTest {
         LoginService loginService = new LoginService(new LoginRequest(service.Test.username, service.Test.password));
         LogoutService logoutService;
         ClearApplicationService clearApplicationService = new ClearApplicationService();
-        clearApplicationService.clearDatabase();
+        assertDoesNotThrow(clearApplicationService::clearDatabase, "Error: Failed to clear database");
         String authToken = null;
         // Register the new user
-        assertDoesNotThrow(() -> {
-            registerService.register();
-        }, "Error: Failed to register new user in LogoutServiceTest.logoutExistingUser()");
+        assertDoesNotThrow(registerService::register, "Error: Failed to register new user");
         // Log in as user and save authToken
         try {
             authToken = loginService.login();
         } catch (Exception exception) {
-            exception.printStackTrace();
-            assert false : "Error: Failed to log in user in LogoutServiceTest.logoutExistingUser()";
+            assert false : "Error: Failed to log in user";
         }
         // Logout user using previous authToken
-        try {
-            logoutService = new LogoutService(new LogoutRequest(authToken));
-            logoutService.logout();
-            assert true;
-        } catch (Exception exception) {
-            exception.printStackTrace();
-            assert false : "Error: Failed to logout user in LogoutServiceTest.logoutExistingUser()";
-        }
+        logoutService = new LogoutService(new LogoutRequest(authToken));
+        assertDoesNotThrow(logoutService::logout, "Error: Failed to logout user");
     }
 
 
@@ -48,8 +39,8 @@ class LogoutServiceTest {
         /// Create the database and clear it
         LogoutService logoutService = new LogoutService(new LogoutRequest(service.Test.authToken));
         ClearApplicationService clearApplicationService = new ClearApplicationService();
-        clearApplicationService.clearDatabase();
+        assertDoesNotThrow(clearApplicationService::clearDatabase, "Error: Failed to clear database");
         // Logout user
-        assertThrows(Error401Unauthorized.class, logoutService::logout, "Error: Should not logout user in LogoutServiceTest.logoutNonexistentUser()");
+        assertThrows(Error401Unauthorized.class, logoutService::logout, "Error: Should not logout user");
     }
 }

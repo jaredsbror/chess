@@ -9,6 +9,7 @@ import model.custom.RegisterRequest;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class JoinGameServiceTest {
 
@@ -20,35 +21,27 @@ class JoinGameServiceTest {
         CreateGameService createGameService;
         JoinGameService joinGameService;
         ClearApplicationService clearApplicationService = new ClearApplicationService();
-        clearApplicationService.clearDatabase();
+        assertDoesNotThrow(clearApplicationService::clearDatabase, "Error: Failed to clear database");
         String authToken = null;
         int gameID = 0;
         // Register the new user
-        assertDoesNotThrow(() -> {
-            registerService.register();
-        }, "Error: Failed to register new user in JoinGameServiceTest.joinGameWithValidID()");
+        assertDoesNotThrow(registerService::register, "Error: Failed to register new user");
         // Log in as user and save authToken
         try {
             authToken = loginService.login();
         } catch (Exception exception) {
-            assert false : "Error: Failed to log in user in JoinGameServiceTest.joinGameWithValidID()";
+            assert false : "Error: Failed to log in user";
         }
         // Create a new game using previous authToken
         try {
             createGameService = new CreateGameService(new CreateRequest(authToken, service.Test.gameName));
             gameID = createGameService.createGame();
-            assert true;
         } catch (Exception exception) {
-            assert false : "Error: Failed to create game in JoinGameServiceTest.joinGameWithValidID()";
+            assert false : "Error: Failed to create game";
         }
         // Join a game using previous authToken and gameID
-        try {
-            joinGameService = new JoinGameService(new JoinRequest(authToken, service.Test.white, gameID));
-            joinGameService.joinGame();
-            assert true;
-        } catch (Exception exception) {
-            assert false : "Error: Failed to join game in JoinGameServiceTest.joinGameWithValidID()";
-        }
+        joinGameService = new JoinGameService(new JoinRequest(authToken, service.Test.white, gameID));
+        assertDoesNotThrow(joinGameService::joinGame, "Error: Failed to join game");
     }
 
     @Test void joinGameWithInvalidGameID() {
@@ -58,35 +51,22 @@ class JoinGameServiceTest {
         CreateGameService createGameService;
         JoinGameService joinGameService;
         ClearApplicationService clearApplicationService = new ClearApplicationService();
-        clearApplicationService.clearDatabase();
+        assertDoesNotThrow(clearApplicationService::clearDatabase, "Error: Failed to clear database");
         String authToken = null;
-        int gameID = 0;
         // Register the new user
-        assertDoesNotThrow(() -> {
-            registerService.register();
-        }, "Error: Failed to register new user in JoinGameServiceTest.joinGameWithInvalidID()");
+        assertDoesNotThrow(registerService::register, "Error: Failed to register new user");
         // Log in as user and save authToken
         try {
             authToken = loginService.login();
         } catch (Exception exception) {
-            assert false : "Error: Failed to log in user in JoinGameServiceTest.joinGameWithInvalidID()";
+            assert false : "Error: Failed to log in user";
         }
         // Create a new game using previous authToken
-        try {
-            createGameService = new CreateGameService(new CreateRequest(authToken, service.Test.gameName));
-            gameID = createGameService.createGame();
-            assert true;
-        } catch (Exception exception) {
-            assert false : "Error: Failed to create game in JoinGameServiceTest.joinGameWithInvalidID()";
-        }
+        createGameService = new CreateGameService(new CreateRequest(authToken, service.Test.gameName));
+        assertDoesNotThrow(createGameService::createGame, "Error: Failed to create game");
         // Join a game using valid authToken and invalid gameID
-        try {
-            joinGameService = new JoinGameService(new JoinRequest(authToken, service.Test.white, service.Test.gameID));
-            joinGameService.joinGame();
-            assert false : "Error: Should not have joined game in JoinGameServiceTest.joinGameWithInvalidID()";
-        } catch (Exception exception) {
-            assert exception instanceof Error400BadRequest;
-        }
+        joinGameService = new JoinGameService(new JoinRequest(authToken, service.Test.white, service.Test.gameID));
+        assertThrows(Error400BadRequest.class, joinGameService::joinGame,"Error: Should not have joined game");
     }
 
     @Test void joinGameWithInvalidAuthToken() {
@@ -96,34 +76,26 @@ class JoinGameServiceTest {
         CreateGameService createGameService;
         JoinGameService joinGameService;
         ClearApplicationService clearApplicationService = new ClearApplicationService();
-        clearApplicationService.clearDatabase();
+        assertDoesNotThrow(clearApplicationService::clearDatabase, "Error: Failed to clear database");
         String authToken = null;
         int gameID = 0;
         // Register the new user
-        assertDoesNotThrow(() -> {
-            registerService.register();
-        }, "Error: Failed to register new user in JoinGameServiceTest.joinGameWithInvalidAuthToken()");
+        assertDoesNotThrow(registerService::register, "Error: Failed to register new user");
         // Log in as user and save authToken
         try {
             authToken = loginService.login();
         } catch (Exception exception) {
-            assert false : "Error: Failed to log in user in JoinGameServiceTest.joinGameWithInvalidAuthToken()";
+            assert false : "Error: Failed to log in user";
         }
         // Create a new game using previous authToken
         try {
             createGameService = new CreateGameService(new CreateRequest(authToken, service.Test.gameName));
             gameID = createGameService.createGame();
-            assert true;
         } catch (Exception exception) {
-            assert false : "Error: Failed to create game in JoinGameServiceTest.joinGameWithInvalidAuthToken()";
+            assert false : "Error: Failed to create game";
         }
         // Join a game using valid authToken and invalid gameID
-        try {
-            joinGameService = new JoinGameService(new JoinRequest(service.Test.authToken, service.Test.white, gameID));
-            joinGameService.joinGame();
-            assert false : "Error: Should not have joined game in JoinGameServiceTest.joinGameWithInvalidAuthToken()";
-        } catch (Exception exception) {
-            assert exception instanceof Error401Unauthorized;
-        }
+        joinGameService = new JoinGameService(new JoinRequest(service.Test.authToken, service.Test.white, gameID));
+        assertThrows(Error401Unauthorized.class, joinGameService::joinGame, "Error: Should not have joined game");
     }
 }

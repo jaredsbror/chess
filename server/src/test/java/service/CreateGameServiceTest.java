@@ -7,6 +7,7 @@ import model.custom.RegisterRequest;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class CreateGameServiceTest {
     @Test
@@ -16,26 +17,19 @@ class CreateGameServiceTest {
         LoginService loginService = new LoginService(new LoginRequest(service.Test.username, service.Test.password));
         CreateGameService createGameService;
         ClearApplicationService clearApplicationService = new ClearApplicationService();
-        clearApplicationService.clearDatabase();
+        assertDoesNotThrow(clearApplicationService::clearDatabase, "Error: Failed to clear database");
         String authToken = null;
         // Register the new user
-        assertDoesNotThrow(() -> {
-            registerService.register();
-        }, "Error: Failed to register new user in CreateGameServiceTest.createGameWithValidAuthToken()");
+        assertDoesNotThrow(registerService::register, "Error: Failed to register new user");
         // Log in as user and save authToken
         try {
             authToken = loginService.login();
         } catch (Exception exception) {
-            assert false : "Error: Failed to log in user in CreateGameServiceTest.createGameWithValidAuthToken()";
+            assert false : "Error: Failed to log in user";
         }
         // Create a new game using previous authToken
-        try {
-            createGameService = new CreateGameService(new CreateRequest(authToken, service.Test.gameName));
-            createGameService.createGame();
-            assert true;
-        } catch (Exception exception) {
-            assert false : "Error: Failed to create game in CreateGameServiceTest.createGameWithValidAuthToken()";
-        }
+        createGameService = new CreateGameService(new CreateRequest(authToken, service.Test.gameName));
+        assertDoesNotThrow(createGameService::createGame, "Error: Failed to create game");
     }
 
     @Test
@@ -45,25 +39,13 @@ class CreateGameServiceTest {
         LoginService loginService = new LoginService(new LoginRequest(service.Test.username, service.Test.password));
         CreateGameService createGameService;
         ClearApplicationService clearApplicationService = new ClearApplicationService();
-        clearApplicationService.clearDatabase();
-        String authToken = null;
+        assertDoesNotThrow(clearApplicationService::clearDatabase, "Error: Failed to clear database");
         // Register the new user
-        assertDoesNotThrow(() -> {
-            registerService.register();
-        }, "Error: Failed to register new user in CreateGameServiceTest.createGameWithInvalidAuthToken()");
+        assertDoesNotThrow(registerService::register, "Error: Failed to register new user");
         // Log in as user and save authToken
-        try {
-            authToken = loginService.login();
-        } catch (Exception exception) {
-            assert false : "Error: Failed to log in user in CreateGameServiceTest.createGameWithInvalidAuthToken()";
-        }
+        assertDoesNotThrow(loginService::login, "Error: Failed to log in user");
         // Create a new game using an invalid authToken
-        try {
-            createGameService = new CreateGameService(new CreateRequest(service.Test.authToken, service.Test.gameName));
-            createGameService.createGame();
-            assert false : "Error: Should not have created game in CreateGameServiceTest.createGameWithInvalidAuthToken()";
-        } catch (Exception exception) {
-            assert exception instanceof Error401Unauthorized;
-        }
+        createGameService = new CreateGameService(new CreateRequest(service.Test.authToken, service.Test.gameName));
+        assertThrows(Error401Unauthorized.class, createGameService::createGame, "Error: Should not have created game");
     }
 }

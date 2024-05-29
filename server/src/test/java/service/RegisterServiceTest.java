@@ -15,11 +15,9 @@ class RegisterServiceTest {
         // Create the database and clear it
         RegisterService registerService = new RegisterService(new RegisterRequest(service.Test.username, service.Test.password, service.Test.email));
         ClearApplicationService clearApplicationService = new ClearApplicationService();
-        clearApplicationService.clearDatabase();
+        assertDoesNotThrow(clearApplicationService::clearDatabase, "Error: Failed to clear database");
         // Register the new user
-        assertDoesNotThrow(() -> {
-            registerService.register();
-        }, "Error: Failed to register new user in RegisterServiceTest.registerNewUser()");
+        assertDoesNotThrow(registerService::register,"Error: Failed to register new user");
     }
 
     @Test
@@ -27,13 +25,11 @@ class RegisterServiceTest {
         // Create the database and clear it
         RegisterService registerService = new RegisterService(new RegisterRequest(service.Test.username, service.Test.password, service.Test.email));
         ClearApplicationService clearApplicationService = new ClearApplicationService();
-        clearApplicationService.clearDatabase();
+        assertDoesNotThrow(clearApplicationService::clearDatabase, "Error: Failed to clear database");
         // Register the new user
-        assertDoesNotThrow(() -> {
-            registerService.register();
-        }, "Error: Failed to register new user in RegisterServiceTest.registerUserAgain()");
+        assertDoesNotThrow(registerService::register, "Error: Failed to register new user");
         // Register the user again (403)
-        assertThrows(Error403AlreadyTaken.class, registerService::register, "Error: Should not have reregistered user in RegisterServiceTest.registerUserAgain()");
+        assertThrows(Error403AlreadyTaken.class, registerService::register, "Error: Should not have reregistered user");
     }
 
 }

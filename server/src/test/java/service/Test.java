@@ -8,5 +8,4 @@ public record Test() {
     static String gameName = "gameName";
     static int gameID = 0;
     static String white = "WHITE";
-    static String black = "BLACK";
 }

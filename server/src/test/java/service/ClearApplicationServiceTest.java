@@ -13,9 +13,9 @@ class ClearApplicationServiceTest {
         // Create database
         ClearApplicationService clearApplicationService = new ClearApplicationService();
         // Clear the database
-        clearApplicationService.clearDatabase();
+        assertDoesNotThrow(clearApplicationService::clearDatabase, "Error: Failed to clear database");
         // Assert that the database is empty
-        assertTrue(clearApplicationService.isDatabaseEmpty(), "Error: Failed to clear database in ClearApplicationServiceTest.clearEmptyDatabase()");
+        assertTrue(clearApplicationService.isDatabaseEmpty(), "Error: Failed to clear database");
     }
 
     @Test
@@ -24,13 +24,11 @@ class ClearApplicationServiceTest {
         ClearApplicationService clearApplicationService = new ClearApplicationService();
         RegisterService registerService = new RegisterService(new RegisterRequest(service.Test.username, service.Test.password,service.Test.email));
         // Register new user
-        assertDoesNotThrow(() -> {
-            registerService.register();
-        }, "Error: Failed to register new user in ClearApplicationServiceTest.clearPopulatedDatabase()");
+        assertDoesNotThrow(registerService::register, "Error: Failed to register new user");
         // Clear the database
-        clearApplicationService.clearDatabase();
+        assertDoesNotThrow(clearApplicationService::clearDatabase, "Error: Failed to clear database");
         // Assert that the database is empty
-        assertTrue(clearApplicationService.isDatabaseEmpty(), "Error: Failed to clear database in ClearApplicationServiceTest.clearPopulatedDatabase()");
+        assertTrue(clearApplicationService.isDatabaseEmpty(), "Error: Failed to clear database");
     }
 
 }

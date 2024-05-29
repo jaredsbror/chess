@@ -21,12 +21,10 @@ class ListGamesServiceTest {
         CreateGameService createGameService;
         ListGamesService listGamesService;
         ClearApplicationService clearApplicationService = new ClearApplicationService();
-        clearApplicationService.clearDatabase();
+        assertDoesNotThrow(clearApplicationService::clearDatabase, "Error: Failed to clear database");
         String authToken = null;
         // Register the new user
-        assertDoesNotThrow(() -> {
-            registerService.register();
-        }, "Error: Failed to register new user in ListGamesServiceTest.listGamesWithValidAuthToken");
+        assertDoesNotThrow(registerService::register, "Error: Failed to register new user");
         // Log in as user and save authToken
         try {
             authToken = loginService.login();
@@ -34,17 +32,17 @@ class ListGamesServiceTest {
             assert false : "Error: Failed to log in user in ListGamesServiceTest.listGamesWithValidAuthToken";
         }
         // Create three new games using previous authToken
+        createGameService = new CreateGameService(new CreateRequest(authToken, UUID.randomUUID().toString()));
         for (int i = 0; i < 3; i++) {
             try {
-                createGameService = new CreateGameService(new CreateRequest(authToken, UUID.randomUUID().toString()));
                 createGameService.createGame();
             } catch (Exception exception) {
                 assert false : "Error: Failed to create game in ListGamesServiceTest.listGamesWithValidAuthToken";
             }
         }
         // List games using valid authToken
+        listGamesService = new ListGamesService(new ListRequest(authToken));
         try {
-            listGamesService = new ListGamesService(new ListRequest(authToken));
             listGamesService.getGameList();
             assert true;
         } catch (Exception exception) {
@@ -60,12 +58,10 @@ class ListGamesServiceTest {
         CreateGameService createGameService;
         ListGamesService listGamesService;
         ClearApplicationService clearApplicationService = new ClearApplicationService();
-        clearApplicationService.clearDatabase();
+        assertDoesNotThrow(clearApplicationService::clearDatabase, "Error: Failed to clear database");
         String authToken = null;
         // Register the new user
-        assertDoesNotThrow(() -> {
-            registerService.register();
-        }, "Error: Failed to register new user in ListGamesServiceTest.listGamesWithInvalidAuthToken");
+        assertDoesNotThrow(registerService::register, "Error: Failed to register new user");
         // Log in as user and save authToken
         try {
             authToken = loginService.login();
@@ -73,17 +69,17 @@ class ListGamesServiceTest {
             assert false : "Error: Failed to log in user in ListGamesServiceTest.listGamesWithInvalidAuthToken";
         }
         // Create three new games using previous authToken
+        createGameService = new CreateGameService(new CreateRequest(authToken, UUID.randomUUID().toString()));
         for (int i = 0; i < 3; i++) {
             try {
-                createGameService = new CreateGameService(new CreateRequest(authToken, UUID.randomUUID().toString()));
                 createGameService.createGame();
             } catch (Exception exception) {
                 assert false : "Error: Failed to create game in ListGamesServiceTest.listGamesWithInvalidAuthToken";
             }
         }
         // List games using invalid authToken
+        listGamesService = new ListGamesService(new ListRequest(service.Test.authToken));
         try {
-            listGamesService = new ListGamesService(new ListRequest(service.Test.authToken));
             listGamesService.getGameList();
             assert false : "Error: Should not list games in ListGamesServiceTest.listGamesWithInvalidAuthToken";
         } catch (Exception exception) {
