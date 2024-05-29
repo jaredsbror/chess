@@ -15,15 +15,11 @@ public class ChessPiece {
     // Variables
     private ChessGame.TeamColor pieceColor;
     private ChessPiece.PieceType pieceType;
-    private boolean hasMoved;
-    private boolean isPawnTwoSquaresForward;
 
     // Constructor
     public ChessPiece(ChessGame.TeamColor pieceColor, ChessPiece.PieceType type) {
         this.pieceColor = pieceColor;
         this.pieceType = type;
-        hasMoved = false;
-        isPawnTwoSquaresForward = false;
         // Optional debug
         if (Constants.DEBUG_GLOBAL || Constants.DEBUG_CHESS_PIECE) System.out.println("Creating Chess" + this.toString());
     }
