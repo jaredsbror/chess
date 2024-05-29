@@ -39,6 +39,16 @@ public class BishopMovesCalculator implements PieceMovesCalculator {
         return (possibleRow >= Constants.BOARD_MIN_ONE_INDEX && possibleRow <= Constants.BOARD_MAX_ONE_INDEX && possibleColumn >= Constants.BOARD_MIN_ONE_INDEX && possibleColumn <= Constants.BOARD_MAX_ONE_INDEX);
     }
 
+    // Method to process bishop possibleRow and possibleColumn and to avoid code duplication
+    private boolean processOrBreakOutOfBishopLoop(ChessBoard board, ChessPosition position) {
+        // If there is a friendly piece there, break out of the loop before adding a valid move
+        if (board.doesFriendlyPieceExist(possibleRow, possibleColumn, currentTeamColor)) return true;
+        // The position is valid, add it to the output collection of valid moves
+        validMoves.add(new ChessMove(position, new ChessPosition(possibleRow, possibleColumn), null));
+        // If there is an opponent's piece there, break out of the loop after adding a valid move
+        return board.doesOpponentPieceExist(possibleRow, possibleColumn, opponentTeamColor);
+    }
+
     @Override
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition position) {
         // Collection to hold resulting valid moves
@@ -53,16 +63,7 @@ public class BishopMovesCalculator implements PieceMovesCalculator {
         possibleColumn = currentColumn - 1;
         // Loop to check movements
         while (isWithinBounds()) {
-            // If there is a friendly piece there, break out of the loop before adding a valid move
-            if (board.doesFriendlyPieceExist(possibleRow, possibleColumn, currentTeamColor)) {
-                break;
-            }
-            // The position is valid, add it to the output collection of valid moves
-            validMoves.add(new ChessMove(position, new ChessPosition(possibleRow, possibleColumn), null));
-            // If there is an opponent's piece there, break out of the loop after adding a valid move
-            if (board.doesOpponentPieceExist(possibleRow, possibleColumn, opponentTeamColor)) {
-                break;
-            }
+            if (processOrBreakOutOfBishopLoop(board, position)) break;
             possibleRow++;
             possibleColumn--;
         }
@@ -72,16 +73,7 @@ public class BishopMovesCalculator implements PieceMovesCalculator {
         possibleColumn = currentColumn + 1;
         // Loop to check movements
         while (isWithinBounds()) {
-            // If there is a friendly piece there, break out of the loop before adding a valid move
-            if (board.doesFriendlyPieceExist(possibleRow, possibleColumn, currentTeamColor)) {
-                break;
-            }
-            // The position is valid, add it to the output collection of valid moves
-            validMoves.add(new ChessMove(position, new ChessPosition(possibleRow, possibleColumn), null));
-            // If there is an opponent's piece there, break out of the loop after adding a valid move
-            if (board.doesOpponentPieceExist(possibleRow, possibleColumn, opponentTeamColor)) {
-                break;
-            }
+            if (processOrBreakOutOfBishopLoop(board, position)) break;
             possibleRow++;
             possibleColumn++;
         }
@@ -91,16 +83,7 @@ public class BishopMovesCalculator implements PieceMovesCalculator {
         possibleColumn = currentColumn + 1;
         // Loop to check movements
         while (isWithinBounds()) {
-            // If there is a friendly piece there, break out of the loop before adding a valid move
-            if (board.doesFriendlyPieceExist(possibleRow, possibleColumn, currentTeamColor)) {
-                break;
-            }
-            // The position is valid, add it to the output collection of valid moves
-            validMoves.add(new ChessMove(position, new ChessPosition(possibleRow, possibleColumn), null));
-            // If there is an opponent's piece there, break out of the loop after adding a valid move
-            if (board.doesOpponentPieceExist(possibleRow, possibleColumn, opponentTeamColor)) {
-                break;
-            }
+            if (processOrBreakOutOfBishopLoop(board, position)) break;
             possibleRow--;
             possibleColumn++;
         }
@@ -110,16 +93,7 @@ public class BishopMovesCalculator implements PieceMovesCalculator {
         possibleColumn = currentColumn - 1;
         // Loop to check movements
         while (isWithinBounds()) {
-            // If there is a friendly piece there, break out of the loop before adding a valid move
-            if (board.doesFriendlyPieceExist(possibleRow, possibleColumn, currentTeamColor)) {
-                break;
-            }
-            // The position is valid, add it to the output collection of valid moves
-            validMoves.add(new ChessMove(position, new ChessPosition(possibleRow, possibleColumn), null));
-            // If there is an opponent's piece there, break out of the loop after adding a valid move
-            if (board.doesOpponentPieceExist(possibleRow, possibleColumn, opponentTeamColor)) {
-                break;
-            }
+            if (processOrBreakOutOfBishopLoop(board, position)) break;
             possibleRow--;
             possibleColumn--;
         }
