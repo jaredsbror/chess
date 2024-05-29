@@ -1,6 +1,6 @@
-package dataAccess.user;
+package dataaccess.user;
 
-import dataAccess.UserDAO;
+import dataaccess.UserDAO;
 import model.UserData;
 import java.util.*;
 
@@ -19,5 +19,9 @@ public class MemoryUserDAO implements UserDAO {
 
     public void clear() {
         userTable.clear();
+    }
+
+    public boolean isEmpty() {
+        return userTable.isEmpty();
     }
 }

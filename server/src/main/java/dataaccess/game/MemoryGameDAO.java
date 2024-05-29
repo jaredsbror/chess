@@ -1,9 +1,8 @@
-package dataAccess.game;
+package dataaccess.game;
 
 import chess.ChessGame;
-import dataAccess.GameDAO;
+import dataaccess.GameDAO;
 import model.GameData;
-import model.RegisterResult;
 
 import java.util.*;
 
@@ -57,5 +56,9 @@ public class MemoryGameDAO implements GameDAO {
         }
         // Return the final list
         return gameDataArrayList;
+    }
+
+    public boolean isEmpty() {
+        return gameTable.isEmpty();
     }
 }

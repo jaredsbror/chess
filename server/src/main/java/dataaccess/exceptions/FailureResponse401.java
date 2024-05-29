@@ -1,4 +1,4 @@
-package dataAccess.exceptions;
+package dataaccess.exceptions;
 
 public class FailureResponse401 extends Exception {
     // Default constructor

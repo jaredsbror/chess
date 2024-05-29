@@ -1,9 +1,9 @@
 package service;
 
-import dataAccess.auth.MemoryAuthDAO;
-import dataAccess.exceptions.FailureResponse401;
-import dataAccess.exceptions.FailureResponse500;
-import dataAccess.game.MemoryGameDAO;
+import dataaccess.auth.MemoryAuthDAO;
+import dataaccess.exceptions.FailureResponse401;
+import dataaccess.exceptions.FailureResponse500;
+import dataaccess.game.MemoryGameDAO;
 import model.GameData;
 import model.ListRequest;
 
@@ -18,7 +18,7 @@ public class ListGamesService {
         authToken = listRequest.authToken();
     }
 
-    public ArrayList<GameData> getGameList(String authToken) throws FailureResponse401, FailureResponse500 {
+    public ArrayList<GameData> getGameList() throws FailureResponse401, FailureResponse500 {
         // Verify that the authToken already exists
         if (!memoryAuthDAO.verifyAuthToken(authToken)) throw new FailureResponse401();
         // Return the list of games

@@ -1,6 +1,6 @@
-package dataAccess.auth;
+package dataaccess.auth;
 
-import dataAccess.AuthDAO;
+import dataaccess.AuthDAO;
 import model.AuthData;
 import java.util.*;
 

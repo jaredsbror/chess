@@ -1,8 +1,8 @@
 package handlers;
 
 import com.google.gson.Gson;
-import dataAccess.exceptions.FailureResponse401;
-import dataAccess.exceptions.FailureResponse500;
+import dataaccess.exceptions.FailureResponse401;
+import dataaccess.exceptions.FailureResponse500;
 import model.LogoutRequest;
 import model.LogoutResult;
 import service.LogoutService;

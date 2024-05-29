@@ -1,10 +1,10 @@
 package service;
 
-import dataAccess.auth.MemoryAuthDAO;
-import dataAccess.exceptions.FailureResponse400;
-import dataAccess.exceptions.FailureResponse401;
-import dataAccess.exceptions.FailureResponse500;
-import dataAccess.game.MemoryGameDAO;
+import dataaccess.auth.MemoryAuthDAO;
+import dataaccess.exceptions.FailureResponse400;
+import dataaccess.exceptions.FailureResponse401;
+import dataaccess.exceptions.FailureResponse500;
+import dataaccess.game.MemoryGameDAO;
 import model.CreateRequest;
 
 public class CreateGameService {

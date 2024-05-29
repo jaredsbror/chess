@@ -1,15 +1,11 @@
 package handlers;
 
 import com.google.gson.Gson;
-import dataAccess.exceptions.FailureResponse400;
-import dataAccess.exceptions.FailureResponse401;
-import dataAccess.exceptions.FailureResponse403;
-import dataAccess.exceptions.FailureResponse500;
-import model.JoinRequest;
+import dataaccess.exceptions.FailureResponse401;
+import dataaccess.exceptions.FailureResponse500;
 import model.JoinResult;
 import model.ListRequest;
 import model.ListResult;
-import service.JoinGameService;
 import service.ListGamesService;
 import spark.Request;
 import spark.Response;
@@ -33,7 +29,7 @@ public class ListGamesHandler implements Route {
         // Return the .json array with GameData
         try {
             response.status(200);
-            return gson.toJson(new ListResult(null, null, listGamesService.getGameList(listRequest.authToken())));
+            return gson.toJson(new ListResult(null, null, listGamesService.getGameList()));
         }  catch (FailureResponse401 exception) {
             response.status(401);
             exception.printStackTrace();

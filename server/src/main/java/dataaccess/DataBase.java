@@ -1,8 +1,8 @@
-package dataAccess;
+package dataaccess;
 
-import dataAccess.auth.MemoryAuthDAO;
-import dataAccess.game.MemoryGameDAO;
-import dataAccess.user.MemoryUserDAO;
+import dataaccess.auth.MemoryAuthDAO;
+import dataaccess.game.MemoryGameDAO;
+import dataaccess.user.MemoryUserDAO;
 
 public class DataBase {
     public MemoryAuthDAO memoryAuthDAO = new MemoryAuthDAO();

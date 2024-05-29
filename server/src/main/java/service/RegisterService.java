@@ -1,8 +1,8 @@
 package service;
 
-import dataAccess.auth.MemoryAuthDAO;
-import dataAccess.exceptions.*;
-import dataAccess.user.MemoryUserDAO;
+import dataaccess.auth.MemoryAuthDAO;
+import dataaccess.exceptions.*;
+import dataaccess.user.MemoryUserDAO;
 import model.RegisterRequest;
 
 public class RegisterService {
