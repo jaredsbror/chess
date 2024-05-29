@@ -64,8 +64,7 @@ public class ChessGame {
      * startPosition
      */
     public Collection<ChessMove> validMoves(ChessPosition startPosition) {
-        System.out.println("ValidMoves:");
-        chessBoard.printBoard();
+        if (Constants.DEBUG_GLOBAL || Constants.DEBUG_CHESS_GAME) chessBoard.printBoard();
         // If the startPosition is invalid, return null
         if (isNotWithinBounds(startPosition)) return null;
         // If there is no piece at startPosition, return null.
@@ -134,8 +133,7 @@ public class ChessGame {
      * @throws InvalidMoveException if move is invalid
      */
     public void makeMove(ChessMove move) throws InvalidMoveException {
-        System.out.println("makeMove:");
-        chessBoard.printBoard();
+        if (Constants.DEBUG_GLOBAL || Constants.DEBUG_CHESS_GAME) chessBoard.printBoard();
         // Save starting, ending position, and promotion piece
         ChessPosition startPosition = move.getStartPosition();
         ChessPosition endPosition = move.getEndPosition();
@@ -219,8 +217,10 @@ public class ChessGame {
         }
         // If there is no friendly king, return false
         if (!foundKing) {
-            System.out.println("Unable to find friendly King in ChessGame.isInCheck():");
-            board.printBoard();
+            if (Constants.DEBUG_GLOBAL || Constants.DEBUG_CHESS_GAME) {
+                System.out.println("Unable to find friendly King in ChessGame.isInCheck():");
+                chessBoard.printBoard();
+            }
             return false;
         }
         // Return whether any opponent moves include the King as their last position
