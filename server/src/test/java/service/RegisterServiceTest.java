@@ -1,7 +1,7 @@
 package service;
 
 import dataaccess.exceptions.FailureResponse403;
-import model.RegisterRequest;
+import model.custom.RegisterRequest;
 import org.junit.jupiter.api.Test;
 
 class RegisterServiceTest {

@@ -4,8 +4,8 @@ import dataaccess.auth.MemoryAuthDAO;
 import dataaccess.exceptions.FailureResponse401;
 import dataaccess.exceptions.FailureResponse500;
 import dataaccess.user.MemoryUserDAO;
-import model.LoginRequest;
-import model.UserData;
+import model.custom.LoginRequest;
+import model.original.UserData;
 
 
 public class LoginService {

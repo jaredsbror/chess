@@ -1,6 +1,6 @@
 package service;
 
-import model.RegisterRequest;
+import model.custom.RegisterRequest;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;

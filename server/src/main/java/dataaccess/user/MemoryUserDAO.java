@@ -1,7 +1,7 @@
 package dataaccess.user;
 
 import dataaccess.UserDAO;
-import model.UserData;
+import model.original.UserData;
 import java.util.*;
 
 // Contains and modifies UserData in Chess application

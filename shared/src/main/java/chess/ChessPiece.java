@@ -47,37 +47,11 @@ public class ChessPiece {
         return pieceColor;
     }
 
-    // Set team color
-    public void setTeamColor(ChessGame.TeamColor pieceColor) {
-        this.pieceColor = pieceColor;
-    }
-
     /**
      * @return which type of chess piece this piece is
      */
     public PieceType getPieceType() {
         return pieceType;
-    }
-
-    // Set piece type
-    public void setPieceType(ChessPiece.PieceType type) {
-        this.pieceType = type;
-    }
-
-    public boolean hasMoved() {
-        return hasMoved;
-    }
-
-    public void setHasMoved(boolean hasMoved) {
-        this.hasMoved = hasMoved;
-    }
-
-    public boolean isPawnTwoSquaresForward() {
-        return isPawnTwoSquaresForward;
-    }
-
-    public void setPawnTwoSquaresForward(boolean pawnTwoSquaresForward) {
-        isPawnTwoSquaresForward = pawnTwoSquaresForward;
     }
 
     /**

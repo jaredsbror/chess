@@ -1,4 +1,4 @@
-package model;
+package model.original;
 
 import chess.ChessGame;
 

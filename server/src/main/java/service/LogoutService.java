@@ -3,7 +3,7 @@ package service;
 import dataaccess.auth.MemoryAuthDAO;
 import dataaccess.exceptions.FailureResponse401;
 import dataaccess.exceptions.FailureResponse500;
-import model.LogoutRequest;
+import model.custom.LogoutRequest;
 
 
 public class LogoutService {

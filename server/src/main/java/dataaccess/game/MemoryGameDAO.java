@@ -2,7 +2,7 @@ package dataaccess.game;
 
 import chess.ChessGame;
 import dataaccess.GameDAO;
-import model.GameData;
+import model.original.GameData;
 
 import java.util.*;
 

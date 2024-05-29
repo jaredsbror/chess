@@ -1,15 +1,5 @@
 package chess;
 
-
-/*
-KING,
-QUEEN,
-BISHOP,
-KNIGHT,
-ROOK,
-PAWN
- */
-
 public interface Constants {
     /// Phase 0
     // Board dimensions

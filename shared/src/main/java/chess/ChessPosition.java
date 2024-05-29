@@ -28,9 +28,6 @@ public class ChessPosition {
      */
     public int getRow() { return row; }
 
-    // Set the column
-    public void setRow(int row) { this.row = row; }
-
     /**
      * @return which column this position is in
      * 1 codes for the left row

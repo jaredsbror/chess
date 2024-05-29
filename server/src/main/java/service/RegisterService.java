@@ -3,7 +3,7 @@ package service;
 import dataaccess.auth.MemoryAuthDAO;
 import dataaccess.exceptions.*;
 import dataaccess.user.MemoryUserDAO;
-import model.RegisterRequest;
+import model.custom.RegisterRequest;
 
 public class RegisterService {
     private MemoryAuthDAO memoryAuthDAO = new MemoryAuthDAO();

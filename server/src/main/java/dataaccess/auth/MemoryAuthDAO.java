@@ -1,7 +1,7 @@
 package dataaccess.auth;
 
 import dataaccess.AuthDAO;
-import model.AuthData;
+import model.original.AuthData;
 import java.util.*;
 
 // Contains and modifies User Authorization Data in the Chess application.

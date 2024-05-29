@@ -1,7 +1,7 @@
 package handlers;
 
 import com.google.gson.Gson;
-import model.ClearResult;
+import model.custom.ClearResult;
 import service.ClearApplicationService;
 import spark.Request;
 import spark.Response;

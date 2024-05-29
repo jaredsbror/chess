@@ -6,9 +6,9 @@ import dataaccess.exceptions.FailureResponse401;
 import dataaccess.exceptions.FailureResponse403;
 import dataaccess.exceptions.FailureResponse500;
 import dataaccess.game.MemoryGameDAO;
-import model.AuthData;
-import model.GameData;
-import model.JoinRequest;
+import model.original.AuthData;
+import model.original.GameData;
+import model.custom.JoinRequest;
 
 public class JoinGameService {
     private MemoryAuthDAO memoryAuthDAO = new MemoryAuthDAO();

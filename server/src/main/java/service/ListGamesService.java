@@ -4,8 +4,8 @@ import dataaccess.auth.MemoryAuthDAO;
 import dataaccess.exceptions.FailureResponse401;
 import dataaccess.exceptions.FailureResponse500;
 import dataaccess.game.MemoryGameDAO;
-import model.GameData;
-import model.ListRequest;
+import model.original.GameData;
+import model.custom.ListRequest;
 
 import java.util.ArrayList;
 

@@ -44,12 +44,6 @@ public class KingMovesCalculator implements PieceMovesCalculator {
         return opponentTeamColor;
     }
 
-    // Set current (and opponent) team color
-    public void setCurrentTeamColor(ChessGame.TeamColor currentTeamColor) {
-        this.currentTeamColor = currentTeamColor;
-        opponentTeamColor = (currentTeamColor == ChessGame.TeamColor.WHITE ? ChessGame.TeamColor.BLACK : ChessGame.TeamColor.WHITE);
-    }
-
     // Check if a position is on the board
     private boolean isWithinBounds() {
         return (possibleRow >= Constants.BOARD_MIN_ONE_INDEX && possibleRow <= Constants.BOARD_MAX_ONE_INDEX && possibleColumn >= Constants.BOARD_MIN_ONE_INDEX && possibleColumn <= Constants.BOARD_MAX_ONE_INDEX);

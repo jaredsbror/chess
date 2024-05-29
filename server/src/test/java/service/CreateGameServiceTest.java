@@ -1,9 +1,9 @@
 package service;
 
 import dataaccess.exceptions.FailureResponse401;
-import model.CreateRequest;
-import model.LoginRequest;
-import model.RegisterRequest;
+import model.custom.CreateRequest;
+import model.custom.LoginRequest;
+import model.custom.RegisterRequest;
 import org.junit.jupiter.api.Test;
 
 class CreateGameServiceTest {

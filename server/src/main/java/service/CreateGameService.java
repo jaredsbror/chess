@@ -5,7 +5,7 @@ import dataaccess.exceptions.FailureResponse400;
 import dataaccess.exceptions.FailureResponse401;
 import dataaccess.exceptions.FailureResponse500;
 import dataaccess.game.MemoryGameDAO;
-import model.CreateRequest;
+import model.custom.CreateRequest;
 
 public class CreateGameService {
     private MemoryAuthDAO memoryAuthDAO = new MemoryAuthDAO();

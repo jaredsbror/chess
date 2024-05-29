@@ -2,8 +2,8 @@ package handlers;
 
 import com.google.gson.Gson;
 import dataaccess.exceptions.*;
-import model.RegisterRequest;
-import model.RegisterResult;
+import model.custom.RegisterRequest;
+import model.custom.RegisterResult;
 import service.RegisterService;
 import spark.*;
 

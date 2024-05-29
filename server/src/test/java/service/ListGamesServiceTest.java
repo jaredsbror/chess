@@ -1,10 +1,10 @@
 package service;
 
 import dataaccess.exceptions.FailureResponse401;
-import model.CreateRequest;
-import model.ListRequest;
-import model.LoginRequest;
-import model.RegisterRequest;
+import model.custom.CreateRequest;
+import model.custom.ListRequest;
+import model.custom.LoginRequest;
+import model.custom.RegisterRequest;
 import org.junit.jupiter.api.Test;
 
 import java.util.UUID;
