@@ -5,23 +5,18 @@ import dataaccess.DataAccessException;
 import dataaccess.DatabaseManager;
 import model.original.AuthData;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
 public class SQLAuthDao implements AuthDAO {
 
-    private Connection connection;
-    private String statement;
-
+    // Constructor
     public SQLAuthDao() throws DataAccessException {
-        try {
-            var conn = DriverManager.getConnection(DatabaseManager.getConnectionUrl(), DatabaseManager.getUSER(), DatabaseManager.getPASSWORD());
-        } catch (SQLException e) {
-            throw new DataAccessException(e.getMessage());
-        }
+        // Verify the connection to the SQL database
+        DatabaseManager.pingDatabase();
+        DatabaseManager.pingTables();
     }
 
-    public AuthData getAuthDataGivenAuthToken(String authToken) {
+    public AuthData getAuthDataGivenAuthToken(String authToken) throws DataAccessException {
+        var statement = ("SELECT authToken, username FROM authTable");
+        DatabaseManager.executeStatementInMySQL(statement);
     }
 
     public String createAuthToken(String username) {

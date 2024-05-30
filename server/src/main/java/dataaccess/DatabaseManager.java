@@ -1,6 +1,11 @@
 package dataaccess;
 
+import chess.Constants;
+
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 import java.util.Properties;
 
 public class DatabaseManager {
@@ -80,15 +85,62 @@ public class DatabaseManager {
             """
     };
 
+    // Check if a sql statement string contains certain word(s)
+    public static boolean containsKeywords(String sql, String... keywords) {
+        // Convert SQL statement to lowercase for case-insensitive search
+        String lowercaseSQL = sql.toLowerCase();
+        // Check if the statement contains any of the specified keywords
+        for (String keyword : keywords)
+            if (lowercaseSQL.contains(keyword.toLowerCase()))
+                return true;
+        return false;
+    }
+
     /**
-     * Creates the database if it does not already exist.
+     * Executes a statement in the database in MySQL
      * @param statement
      */
-    static void executeStatementInMySQL(String statement) throws DataAccessException {
+    public static List<Object> executeStatementInMySQL(String statement) throws DataAccessException {
         try {
+            // Establish a connection and prepare the statement to be executed.
             Connection connection = DriverManager.getConnection(CONNECTION_URL, USER, PASSWORD);
             try (PreparedStatement preparedStatement = connection.prepareStatement(statement)) {
-                preparedStatement.executeUpdate();
+                // Execute the statement. Check if it returned a result set.
+                if (preparedStatement.execute()) {
+                    List<Object> resultList = new ArrayList<>();
+                    ResultSet resultSet = preparedStatement.getResultSet();
+                    // Process resultData returned depending on the statement executed.
+                    if (containsKeywords(statement, Constants.authTable)) {
+                        // Check for what individual values are needed and add them.
+                        if (containsKeywords(statement, Constants.authToken)) {
+                            resultList.add(resultSet.getObject(Constants.authToken));
+                        } else if (containsKeywords(statement, Constants.username)) {
+                            resultList.add(resultSet.getObject(Constants.username));
+                        }
+                    } else if (containsKeywords(statement, Constants.gameTable)) {
+                        // Check for what individual values are needed and add them.
+                        if (containsKeywords(statement, Constants.gameID)) {
+                            resultList.add(resultSet.getObject(Constants.gameID));
+                        } else if (containsKeywords(statement, Constants.whiteUsername)) {
+                            resultList.add(resultSet.getObject(Constants.whiteUsername));
+                        } else if (containsKeywords(statement, Constants.blackUsername)) {
+                            resultList.add(resultSet.getObject(Constants.blackUsername));
+                        } else if (containsKeywords(statement, Constants.gameName)) {
+                            resultList.add(resultSet.getObject(Constants.gameName));
+                        } else if (containsKeywords(statement, Constants.game)) {
+                            resultList.add(resultSet.getObject(Constants.game));
+                        }
+                    } else if (containsKeywords(statement, Constants.userTable)) {
+                        // Check for what individual values are needed and add them.
+                        if (containsKeywords(statement, Constants.username)) {
+                            resultList.add(resultSet.getObject(Constants.username));
+                        } else if (containsKeywords(statement, Constants.password)) {
+                            resultList.add(resultSet.getObject(Constants.password));
+                        } else if (containsKeywords(statement, Constants.email)) {
+                            resultList.add(resultSet.getObject(Constants.email));
+                        }
+                    }
+                }
             }
         } catch (SQLException e) {
             throw new DataAccessException(e.getMessage());
@@ -109,7 +161,7 @@ public class DatabaseManager {
      * Creates a table if it does not already exist.
      * @param tableChoice (which of the tables to create)
      */
-    static void createTable(TableChoice tableChoice) throws DataAccessException {
+    private static void createTable(TableChoice tableChoice) throws DataAccessException {
         String statement;
         // Depending on tableChoice, get the statement
         switch (tableChoice) {
@@ -130,6 +182,27 @@ public class DatabaseManager {
         }
     }
 
+    public static void pingDatabase() throws DataAccessException {
+        // Attempt to execute a harmless statement in order to test the SQL connection to the database
+        try {
+            DatabaseManager.executeStatementInMySQL("SELECT 1");
+        } catch (DataAccessException e) {
+            throw new DataAccessException(e.getMessage());
+        }
+    }
+
+    public static void pingTables() throws DataAccessException {
+        // Attempt to execute harmless statements in order to test the SQL connection to the tables
+        try {
+            DatabaseManager.executeStatementInMySQL("USE chess");
+            DatabaseManager.executeStatementInMySQL("SELECT * FROM authTable");
+            DatabaseManager.executeStatementInMySQL("SELECT * FROM gameTable");
+            DatabaseManager.executeStatementInMySQL("SELECT * FROM userTable");
+        } catch (DataAccessException e) {
+            throw new DataAccessException(e.getMessage());
+        }
+    }
+
     /**
      * Create a connection to the database and sets the catalog based upon the
      * properties specified in db.properties. Connections to the database should
@@ -142,7 +215,7 @@ public class DatabaseManager {
      * }
      * </code>
      */
-    Connection getConnection() throws DataAccessException {
+    public static Connection getConnection() throws DataAccessException {
         try {
             var conn = DriverManager.getConnection(CONNECTION_URL, USER, PASSWORD);
             conn.setCatalog(DATABASE_NAME);

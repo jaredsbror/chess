@@ -41,4 +41,17 @@ public interface Constants {
     boolean DEBUG_KNIGHT_MOVES_CALCULATOR = false;
     boolean DEBUG_ROOK_MOVES_CALCULATOR = false;
     boolean DEBUG_PAWN_MOVES_CALCULATOR = false;
+
+    String authTable = "authTable";
+    String gameTable = "gameTable";
+    String userTable = "userTable";
+    String username = "username";
+    String password = "password";
+    String email = "email";
+    String gameID = "gameID";
+    String whiteUsername = "whiteUsername";
+    String blackUsername = "blackUsername";
+    String gameName = "gameName";
+    String game = "game";
+    String authToken = "authToken";
 }
