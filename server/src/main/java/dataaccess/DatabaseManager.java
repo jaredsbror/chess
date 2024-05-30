@@ -1,107 +1,104 @@
 package dataaccess;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.HashSet;
-import java.util.Set;
+import java.sql.*;
+import java.util.Properties;
 
 public class DatabaseManager {
+    private static final String DATABASE_NAME;
+    private static final String USER;
+    private static final String PASSWORD;
+    private static final String CONNECTION_URL;
 
-    private Connection conn;
-
-    public void openConnection() throws DatabaseException {
+    /*
+     * Load the database information for the db.properties file.
+     */
+    static {
         try {
-            final String CONNECTION_URL = "jdbc:sqlite:spellcheck.sqlite";
+            try (var propStream = Thread.currentThread().getContextClassLoader().getResourceAsStream("db.properties")) {
+                if (propStream == null) throw new Exception("Unable to load db.properties");
+                Properties props = new Properties();
+                props.load(propStream);
+                DATABASE_NAME = props.getProperty("db.name");
+                USER = props.getProperty("db.user");
+                PASSWORD = props.getProperty("db.password");
 
-            // Open a database connection
-            conn = DriverManager.getConnection(CONNECTION_URL);
-
-            // Start a transaction
-            conn.setAutoCommit(false);
-        } catch (SQLException e) {
-            throw new DatabaseException("openConnection failed", e);
-        }
-    }
-
-    public void closeConnection(boolean commit) throws DatabaseException {
-        try {
-            if (commit) {
-                conn.commit();
-            } else {
-                conn.rollback();
+                var host = props.getProperty("db.host");
+                var port = Integer.parseInt(props.getProperty("db.port"));
+                CONNECTION_URL = String.format("jdbc:mysql://%s:%d", host, port);
             }
-
-            conn.close();
-            conn = null;
-        } catch (SQLException e) {
-            throw new DatabaseException("closeConnection failed", e);
+        } catch (Exception ex) {
+            throw new RuntimeException("unable to process db.properties. " + ex.getMessage());
         }
     }
 
-    public void createTables() throws DatabaseException {
-        try (Statement stmt = conn.createStatement()) {
-
-            stmt.executeUpdate("drop table if exists dictionary");
-            stmt.executeUpdate("create table dictionary ( word text not null unique )");
-        } catch (SQLException e) {
-            throw new DatabaseException("createTables failed", e);
-        }
-    }
-
-    public void fillDictionary() throws DatabaseException {
-        String[] words = {"fred", "wilma", "betty", "barney"};
-
-        String sql = "insert into dictionary (word) values (?)";
-        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-
-            for (String word : words) {
-                stmt.setString(1, word);
-
-                if (stmt.executeUpdate() != 1) {
-                    throw new DatabaseException("fillDictionary failed: Could not insert word");
-                }
+    /**
+     * Creates the database if it does not already exist.
+     */
+    public static void createDatabase() throws DataAccessException {
+        try {
+            var statement = "CREATE DATABASE IF NOT EXISTS " + DATABASE_NAME;
+            var conn = DriverManager.getConnection(CONNECTION_URL, USER, PASSWORD);
+            try (var preparedStatement = conn.prepareStatement(statement)) {
+                preparedStatement.executeUpdate();
             }
         } catch (SQLException e) {
-            throw new DatabaseException("fillDictionary failed", e);
+            throw new DataAccessException(e.getMessage());
         }
     }
 
-    public Set<String> loadDictionary() throws DatabaseException {
+    private final String[] createAuthTableStatement = {
+            """
+            CREATE TABLE IF NOT EXISTS  authTable (
+              `username` VARCHAR(255) NOT NULL
+              `authToken` VARCHAR(255) NOT NULL
+              PRIMARY KEY (`username`)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
+            """
+    };
 
-        String sql = "select word from dictionary";
-        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+    private final String[] createGameTableStatement = {
+            """
+            CREATE TABLE IF NOT EXISTS  gameTable (
+              `gameID` INT NOT NULL
+              `whiteUsername` VARCHAR(255)
+              `blackUsername` VARCHAR(255)
+              `gameName` VARCHAR(255) NOT NULL
+              `game` LONGTEXT NOT NULL
+              PRIMARY KEY (`gameID`)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
+            """
+    };
 
-            Set<String> words = new HashSet<>();
-            try (ResultSet rs = stmt.executeQuery()) {
-                while (rs.next()) {
-                    String word = rs.getString(1);
-                    words.add(word);
-                }
-            }
+    private final String[] createUserTableStatement = {
+            """
+            CREATE TABLE IF NOT EXISTS  userTable (
+              `username` VARCHAR(255) NOT NULL
+              `password` VARCHAR(255) NOT NULL
+              `email` VARCHAR(255) NOT NULL
+              PRIMARY KEY (`username`)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
+            """
+    };
 
-            return words;
-        } catch (SQLException e) {
-            throw new DatabaseException("fillDictionary failed", e);
-        }
-    }
-
-
-    public static void main(String[] args) {
+    /**
+     * Create a connection to the database and sets the catalog based upon the
+     * properties specified in db.properties. Connections to the database should
+     * be short-lived, and you must close the connection when you are done with it.
+     * The easiest way to do that is with a try-with-resource block.
+     * <br/>
+     * <code>
+     * try (var conn = DbInfo.getConnection(databaseName)) {
+     * // execute SQL statements.
+     * }
+     * </code>
+     */
+    Connection getConnection() throws DataAccessException {
         try {
-            DatabaseManager db = new DatabaseManager();
-
-            db.openConnection();
-            db.createTables();
-            db.fillDictionary();
-            db.closeConnection(true);
-
-            System.out.println("Database created and loaded.");
-        } catch (DatabaseException e) {
-            e.printStackTrace();
+            var conn = DriverManager.getConnection(CONNECTION_URL, USER, PASSWORD);
+            conn.setCatalog(DATABASE_NAME);
+            return conn;
+        } catch (SQLException e) {
+            throw new DataAccessException(e.getMessage());
         }
     }
 }

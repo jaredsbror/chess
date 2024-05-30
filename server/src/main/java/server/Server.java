@@ -1,5 +1,6 @@
 package server;
 
+import dataaccess.DatabaseManager;
 import handlers.*;
 import spark.*;
 
@@ -16,6 +17,12 @@ public class Server {
 
     public int run(int desiredPort) {
         Spark.port(desiredPort);
+
+        try {
+            DatabaseManager.createDatabase();
+        } catch (Exception exception) {
+            exception.printStackTrace();
+        }
 
         Spark.staticFiles.location("web");
 
