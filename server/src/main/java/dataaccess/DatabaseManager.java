@@ -97,51 +97,48 @@ public class DatabaseManager {
     }
 
     /**
-     * Executes a statement in the database in MySQL
+     * Executes a statement in the database in MySQL and returns a list of objects (strings, ints, etc)
      * @param statement
      */
     public static List<Object> executeStatementInMySQL(String statement) throws DataAccessException {
         try {
+            List<Object> resultList = new ArrayList<>();
             // Establish a connection and prepare the statement to be executed.
             Connection connection = DriverManager.getConnection(CONNECTION_URL, USER, PASSWORD);
             try (PreparedStatement preparedStatement = connection.prepareStatement(statement)) {
                 // Execute the statement. Check if it returned a result set.
                 if (preparedStatement.execute()) {
-                    List<Object> resultList = new ArrayList<>();
                     ResultSet resultSet = preparedStatement.getResultSet();
                     // Process resultData returned depending on the statement executed.
-                    if (containsKeywords(statement, Constants.authTable)) {
+                    if (containsKeywords(statement, Constants.authTable))
                         // Check for what individual values are needed and add them.
-                        if (containsKeywords(statement, Constants.authToken)) {
+                        if (containsKeywords(statement, Constants.authToken))
                             resultList.add(resultSet.getObject(Constants.authToken));
-                        } else if (containsKeywords(statement, Constants.username)) {
+                        else if (containsKeywords(statement, Constants.username))
                             resultList.add(resultSet.getObject(Constants.username));
-                        }
-                    } else if (containsKeywords(statement, Constants.gameTable)) {
+                    else if (containsKeywords(statement, Constants.gameTable))
                         // Check for what individual values are needed and add them.
-                        if (containsKeywords(statement, Constants.gameID)) {
+                        if (containsKeywords(statement, Constants.gameID))
                             resultList.add(resultSet.getObject(Constants.gameID));
-                        } else if (containsKeywords(statement, Constants.whiteUsername)) {
+                        else if (containsKeywords(statement, Constants.whiteUsername))
                             resultList.add(resultSet.getObject(Constants.whiteUsername));
-                        } else if (containsKeywords(statement, Constants.blackUsername)) {
+                        else if (containsKeywords(statement, Constants.blackUsername))
                             resultList.add(resultSet.getObject(Constants.blackUsername));
-                        } else if (containsKeywords(statement, Constants.gameName)) {
+                        else if (containsKeywords(statement, Constants.gameName))
                             resultList.add(resultSet.getObject(Constants.gameName));
-                        } else if (containsKeywords(statement, Constants.game)) {
+                        else if (containsKeywords(statement, Constants.game))
                             resultList.add(resultSet.getObject(Constants.game));
-                        }
-                    } else if (containsKeywords(statement, Constants.userTable)) {
+                    else if (containsKeywords(statement, Constants.userTable))
                         // Check for what individual values are needed and add them.
-                        if (containsKeywords(statement, Constants.username)) {
+                        if (containsKeywords(statement, Constants.username))
                             resultList.add(resultSet.getObject(Constants.username));
-                        } else if (containsKeywords(statement, Constants.password)) {
+                        else if (containsKeywords(statement, Constants.password))
                             resultList.add(resultSet.getObject(Constants.password));
-                        } else if (containsKeywords(statement, Constants.email)) {
+                        else if (containsKeywords(statement, Constants.email))
                             resultList.add(resultSet.getObject(Constants.email));
-                        }
-                    }
                 }
             }
+            return resultList;
         } catch (SQLException e) {
             throw new DataAccessException(e.getMessage());
         }
