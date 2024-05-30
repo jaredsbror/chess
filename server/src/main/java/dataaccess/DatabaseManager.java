@@ -4,7 +4,6 @@ import chess.Constants;
 
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.Properties;
 
@@ -48,8 +47,8 @@ public class DatabaseManager {
     private static final String[] createAuthTableStatement = {
             """
             CREATE TABLE IF NOT EXISTS authTable (
-              username VARCHAR(255) NOT NULL,
               authToken VARCHAR(255) NOT NULL,
+              username VARCHAR(255) NOT NULL,
               PRIMARY KEY (`username`)
             )
             """
@@ -97,18 +96,40 @@ public class DatabaseManager {
     }
 
     /**
+     * Generically execute a statement in the database in MySQL and returns whether the result is empty
+     * @param statement
+     */
+    public static Boolean executeStatementAndReturnEmpty(String statement) throws DataAccessException, SQLException {
+        // Establish a connection and prepare the statement to be executed.
+        try (Connection connection = DriverManager.getConnection(CONNECTION_URL, USER, PASSWORD)) {
+            try (PreparedStatement preparedStatement = connection.prepareStatement(statement)) {
+                // Execute the statement. Check if it returned an empty returnSet.
+                if (preparedStatement.execute()) {
+                    return (!preparedStatement.getResultSet().next());
+                } else {
+                    return true;
+                }
+            }
+        } catch (SQLException e) {
+            throw new DataAccessException(e.getMessage());
+        }
+    };
+
+
+    /**
      * Executes a statement in the database in MySQL and returns a list of objects (strings, ints, etc)
      * @param statement
      */
-    public static List<Object> executeStatementInMySQL(String statement) throws DataAccessException {
-        try {
-            List<Object> resultList = new ArrayList<>();
-            // Establish a connection and prepare the statement to be executed.
-            Connection connection = DriverManager.getConnection(CONNECTION_URL, USER, PASSWORD);
+    public static List<Object> executeStatementAndMaybeReturnSingleRow(String statement) throws DataAccessException {
+        List<Object> resultList = new ArrayList<>();
+        // Establish a connection and prepare the statement to be executed.
+        try (Connection connection = DriverManager.getConnection(CONNECTION_URL, USER, PASSWORD)) {
             try (PreparedStatement preparedStatement = connection.prepareStatement(statement)) {
                 // Execute the statement. Check if it returned a result set.
                 if (preparedStatement.execute()) {
                     ResultSet resultSet = preparedStatement.getResultSet();
+                    // If the result set is empty, return an empty list
+                    if (!resultSet.next()) return resultList;
                     // Process resultData returned depending on the statement executed.
                     if (containsKeywords(statement, Constants.authTable))
                         // Check for what individual values are needed and add them.
@@ -148,7 +169,7 @@ public class DatabaseManager {
      * Creates the database if it does not already exist.
      */
     public static void createDatabase() throws DataAccessException {
-        executeStatementInMySQL("CREATE DATABASE IF NOT EXISTS " + DATABASE_NAME);
+        executeStatementAndMaybeReturnSingleRow("CREATE DATABASE IF NOT EXISTS " + DATABASE_NAME);
         createTable(TableChoice.AUTHTABLE);
         createTable(TableChoice.GAMETABLE);
         createTable(TableChoice.USERTABLE);
@@ -164,15 +185,15 @@ public class DatabaseManager {
         switch (tableChoice) {
             case AUTHTABLE:
                 statement = String.join(" ", createAuthTableStatement);
-                executeStatementInMySQL(statement);
+                executeStatementAndMaybeReturnSingleRow(statement);
                 break;
             case GAMETABLE:
                 statement = String.join(" ", createGameTableStatement);
-                executeStatementInMySQL(statement);
+                executeStatementAndMaybeReturnSingleRow(statement);
                 break;
             case USERTABLE:
                 statement = String.join(" ", createUserTableStatement);
-                executeStatementInMySQL(statement);
+                executeStatementAndMaybeReturnSingleRow(statement);
                 break;
             default:
                 break;
@@ -182,7 +203,7 @@ public class DatabaseManager {
     public static void pingDatabase() throws DataAccessException {
         // Attempt to execute a harmless statement in order to test the SQL connection to the database
         try {
-            DatabaseManager.executeStatementInMySQL("SELECT 1");
+            DatabaseManager.executeStatementAndMaybeReturnSingleRow("SELECT 1");
         } catch (DataAccessException e) {
             throw new DataAccessException(e.getMessage());
         }
@@ -191,10 +212,10 @@ public class DatabaseManager {
     public static void pingTables() throws DataAccessException {
         // Attempt to execute harmless statements in order to test the SQL connection to the tables
         try {
-            DatabaseManager.executeStatementInMySQL("USE chess");
-            DatabaseManager.executeStatementInMySQL("SELECT * FROM authTable");
-            DatabaseManager.executeStatementInMySQL("SELECT * FROM gameTable");
-            DatabaseManager.executeStatementInMySQL("SELECT * FROM userTable");
+            DatabaseManager.executeStatementAndMaybeReturnSingleRow("USE chess");
+            DatabaseManager.executeStatementAndMaybeReturnSingleRow("SELECT * FROM authTable");
+            DatabaseManager.executeStatementAndMaybeReturnSingleRow("SELECT * FROM gameTable");
+            DatabaseManager.executeStatementAndMaybeReturnSingleRow("SELECT * FROM userTable");
         } catch (DataAccessException e) {
             throw new DataAccessException(e.getMessage());
         }
