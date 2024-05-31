@@ -16,11 +16,7 @@ class ClearApplicationServiceTest {
         // Clear the database
         assertDoesNotThrow(clearApplicationService::clearDatabase, "Error: Failed to clear database");
         // Assert that the database is empty
-        try {
-            assertTrue(clearApplicationService.isDatabaseEmpty(), "Error: Failed to clear database");
-        } catch (DataAccessException e) {
-            throw new RuntimeException(e);
-        }
+        assertTrue(clearApplicationService.isDatabaseEmpty(), "Error: Failed to clear database");
     }
 
     @Test
@@ -33,11 +29,7 @@ class ClearApplicationServiceTest {
         // Clear the database
         assertDoesNotThrow(clearApplicationService::clearDatabase, "Error: Failed to clear database");
         // Assert that the database is empty
-        try {
-            assertTrue(clearApplicationService.isDatabaseEmpty(), "Error: Failed to clear database");
-        } catch (DataAccessException e) {
-            throw new RuntimeException(e);
-        }
+        assertTrue(clearApplicationService.isDatabaseEmpty(), "Error: Failed to clear database");
     }
 
 }

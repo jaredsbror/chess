@@ -14,11 +14,7 @@ public class ClearApplicationHandler implements Route {
     private final ClearApplicationService clearApplicationService;
 
     public ClearApplicationHandler() throws Error500Internal {
-        try {
-            clearApplicationService = new ClearApplicationService();
-        } catch (DataAccessException e) {
-            throw new Error500Internal(e.getMessage());
-        }
+        clearApplicationService = new ClearApplicationService();
     }
 
     @Override
@@ -30,7 +26,7 @@ public class ClearApplicationHandler implements Route {
         try {
             clearApplicationService.clearDatabase();
             return "{}";
-        } catch (Exception exception) {
+        } catch (DataAccessException exception) {
             response.status(500);
             return gson.toJson(new ClearResult("Error: " + exception));
         }
