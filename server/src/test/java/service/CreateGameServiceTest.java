@@ -18,10 +18,8 @@ class CreateGameServiceTest {
     ClearApplicationService clearApplicationService;
     String authToken;
 
-
     @Test
-    public void createGameWithValidAuthToken() {
-
+    public void setupForCreateGame() {
         assertDoesNotThrow( () -> {
             // Create the database and clear it
             registerService = new RegisterService( new RegisterRequest( service.Test.username, service.Test.password, service.Test.email ) );
@@ -32,7 +30,12 @@ class CreateGameServiceTest {
             registerService.register();
             // Log in as user and save authToken
             authToken = loginService.login();
-        } );
+        }, "Error: Failed to setup for game creation" );
+    }
+
+    @Test
+    public void createGameWithValidAuthToken() {
+        setupForCreateGame();
         // Create a new game using previous authToken
         assertDoesNotThrow( () -> {
             createGameService = new CreateGameService( new CreateRequest( authToken, service.Test.gameName ) );
@@ -43,17 +46,7 @@ class CreateGameServiceTest {
 
     @Test
     public void createGameWithInvalidAuthToken() {
-        assertDoesNotThrow( () -> {
-            // Create the database and clear it
-            registerService = new RegisterService( new RegisterRequest( service.Test.username, service.Test.password, service.Test.email ) );
-            loginService = new LoginService( new LoginRequest( service.Test.username, service.Test.password ) );
-            clearApplicationService = new ClearApplicationService();
-            clearApplicationService.clearDatabase();
-            // Register the new user
-            registerService.register();
-            // Log in as user and save authToken
-            authToken = loginService.login();
-        } );
+        setupForCreateGame();
         // Create a new game using an invalid authToken
         assertDoesNotThrow( () -> {
             createGameService = new CreateGameService( new CreateRequest( service.Test.authToken, service.Test.gameName ) );
