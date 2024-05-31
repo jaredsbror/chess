@@ -1,19 +1,33 @@
 package server;
 
 import dataaccess.DatabaseManager;
+import dataaccess.exceptions.Error500Internal;
 import handlers.*;
 import spark.*;
 
 public class Server {
 
-    private ClearApplicationHandler clearApplicationHandler = new ClearApplicationHandler();
-    private CreateGameHandler createGameHandler = new CreateGameHandler();
-    private JoinGameHandler joinGameHandler = new JoinGameHandler();
-    private ListGamesHandler listGamesHandler = new ListGamesHandler();
-    private LoginHandler loginHandler = new LoginHandler();
-    private LogoutHandler logoutHandler = new LogoutHandler();
-    private RegisterHandler registerHandler = new RegisterHandler();
+    private final ClearApplicationHandler clearApplicationHandler;
+    private final CreateGameHandler createGameHandler;
+    private final JoinGameHandler joinGameHandler;
+    private final ListGamesHandler listGamesHandler;
+    private final LoginHandler loginHandler;
+    private final LogoutHandler logoutHandler;
+    private final RegisterHandler registerHandler;
 
+    public Server() {
+        try {
+            clearApplicationHandler = new ClearApplicationHandler();
+            createGameHandler = new CreateGameHandler();
+            joinGameHandler = new JoinGameHandler();
+            listGamesHandler = new ListGamesHandler();
+            loginHandler = new LoginHandler();
+            logoutHandler = new LogoutHandler();
+            registerHandler = new RegisterHandler();
+        } catch (Error500Internal e) {
+            throw new RuntimeException(e.getMessage());
+        }
+    }
 
     public int run(int desiredPort) {
         Spark.port(desiredPort);
@@ -22,6 +36,7 @@ public class Server {
             DatabaseManager.createDatabase();
         } catch (Exception exception) {
             exception.printStackTrace();
+            throw new RuntimeException(exception);
         }
 
         Spark.staticFiles.location("web");

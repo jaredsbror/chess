@@ -13,8 +13,12 @@ public class ClearApplicationHandler implements Route {
 
     private final ClearApplicationService clearApplicationService;
 
-    public ClearApplicationHandler() throws Error500Internal {
-        clearApplicationService = new ClearApplicationService();
+    public ClearApplicationHandler() throws Error500Internal{
+        try {
+            clearApplicationService = new ClearApplicationService();
+        } catch (DataAccessException e) {
+            throw new Error500Internal(e.getMessage());
+        }
     }
 
     @Override
