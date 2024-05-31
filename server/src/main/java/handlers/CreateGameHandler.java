@@ -1,9 +1,9 @@
 package handlers;
 
 import com.google.gson.Gson;
+import dataaccess.DataAccessException;
 import dataaccess.exceptions.Error400BadRequest;
 import dataaccess.exceptions.Error401Unauthorized;
-import dataaccess.exceptions.Error500Internal;
 import model.custom.CreateRequest;
 import model.custom.CreateResult;
 import service.CreateGameService;
@@ -28,10 +28,10 @@ public class CreateGameHandler implements Route {
             response.status(401);
             return gson.toJson(new CreateResult(null, new Error401Unauthorized().getMessage(), null));
         }
-        createGameService = new CreateGameService(createRequest);
 
         try {
             response.status(200);
+            createGameService = new CreateGameService(createRequest);
             return gson.toJson(new CreateResult(null, null, createGameService.createGame()));
         } catch (Error400BadRequest exception) {
             response.status(400);
@@ -39,7 +39,7 @@ public class CreateGameHandler implements Route {
         } catch (Error401Unauthorized exception) {
             response.status(401);
             return gson.toJson(new CreateResult(null, exception.getMessage(), null));
-        } catch (Error500Internal exception) {
+        } catch (DataAccessException exception) {
             response.status(500);
             return gson.toJson(new CreateResult(null, exception.getMessage(), null));
         }

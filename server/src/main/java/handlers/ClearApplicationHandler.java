@@ -10,7 +10,6 @@ import spark.Response;
 import spark.Route;
 
 public class ClearApplicationHandler implements Route {
-
     private final ClearApplicationService clearApplicationService;
 
     public ClearApplicationHandler() throws Error500Internal{
