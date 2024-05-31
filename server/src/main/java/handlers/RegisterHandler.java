@@ -30,15 +30,12 @@ public class RegisterHandler implements Route {
             return gson.toJson(new RegisterResult(null, null, registerRequest.username(), registerService.register()));
         } catch (Error400BadRequest exception) {
             response.status(400);
-            exception.printStackTrace();
             return gson.toJson(new RegisterResult(null, exception.getMessage(), null, null));
         } catch (Error403AlreadyTaken exception) {
             response.status(403);
-            exception.printStackTrace();
             return gson.toJson(new RegisterResult(null, exception.getMessage(), null, null));
         } catch (Error500Internal exception) {
             response.status(500);
-            exception.printStackTrace();
             return gson.toJson(new RegisterResult(null, exception.getMessage(), null, null));
         }
     }

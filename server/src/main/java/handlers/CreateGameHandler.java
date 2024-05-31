@@ -35,15 +35,12 @@ public class CreateGameHandler implements Route {
             return gson.toJson(new CreateResult(null, null, createGameService.createGame()));
         } catch (Error400BadRequest exception) {
             response.status(400);
-            exception.printStackTrace();
             return gson.toJson(new CreateResult(null, exception.getMessage(), null));
         } catch (Error401Unauthorized exception) {
             response.status(401);
-            exception.printStackTrace();
             return gson.toJson(new CreateResult(null, exception.getMessage(), null));
         } catch (Error500Internal exception) {
             response.status(500);
-            exception.printStackTrace();
             return gson.toJson(new CreateResult(null, exception.getMessage(), null));
         }
     }

@@ -1,6 +1,7 @@
 package service;
 
-import dataaccess.auth.MemoryAuthDAO;
+import dataaccess.DataAccessException;
+import dataaccess.auth.SQLAuthDao;
 import dataaccess.game.MemoryGameDAO;
 import dataaccess.user.MemoryUserDAO;
 
@@ -8,15 +9,19 @@ import dataaccess.user.MemoryUserDAO;
 public class ClearApplicationService {
     private MemoryUserDAO memoryUserDAO = new MemoryUserDAO();
     private MemoryGameDAO memoryGameDAO = new MemoryGameDAO();
-    private MemoryAuthDAO memoryAuthDAO = new MemoryAuthDAO();
+    private SQLAuthDao sqlAuthDao;
 
-    public void clearDatabase() {
-        memoryAuthDAO.clear();
+    public ClearApplicationService() throws DataAccessException {
+        sqlAuthDao = new SQLAuthDao();
+    }
+
+    public void clearDatabase() throws DataAccessException {
+        sqlAuthDao.clear();
         memoryGameDAO.clear();
         memoryUserDAO.clear();
     }
 
-    public Boolean isDatabaseEmpty() {
-        return (memoryAuthDAO.isEmpty() && memoryGameDAO.isEmpty() && memoryUserDAO.isEmpty());
+    public Boolean isDatabaseEmpty() throws DataAccessException {
+        return (sqlAuthDao.isEmpty() && memoryGameDAO.isEmpty() && memoryUserDAO.isEmpty());
     }
 }

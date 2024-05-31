@@ -6,7 +6,6 @@ import dataaccess.DatabaseManager;
 import model.original.AuthData;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -23,12 +22,11 @@ public class SQLAuthDao implements AuthDAO {
     // Get AuthData object from authTable given an authToken
     public AuthData getAuthDataGivenAuthToken(String authToken) throws DataAccessException {
         // Get resultList data
-        statement = "SELECT authToken, username FROM authTable";
+        statement = "SELECT authToken, username FROM authTable WHERE authToken = '" + authToken + "'";
         List<Object> resultList = DatabaseManager.executeStatementAndMaybeReturnSingleRow(statement);
         // If the resultList is empty, return null
         if (resultList.isEmpty()) return null;
         // Parse resultList
-        authToken = (String) resultList.get(0);
         String username = (String) resultList.get(1);
         // Return the new AuthData object
         return new AuthData(authToken, username);

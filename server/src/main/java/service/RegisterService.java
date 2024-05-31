@@ -1,12 +1,13 @@
 package service;
 
 import dataaccess.auth.MemoryAuthDAO;
+import dataaccess.auth.SQLAuthDao;
 import dataaccess.exceptions.*;
 import dataaccess.user.MemoryUserDAO;
 import model.custom.RegisterRequest;
 
 public class RegisterService {
-    private MemoryAuthDAO memoryAuthDAO = new MemoryAuthDAO();
+    private SQLAuthDao sqlAuthDao = new SQLAuthDao();
     private MemoryUserDAO memoryUserDAO = new MemoryUserDAO();
     private String username;
     private String password;
@@ -25,7 +26,7 @@ public class RegisterService {
         memoryUserDAO.insertUser(username, password, email);
         // Add AuthData into authTable
         // Return the generated authToken
-        return memoryAuthDAO.createAuthToken(username);
+        return sqlAuthDao.createAuthToken(username);
     }
 
 

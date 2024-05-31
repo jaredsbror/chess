@@ -40,19 +40,15 @@ public class JoinGameHandler implements Route {
             return gson.toJson(new JoinResult(null, null));
         } catch (Error400BadRequest exception) {
             response.status(400);
-            exception.printStackTrace();
             return gson.toJson(new JoinResult(null, exception.getMessage()));
         } catch (Error401Unauthorized exception) {
             response.status(401);
-            exception.printStackTrace();
             return gson.toJson(new JoinResult(null, exception.getMessage()));
         } catch (Error403AlreadyTaken exception) {
             response.status(403);
-            exception.printStackTrace();
             return gson.toJson(new JoinResult(null, exception.getMessage()));
         } catch (Error500Internal exception) {
             response.status(500);
-            exception.printStackTrace();
             return gson.toJson(new JoinResult(null, exception.getMessage()));
         }
 

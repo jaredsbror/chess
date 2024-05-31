@@ -1,5 +1,6 @@
 package service;
 
+import dataaccess.DataAccessException;
 import model.custom.RegisterRequest;
 import org.junit.jupiter.api.Test;
 
@@ -15,7 +16,11 @@ class ClearApplicationServiceTest {
         // Clear the database
         assertDoesNotThrow(clearApplicationService::clearDatabase, "Error: Failed to clear database");
         // Assert that the database is empty
-        assertTrue(clearApplicationService.isDatabaseEmpty(), "Error: Failed to clear database");
+        try {
+            assertTrue(clearApplicationService.isDatabaseEmpty(), "Error: Failed to clear database");
+        } catch (DataAccessException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Test
@@ -28,7 +33,11 @@ class ClearApplicationServiceTest {
         // Clear the database
         assertDoesNotThrow(clearApplicationService::clearDatabase, "Error: Failed to clear database");
         // Assert that the database is empty
-        assertTrue(clearApplicationService.isDatabaseEmpty(), "Error: Failed to clear database");
+        try {
+            assertTrue(clearApplicationService.isDatabaseEmpty(), "Error: Failed to clear database");
+        } catch (DataAccessException e) {
+            throw new RuntimeException(e);
+        }
     }
 
 }

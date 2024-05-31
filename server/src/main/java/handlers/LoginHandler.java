@@ -31,11 +31,9 @@ public class LoginHandler implements Route {
             return gson.toJson(new LoginResult(null, null, loginRequest.username(), loginService.login()));
         } catch (Error401Unauthorized exception) {
             response.status(401);
-            exception.printStackTrace();
             return gson.toJson(new LoginResult(null, exception.getMessage(), null, null));
         } catch (Error500Internal exception) {
             response.status(500);
-            exception.printStackTrace();
             return gson.toJson(new LoginResult(null, exception.getMessage(), null, null));
         }
     }

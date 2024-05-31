@@ -1,6 +1,7 @@
 package service;
 
 import dataaccess.auth.MemoryAuthDAO;
+import dataaccess.auth.SQLAuthDao;
 import dataaccess.exceptions.Error400BadRequest;
 import dataaccess.exceptions.Error401Unauthorized;
 import dataaccess.exceptions.Error500Internal;
@@ -8,7 +9,7 @@ import dataaccess.game.MemoryGameDAO;
 import model.custom.CreateRequest;
 
 public class CreateGameService {
-    private MemoryAuthDAO memoryAuthDAO = new MemoryAuthDAO();
+    private SQLAuthDao sqlAuthDao = new SQLAuthDao();
     private MemoryGameDAO memoryGameDAO = new MemoryGameDAO();
     private String authToken;
     private String gameName;
@@ -20,7 +21,7 @@ public class CreateGameService {
 
     public int createGame() throws Error400BadRequest, Error401Unauthorized, Error500Internal {
         // Verify that the user exists
-        if (!memoryAuthDAO.verifyAuthToken(authToken)) {
+        if (!SQLAuthDao.verifyAuthToken(authToken)) {
             throw new Error401Unauthorized();
         }
         // Insert a new game

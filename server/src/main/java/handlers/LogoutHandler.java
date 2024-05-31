@@ -34,11 +34,9 @@ public class LogoutHandler implements Route {
             return gson.toJson(new LogoutResult(null, null));
         } catch (Error401Unauthorized exception) {
             response.status(401);
-            exception.printStackTrace();
             return gson.toJson(new LogoutResult(null, exception.getMessage()));
         } catch (Error500Internal exception) {
             response.status(500);
-            exception.printStackTrace();
             return gson.toJson(new LogoutResult(null, exception.getMessage()));
         }
     }

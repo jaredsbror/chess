@@ -1,6 +1,7 @@
 package service;
 
 import dataaccess.auth.MemoryAuthDAO;
+import dataaccess.auth.SQLAuthDao;
 import dataaccess.exceptions.Error400BadRequest;
 import dataaccess.exceptions.Error401Unauthorized;
 import dataaccess.exceptions.Error403AlreadyTaken;
@@ -11,7 +12,7 @@ import model.original.GameData;
 import model.custom.JoinRequest;
 
 public class JoinGameService {
-    private MemoryAuthDAO memoryAuthDAO = new MemoryAuthDAO();
+    private SQLAuthDao sqlAuthDao = new SQLAuthDao();
     private MemoryGameDAO memoryGameDAO = new MemoryGameDAO();
     private String authToken;
     private String playerColor;
@@ -25,7 +26,7 @@ public class JoinGameService {
 
     public void joinGame() throws Error400BadRequest, Error401Unauthorized, Error403AlreadyTaken, Error500Internal {
         // Verify that there exists a corresponding AuthData object
-        AuthData authData = memoryAuthDAO.getAuthDataGivenAuthToken(authToken);
+        AuthData authData = sqlAuthDao.getAuthDataGivenAuthToken(authToken);
         if (authData == null) throw new Error401Unauthorized();
         // Verify that there exists a corresponding GameData object
         GameData gameData = memoryGameDAO.getGameData(gameID);
