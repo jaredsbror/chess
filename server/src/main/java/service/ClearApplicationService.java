@@ -1,7 +1,7 @@
 package service;
 
 import dataaccess.DataAccessException;
-import dataaccess.auth.SQLAuthDao;
+import dataaccess.auth.SQLAuthDAO;
 import dataaccess.game.MemoryGameDAO;
 import dataaccess.user.MemoryUserDAO;
 
@@ -9,10 +9,10 @@ import dataaccess.user.MemoryUserDAO;
 public class ClearApplicationService {
     private final MemoryUserDAO memoryUserDAO = new MemoryUserDAO();
     private final MemoryGameDAO memoryGameDAO = new MemoryGameDAO();
-    private final SQLAuthDao sqlAuthDao;
+    private final SQLAuthDAO sqlAuthDao;
 
     public ClearApplicationService() throws DataAccessException {
-        sqlAuthDao = new SQLAuthDao();
+        sqlAuthDao = new SQLAuthDAO();
     }
 
     public void clearDatabase() throws DataAccessException {

@@ -1,28 +1,30 @@
 package service;
 
-import dataaccess.auth.MemoryAuthDAO;
-import dataaccess.auth.SQLAuthDao;
+
+import dataaccess.DataAccessException;
+import dataaccess.auth.SQLAuthDAO;
 import dataaccess.exceptions.Error401Unauthorized;
-import dataaccess.exceptions.Error500Internal;
-import dataaccess.user.MemoryUserDAO;
+import dataaccess.user.SQLUserDAO;
 import model.custom.LoginRequest;
 import model.original.UserData;
 
 
 public class LoginService {
-    private SQLAuthDao sqlAuthDao = new SQLAuthDao();
-    private MemoryUserDAO memoryUserDAO = new MemoryUserDAO();
-    private String username;
-    private String password;
+    private final SQLAuthDAO sqlAuthDao;
+    private final SQLUserDAO sqlUserDAO;
+    private final String username;
+    private final String password;
 
-    public LoginService(LoginRequest loginRequest) {
+    public LoginService(LoginRequest loginRequest) throws DataAccessException {
         this.username = loginRequest.username();
         this.password = loginRequest.password();
+        sqlAuthDao = new SQLAuthDAO();
+        sqlUserDAO = new SQLUserDAO();
     }
 
-    public String login() throws Error401Unauthorized, Error500Internal {
+    public String login() throws Error401Unauthorized, DataAccessException {
         // Get corresponding user data from userTable
-        UserData tableData = memoryUserDAO.getUser(username);
+        UserData tableData = sqlUserDAO.getUser(username);
         // Make sure the passwords match (after making sure tableData is not null)
         if (tableData == null) throw new Error401Unauthorized();
         if (!this.password.equals(tableData.password())) throw new Error401Unauthorized();

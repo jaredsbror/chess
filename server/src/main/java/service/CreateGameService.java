@@ -1,20 +1,20 @@
 package service;
 
 import dataaccess.DataAccessException;
-import dataaccess.auth.SQLAuthDao;
+import dataaccess.auth.SQLAuthDAO;
 import dataaccess.exceptions.Error400BadRequest;
 import dataaccess.exceptions.Error401Unauthorized;
 import dataaccess.game.MemoryGameDAO;
 import model.custom.CreateRequest;
 
 public class CreateGameService {
-    private final SQLAuthDao sqlAuthDao;
+    private final SQLAuthDAO sqlAuthDao;
     private final MemoryGameDAO memoryGameDAO;
     private final String authToken;
     private final String gameName;
 
     public CreateGameService(CreateRequest createRequest) throws DataAccessException {
-        sqlAuthDao = new SQLAuthDao();
+        sqlAuthDao = new SQLAuthDAO();
         memoryGameDAO = new MemoryGameDAO();
         authToken = createRequest.authToken();
         gameName = createRequest.gameName();

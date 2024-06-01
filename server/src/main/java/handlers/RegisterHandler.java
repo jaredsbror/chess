@@ -1,6 +1,7 @@
 package handlers;
 
 import com.google.gson.Gson;
+import dataaccess.DataAccessException;
 import dataaccess.exceptions.*;
 import model.custom.RegisterRequest;
 import model.custom.RegisterResult;
@@ -23,9 +24,9 @@ public class RegisterHandler implements Route {
             response.status(400);
             return gson.toJson(new RegisterResult(null, new Error400BadRequest().getMessage(), null, null));
         }
-        registerService = new RegisterService(registerRequest);
 
         try {
+            registerService = new RegisterService(registerRequest);
             response.status(200);
             return gson.toJson(new RegisterResult(null, null, registerRequest.username(), registerService.register()));
         } catch (Error400BadRequest exception) {
@@ -34,7 +35,7 @@ public class RegisterHandler implements Route {
         } catch (Error403AlreadyTaken exception) {
             response.status(403);
             return gson.toJson(new RegisterResult(null, exception.getMessage(), null, null));
-        } catch (Error500Internal exception) {
+        } catch ( DataAccessException exception) {
             response.status(500);
             return gson.toJson(new RegisterResult(null, exception.getMessage(), null, null));
         }

@@ -1,10 +1,11 @@
 package handlers;
 
+
 import com.google.gson.Gson;
+import dataaccess.DataAccessException;
 import dataaccess.exceptions.Error400BadRequest;
 import dataaccess.exceptions.Error401Unauthorized;
 import dataaccess.exceptions.Error403AlreadyTaken;
-import dataaccess.exceptions.Error500Internal;
 import model.custom.JoinRequest;
 import model.custom.JoinResult;
 import service.JoinGameService;
@@ -31,12 +32,12 @@ public class JoinGameHandler implements Route {
             response.status(401);
             return gson.toJson(new JoinResult(null, new Error401Unauthorized().getMessage()));
         }
-        // Create a new joinGameService
-        joinGameService = new JoinGameService(finalJoinRequest);
 
         try {
-            response.status(200);
+            // Create a new joinGameService
+            joinGameService = new JoinGameService(finalJoinRequest);
             joinGameService.joinGame();
+            response.status(200);
             return gson.toJson(new JoinResult(null, null));
         } catch (Error400BadRequest exception) {
             response.status(400);
@@ -47,7 +48,7 @@ public class JoinGameHandler implements Route {
         } catch (Error403AlreadyTaken exception) {
             response.status(403);
             return gson.toJson(new JoinResult(null, exception.getMessage()));
-        } catch (Error500Internal exception) {
+        } catch ( DataAccessException exception) {
             response.status(500);
             return gson.toJson(new JoinResult(null, exception.getMessage()));
         }

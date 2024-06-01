@@ -1,8 +1,9 @@
 package handlers;
 
+
 import com.google.gson.Gson;
+import dataaccess.DataAccessException;
 import dataaccess.exceptions.Error401Unauthorized;
-import dataaccess.exceptions.Error500Internal;
 import model.custom.JoinResult;
 import model.custom.ListRequest;
 import model.custom.ListResult;
@@ -24,16 +25,16 @@ public class ListGamesHandler implements Route {
             response.status(401);
             return gson.toJson(new ListResult(null, new Error401Unauthorized().getMessage(), null));
         }
-        listGamesService = new ListGamesService(listRequest);
 
         // Return the .json array with GameData
         try {
+            listGamesService = new ListGamesService(listRequest);
             response.status(200);
             return gson.toJson(new ListResult(null, null, listGamesService.getGameList()));
         }  catch (Error401Unauthorized exception) {
             response.status(401);
             return gson.toJson(new JoinResult(null, exception.getMessage()));
-        } catch (Error500Internal exception) {
+        } catch ( DataAccessException exception) {
             response.status(500);
             return gson.toJson(new JoinResult(null, exception.getMessage()));
         }

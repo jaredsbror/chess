@@ -1,32 +1,38 @@
 package service;
 
-import dataaccess.auth.MemoryAuthDAO;
-import dataaccess.auth.SQLAuthDao;
-import dataaccess.exceptions.*;
-import dataaccess.user.MemoryUserDAO;
+
+import dataaccess.DataAccessException;
+import dataaccess.auth.SQLAuthDAO;
+import dataaccess.exceptions.Error400BadRequest;
+import dataaccess.exceptions.Error403AlreadyTaken;
+import dataaccess.user.SQLUserDAO;
 import model.custom.RegisterRequest;
 
 public class RegisterService {
-    private SQLAuthDao sqlAuthDao = new SQLAuthDao();
-    private MemoryUserDAO memoryUserDAO = new MemoryUserDAO();
-    private String username;
-    private String password;
-    private String email;
+    private final SQLAuthDAO sqlAuthDao;
+    private final SQLUserDAO sqlUserDAO;
+    private final String username;
+    private final String password;
+    private final String email;
 
-    public RegisterService(RegisterRequest registerRequest) {
+    public RegisterService(RegisterRequest registerRequest) throws DataAccessException {
+        // Process registerRequest variables
         this.username = registerRequest.username();
         this.password = registerRequest.password();
         this.email = registerRequest.email();
+        // Try to access the database
+        sqlAuthDao = new SQLAuthDAO();
+        sqlUserDAO = new SQLUserDAO();
     }
 
-    public String register() throws Error400BadRequest, Error403AlreadyTaken, Error500Internal {
+    public String register() throws Error400BadRequest, Error403AlreadyTaken, DataAccessException {
         // Verify that the user does not exist
-        if (memoryUserDAO.getUser(username) != null) throw new Error403AlreadyTaken();
+        if ( sqlUserDAO.getUser( username ) != null ) throw new Error403AlreadyTaken();
         // Add UserData into userTable
-        memoryUserDAO.insertUser(username, password, email);
+        sqlUserDAO.insertUser( username, password, email );
         // Add AuthData into authTable
         // Return the generated authToken
-        return sqlAuthDao.createAuthToken(username);
+        return sqlAuthDao.createAuthToken( username );
     }
 
 

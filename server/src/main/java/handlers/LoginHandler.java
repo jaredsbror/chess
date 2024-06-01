@@ -1,8 +1,9 @@
 package handlers;
 
+
 import com.google.gson.Gson;
+import dataaccess.DataAccessException;
 import dataaccess.exceptions.Error401Unauthorized;
-import dataaccess.exceptions.Error500Internal;
 import model.custom.LoginRequest;
 import model.custom.LoginResult;
 import model.custom.LogoutResult;
@@ -24,15 +25,15 @@ public class LoginHandler implements Route {
             response.status(401);
             return gson.toJson(new LogoutResult(null, new Error401Unauthorized().getMessage()));
         }
-        loginService = new LoginService(loginRequest);
 
         try {
+            loginService = new LoginService(loginRequest);
             response.status(200);
             return gson.toJson(new LoginResult(null, null, loginRequest.username(), loginService.login()));
         } catch (Error401Unauthorized exception) {
             response.status(401);
             return gson.toJson(new LoginResult(null, exception.getMessage(), null, null));
-        } catch (Error500Internal exception) {
+        } catch ( DataAccessException exception) {
             response.status(500);
             return gson.toJson(new LoginResult(null, exception.getMessage(), null, null));
         }

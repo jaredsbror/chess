@@ -23,7 +23,6 @@ public class ClearApplicationHandler implements Route {
     @Override
     public Object handle(Request request, Response response) {
         Gson gson = new Gson();
-
         // Attempt to clear the database.
         // Otherwise, return an error.
         try {

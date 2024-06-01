@@ -9,11 +9,11 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.UUID;
 
-public class SQLAuthDao implements AuthDAO {
+public class SQLAuthDAO implements AuthDAO {
     private String statement = null;
 
     // Constructor
-    public SQLAuthDao() throws DataAccessException {
+    public SQLAuthDAO() throws DataAccessException {
         // Verify the connection to the SQL database
         DatabaseManager.pingDatabase();
         DatabaseManager.pingTables();

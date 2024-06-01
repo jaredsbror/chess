@@ -1,21 +1,22 @@
 package service;
 
-import dataaccess.auth.MemoryAuthDAO;
-import dataaccess.auth.SQLAuthDao;
+
+import dataaccess.DataAccessException;
+import dataaccess.auth.SQLAuthDAO;
 import dataaccess.exceptions.Error401Unauthorized;
-import dataaccess.exceptions.Error500Internal;
 import model.custom.LogoutRequest;
 
 
 public class LogoutService {
-    private SQLAuthDao sqlAuthDao = new SQLAuthDao();
-    private String authToken;
+    private final SQLAuthDAO sqlAuthDao;
+    private final String authToken;
 
-    public LogoutService(LogoutRequest logoutRequest) {
+    public LogoutService(LogoutRequest logoutRequest) throws DataAccessException {
         authToken = logoutRequest.authToken();
+        sqlAuthDao = new SQLAuthDAO();
     }
 
-    public void logout() throws Error401Unauthorized, Error500Internal {
+    public void logout() throws Error401Unauthorized, DataAccessException {
         // Verify that the authToken is valid
         if (!sqlAuthDao.verifyAuthToken(authToken)) throw new Error401Unauthorized();
         // Delete the authToken from the database
