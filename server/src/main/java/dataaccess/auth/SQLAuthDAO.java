@@ -56,13 +56,13 @@ public class SQLAuthDAO implements AuthDAO {
     // Delete authData within authTable given authToken
     public void deleteAuthDataGivenAuthToken(String authToken) throws DataAccessException {
         statement = "DELETE FROM authTable WHERE authToken = '" + authToken + "'";
-        DatabaseManager.executeStatementAndMaybeReturnSingleRow(statement);
+        DatabaseManager.executeStatementInChess(statement);
     }
 
     // Clear the entire authTable
     public void clear() throws DataAccessException {
         statement = "DELETE FROM authTable";
-        DatabaseManager.executeStatementAndMaybeReturnSingleRow(statement);
+        DatabaseManager.executeStatementInChess(statement);
     }
 
     // Return whether authTable is empty

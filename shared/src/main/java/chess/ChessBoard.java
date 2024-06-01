@@ -205,9 +205,7 @@ public class ChessBoard {
 
     @Override
     public String toString() {
-        return "Board{" +
-                "board=" + Arrays.deepToString(board) +
-                '}';
+        return "Board{" + Arrays.deepToString(board) + '}';
     }
 
     // Print out a visually correct chessboard (i.e. the top left corresponds to position (8,1) and the bottom left (1,1)
