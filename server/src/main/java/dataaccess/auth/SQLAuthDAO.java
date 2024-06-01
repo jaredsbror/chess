@@ -1,11 +1,11 @@
 package dataaccess.auth;
 
+
 import dataaccess.AuthDAO;
 import dataaccess.DataAccessException;
 import dataaccess.DatabaseManager;
 import model.original.AuthData;
 
-import java.sql.SQLException;
 import java.util.List;
 import java.util.UUID;
 
@@ -15,8 +15,8 @@ public class SQLAuthDAO implements AuthDAO {
     // Constructor
     public SQLAuthDAO() throws DataAccessException {
         // Verify the connection to the SQL database
-        DatabaseManager.pingDatabase();
-        DatabaseManager.pingTables();
+//        DatabaseManager.pingDatabase();
+//        DatabaseManager.pingTables();
     }
 
     // Get AuthData object from authTable given an authToken
@@ -49,8 +49,8 @@ public class SQLAuthDAO implements AuthDAO {
         // Return whether the resultSet of the request is empty
         try {
             return (!DatabaseManager.executeStatementAndReturnEmpty(statement));
-        } catch (SQLException sqlException) {
-            throw new DataAccessException(sqlException.getMessage());
+        } catch (DataAccessException dataAccessException) {
+            throw new DataAccessException(dataAccessException.getMessage());
         }
     }
 
@@ -72,8 +72,8 @@ public class SQLAuthDAO implements AuthDAO {
         statement = "SELECT * FROM authTable";
         try {
             return DatabaseManager.executeStatementAndReturnEmpty(statement);
-        } catch (SQLException sqlException) {
-            throw new DataAccessException(sqlException.getMessage());
+        } catch (DataAccessException dataAccessException) {
+            throw new DataAccessException(dataAccessException.getMessage());
         }
     }
 

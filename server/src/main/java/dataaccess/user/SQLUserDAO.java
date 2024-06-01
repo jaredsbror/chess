@@ -7,7 +7,6 @@ import dataaccess.UserDAO;
 import model.original.UserData;
 
 import java.sql.Connection;
-import java.sql.SQLException;
 import java.util.List;
 
 
@@ -17,8 +16,8 @@ public class SQLUserDAO implements UserDAO {private Connection connection;
     // Constructor
     public SQLUserDAO() throws DataAccessException {
         // Verify the connection to the SQL database
-        DatabaseManager.pingDatabase();
-        DatabaseManager.pingTables();
+//        DatabaseManager.pingDatabase();
+//        DatabaseManager.pingTables();
     }
 
     public UserData getUser(String username) throws DataAccessException {
@@ -41,12 +40,12 @@ public class SQLUserDAO implements UserDAO {private Connection connection;
         // Create  statement
         statement = "INSERT INTO userTable (username, password, email) VALUES ('" + username + "', '" + password + "', '" + email + "')";
         // Execute the statement and return the authToken
-        DatabaseManager.executeStatementAndMaybeReturnSingleRow(statement);
+        DatabaseManager.executeStatementInChess(statement);
     };
 
     public void clear() throws DataAccessException {
         statement = "DELETE FROM userTable";
-        DatabaseManager.executeStatementAndMaybeReturnSingleRow(statement);
+        DatabaseManager.executeStatementInChess(statement);
     };
 
     public boolean isEmpty() throws DataAccessException {
@@ -54,8 +53,8 @@ public class SQLUserDAO implements UserDAO {private Connection connection;
         statement = "SELECT * FROM userTable";
         try {
             return DatabaseManager.executeStatementAndReturnEmpty(statement);
-        } catch ( SQLException sqlException) {
-            throw new DataAccessException(sqlException.getMessage());
+        } catch ( DataAccessException dataAccessException) {
+            throw new DataAccessException(dataAccessException.getMessage());
         }
     };
 }

@@ -1,9 +1,10 @@
 package server;
 
+
 import dataaccess.DatabaseManager;
 import dataaccess.exceptions.Error500Internal;
 import handlers.*;
-import spark.*;
+import spark.Spark;
 
 public class Server {
 
@@ -31,7 +32,6 @@ public class Server {
 
     public int run(int desiredPort) {
         Spark.port(desiredPort);
-
         try {
             DatabaseManager.createDatabase();
         } catch (Exception exception) {

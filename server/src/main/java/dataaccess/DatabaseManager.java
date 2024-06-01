@@ -12,6 +12,7 @@ public class DatabaseManager {
     private static final String USER;
     private static final String PASSWORD;
     private static final String CONNECTION_URL;
+    private static final String LOCALHOST_PORT_URL;
 
     enum TableChoice {
         AUTHTABLE,
@@ -35,6 +36,7 @@ public class DatabaseManager {
                 var host = props.getProperty("db.host");
                 var port = Integer.parseInt(props.getProperty("db.port"));
                 CONNECTION_URL = String.format("jdbc:mysql://%s:%d/%s", host, port, DATABASE_NAME);
+                LOCALHOST_PORT_URL = String.format("jdbc:mysql://%s:%d", host, port);
             }
         } catch (Exception ex) {
             throw new RuntimeException("unable to process db.properties. " + ex.getMessage());
@@ -96,13 +98,45 @@ public class DatabaseManager {
     }
 
     /**
+     * Generically execute a statement at the URL in MySQL
+     * @param statement
+     */
+    public static void executeStatement(String statement) throws DataAccessException {
+        // Establish a connection and prepare the statement to be executed.
+        try (var connection = DriverManager.getConnection(LOCALHOST_PORT_URL, USER, PASSWORD)) {
+            try (var preparedStatement = connection.prepareStatement(statement)) {
+                // Execute the statement. Check if it returned an empty returnSet.
+                preparedStatement.execute();
+            }
+        } catch (SQLException e) {
+            throw new DataAccessException(e.getMessage());
+        }
+    };
+
+    /**
+     * Generically execute a statement at the URL in MySQL
+     * @param statement
+     */
+    public static void executeStatementInChess(String statement) throws DataAccessException {
+        // Establish a connection and prepare the statement to be executed.
+        try (var connection = DriverManager.getConnection(CONNECTION_URL, USER, PASSWORD)) {
+            try (var preparedStatement = connection.prepareStatement(statement)) {
+                // Execute the statement. Check if it returned an empty returnSet.
+                preparedStatement.execute();
+            }
+        } catch (SQLException e) {
+            throw new DataAccessException(e.getMessage());
+        }
+    };
+
+    /**
      * Generically execute a statement in the database in MySQL and returns whether the result is empty
      * @param statement
      */
-    public static Boolean executeStatementAndReturnEmpty(String statement) throws DataAccessException, SQLException {
+    public static Boolean executeStatementAndReturnEmpty(String statement) throws DataAccessException {
         // Establish a connection and prepare the statement to be executed.
-        try (Connection connection = DriverManager.getConnection(CONNECTION_URL, USER, PASSWORD)) {
-            try (PreparedStatement preparedStatement = connection.prepareStatement(statement)) {
+        try (var connection = DriverManager.getConnection(CONNECTION_URL, USER, PASSWORD)) {
+            try (var preparedStatement = connection.prepareStatement(statement)) {
                 // Execute the statement. Check if it returned an empty returnSet.
                 if (preparedStatement.execute()) {
                     return (!preparedStatement.getResultSet().next());
@@ -169,7 +203,7 @@ public class DatabaseManager {
      * Creates the database if it does not already exist.
      */
     public static void createDatabase() throws DataAccessException {
-        executeStatementAndMaybeReturnSingleRow("CREATE DATABASE IF NOT EXISTS " + DATABASE_NAME);
+        executeStatement("CREATE DATABASE IF NOT EXISTS " + DATABASE_NAME);
         createTable(TableChoice.AUTHTABLE);
         createTable(TableChoice.GAMETABLE);
         createTable(TableChoice.USERTABLE);

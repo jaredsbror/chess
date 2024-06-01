@@ -32,6 +32,7 @@ class ClearApplicationServiceTest {
         assertDoesNotThrow( () -> {
             // Create database
             clearApplicationService = new ClearApplicationService();
+            clearApplicationService.clearDatabase();
             // Register new user
             registerService = new RegisterService( new RegisterRequest( service.Test.username, service.Test.password, service.Test.email ) );
             registerService.register();
