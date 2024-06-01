@@ -26,9 +26,7 @@ public class SQLUserDAO implements UserDAO {private Connection connection;
         List<Object> resultList = DatabaseManager.executeStatementAndMaybeReturnSingleRow(statement);
         // If the resultList is empty, return null
         if (resultList.isEmpty()) return null;
-        if (resultList.size() < 3) {
-            throw new DataAccessException( "Error: Did not receive resultList of size 3 or greater in SQLUserDAO.getUser()" );
-        }
+        if (resultList.size() < 3) throw new DataAccessException( "Error: Did not receive resultList of size 3 or greater in SQLUserDAO.getUser()" );
         // Parse resultList
         String password = (String) resultList.get(1);
         String email = (String) resultList.get(2);

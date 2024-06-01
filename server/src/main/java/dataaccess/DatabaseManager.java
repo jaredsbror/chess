@@ -167,30 +167,20 @@ public class DatabaseManager {
                     // Process resultData returned depending on the statement executed.
                     if (containsKeywords(statement, Constants.authTable))
                         // Check for what individual values are needed and add them.
-                        if (containsKeywords(statement, Constants.authToken))
-                            resultList.add(resultSet.getObject(Constants.authToken));
-                        else if (containsKeywords(statement, Constants.username))
-                            resultList.add(resultSet.getObject(Constants.username));
+                        if (containsKeywords(statement, Constants.authToken)) resultList.add(resultSet.getObject(Constants.authToken));
+                        if (containsKeywords(statement, Constants.username)) resultList.add(resultSet.getObject(Constants.username));
                     else if (containsKeywords(statement, Constants.gameTable))
                         // Check for what individual values are needed and add them.
-                        if (containsKeywords(statement, Constants.gameID))
-                            resultList.add(resultSet.getObject(Constants.gameID));
-                        else if (containsKeywords(statement, Constants.whiteUsername))
-                            resultList.add(resultSet.getObject(Constants.whiteUsername));
-                        else if (containsKeywords(statement, Constants.blackUsername))
-                            resultList.add(resultSet.getObject(Constants.blackUsername));
-                        else if (containsKeywords(statement, Constants.gameName))
-                            resultList.add(resultSet.getObject(Constants.gameName));
-                        else if (containsKeywords(statement, Constants.game))
-                            resultList.add(resultSet.getObject(Constants.game));
+                        if (containsKeywords(statement, Constants.gameID)) resultList.add(resultSet.getObject(Constants.gameID));
+                        if (containsKeywords(statement, Constants.whiteUsername)) resultList.add(resultSet.getObject(Constants.whiteUsername));
+                        if (containsKeywords(statement, Constants.blackUsername)) resultList.add(resultSet.getObject(Constants.blackUsername));
+                        if (containsKeywords(statement, Constants.gameName)) resultList.add(resultSet.getObject(Constants.gameName));
+                        if (containsKeywords(statement, Constants.game)) resultList.add(resultSet.getObject(Constants.game));
                     else if (containsKeywords(statement, Constants.userTable))
                         // Check for what individual values are needed and add them.
-                        if (containsKeywords(statement, Constants.username))
-                            resultList.add(resultSet.getObject(Constants.username));
-                        else if (containsKeywords(statement, Constants.password))
-                            resultList.add(resultSet.getObject(Constants.password));
-                        else if (containsKeywords(statement, Constants.email))
-                            resultList.add(resultSet.getObject(Constants.email));
+                        if (containsKeywords(statement, Constants.username)) resultList.add(resultSet.getObject(Constants.username));
+                        if (containsKeywords(statement, Constants.password)) resultList.add(resultSet.getObject(Constants.password));
+                        if (containsKeywords(statement, Constants.email)) resultList.add(resultSet.getObject(Constants.email));
                 }
             }
             return resultList;

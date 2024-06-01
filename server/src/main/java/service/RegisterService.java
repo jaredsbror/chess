@@ -7,6 +7,8 @@ import dataaccess.exceptions.Error400BadRequest;
 import dataaccess.exceptions.Error403AlreadyTaken;
 import dataaccess.user.SQLUserDAO;
 import model.custom.RegisterRequest;
+import model.original.UserData;
+
 
 public class RegisterService {
     private final SQLAuthDAO sqlAuthDao;
@@ -27,7 +29,8 @@ public class RegisterService {
 
     public String register() throws Error400BadRequest, Error403AlreadyTaken, DataAccessException {
         // Verify that the user does not exist
-        if ( sqlUserDAO.getUser( username ) != null ) throw new Error403AlreadyTaken();
+        UserData userData = sqlUserDAO.getUser( username );
+        if ( userData != null ) throw new Error403AlreadyTaken();
         // Add UserData into userTable
         sqlUserDAO.insertUser( username, password, email );
         // Add AuthData into authTable

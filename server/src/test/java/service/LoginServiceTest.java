@@ -25,7 +25,7 @@ class LoginServiceTest {
             loginService = new LoginService(new LoginRequest(service.Test.username, service.Test.password));
         }, "Error: Failed to setup for login" );
         // Log in as user
-        assertDoesNotThrow(loginService::login, "Error: Failed to log in user in LoginServiceTest.logInAfterRegistering()");
+        assertDoesNotThrow(loginService::login, "Error: Failed to log in user");
     }
 
     @Test
@@ -37,6 +37,6 @@ class LoginServiceTest {
             loginService = new LoginService(new LoginRequest(service.Test.username, service.Test.password));
         }, "Error: Failed to setup for login" );
         // Log in the user (403)
-        assertThrows(Error401Unauthorized.class, loginService::login, "Error: Should not have reregistered user in RegisterServiceTest.logInWithoutRegistering()");
+        assertThrows(Error401Unauthorized.class, loginService::login, "Error: Should not have reregistered user");
     }
 }

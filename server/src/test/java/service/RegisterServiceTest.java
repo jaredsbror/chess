@@ -4,8 +4,8 @@ import dataaccess.exceptions.Error403AlreadyTaken;
 import model.custom.RegisterRequest;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
+
 
 class RegisterServiceTest {
     private RegisterService registerService;
@@ -26,6 +26,9 @@ class RegisterServiceTest {
         setupForRegister();
         // Register the new user
         assertDoesNotThrow(registerService::register,"Error: Failed to register new user");
+        assertDoesNotThrow( () -> {
+            assertFalse( clearApplicationService.isDatabaseEmpty(), "Error: Database is empty after registering new user." );
+        } );
     }
 
     @Test
@@ -33,6 +36,9 @@ class RegisterServiceTest {
         setupForRegister();
         // Register the new user
         assertDoesNotThrow(registerService::register, "Error: Failed to register new user");
+        assertDoesNotThrow( () -> {
+            assertFalse( clearApplicationService.isDatabaseEmpty(), "Error: Database is empty after registering new user." );
+        } );
         // Register the user again (403)
         assertThrows(Error403AlreadyTaken.class, registerService::register, "Error: Should not have reregistered user");
     }
