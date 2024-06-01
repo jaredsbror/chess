@@ -41,6 +41,7 @@ public interface Constants {
     boolean DEBUG_KNIGHT_MOVES_CALCULATOR = false;
     boolean DEBUG_ROOK_MOVES_CALCULATOR = false;
     boolean DEBUG_PAWN_MOVES_CALCULATOR = false;
+    boolean DEBUG_PARSE_BOARD_IN_CHESSBOARD_JAVA = false;
 
     String authTable = "authTable";
     String gameTable = "gameTable";

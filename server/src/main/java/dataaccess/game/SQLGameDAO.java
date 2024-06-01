@@ -1,7 +1,9 @@
 package dataaccess.game;
 
 
+import chess.ChessBoard;
 import chess.ChessGame;
+import chess.ChessPiece;
 import dataaccess.DataAccessException;
 import dataaccess.DatabaseManager;
 import dataaccess.GameDAO;
@@ -50,9 +52,12 @@ public class SQLGameDAO implements GameDAO {private Connection connection;
         String whiteUsername = (String) resultList.get(1);
         String blackUsername = (String) resultList.get(2);
         String gameName = (String) resultList.get(3);
-        String game = (String) resultList.get(4);
+        String gameString = (String) resultList.get(4);
         // Parse game data from 'game'
-        return new GameData( null, null, null, null, null );
+        ChessGame.TeamColor teamColor = ChessBoard.parseColor( gameString );
+        ChessPiece[][] board = ChessBoard.parseBoard( gameString );
+        // Return the new gameData object
+        return new GameData( gameID, whiteUsername, blackUsername, gameName, new ChessGame(teamColor, board) );
     }
 
     public void updateGame(int gameID, String username, String playerColor) throws DataAccessException {

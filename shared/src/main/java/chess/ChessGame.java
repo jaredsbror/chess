@@ -22,13 +22,21 @@ public class ChessGame {
 
     // Variables
     private TeamColor gameTeamColor;
-    private ChessBoard chessBoard;
+    private final ChessBoard chessBoard;
 
-    // Constructor
+    // Default Constructor
     public ChessGame() {
         gameTeamColor = TeamColor.WHITE;
         chessBoard = new ChessBoard();
         chessBoard.resetBoard();
+        // Optional debug
+        if (Constants.DEBUG_GLOBAL || Constants.DEBUG_CHESS_GAME) System.out.println("Creating Chess" + this);
+    }
+
+    // Custom constructor
+    public ChessGame(TeamColor teamColor, ChessPiece[][] board) {
+        gameTeamColor = teamColor;
+        chessBoard = new ChessBoard(board);
         // Optional debug
         if (Constants.DEBUG_GLOBAL || Constants.DEBUG_CHESS_GAME) System.out.println("Creating Chess" + this);
     }
