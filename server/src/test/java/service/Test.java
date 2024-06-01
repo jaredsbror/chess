@@ -1,11 +1,11 @@
 package service;
 
-public record Test() {
-    static String username = "username";
-    static String password = "password";
-    static String email = "blank@gmail.com";
-    static String authToken = "authToken";
-    static String gameName = "gameName";
-    static int gameID = 0;
-    static String white = "WHITE";
+public interface Test {
+    String username = "username";
+    String password = "password";
+    String email = "blank@gmail.com";
+    String authToken = "authToken";
+    String gameName = "gameName";
+    int gameID = 0;
+    String white = "WHITE";
 }

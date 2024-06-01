@@ -12,19 +12,18 @@ class ClearApplicationServiceTest {
     private ClearApplicationService clearApplicationService;
     private RegisterService registerService;
 
-
     @Test
     public void clearEmptyDatabase() {
         assertDoesNotThrow( () -> {
             // Create database
             clearApplicationService = new ClearApplicationService();
-        });
-        // Clear the database
-        assertDoesNotThrow( clearApplicationService::clearDatabase, "Error: Failed to clear database" );
-        // Assert that the database is empty
+        }, "Error: Failed to setup to clear the database");
         assertDoesNotThrow( () -> {
+            // Clear the database
+            clearApplicationService.clearDatabase();
+            // Assert that the database is empty
             assertTrue( clearApplicationService.isDatabaseEmpty(), "Error: Database is not empty" );
-        } );
+        }, "Error: Failed to clear database" );
     }
 
 
@@ -33,16 +32,16 @@ class ClearApplicationServiceTest {
         assertDoesNotThrow( () -> {
             // Create database
             clearApplicationService = new ClearApplicationService();
-            registerService = new RegisterService( new RegisterRequest( service.Test.username, service.Test.password, service.Test.email ) );
             // Register new user
+            registerService = new RegisterService( new RegisterRequest( service.Test.username, service.Test.password, service.Test.email ) );
             registerService.register();
-        } );
-        // Clear the database
-        assertDoesNotThrow( clearApplicationService::clearDatabase, "Error: Failed to clear database" );
-        // Assert that the database is empty
+        }, "Error: Failed to setup to clear the database");
         assertDoesNotThrow( () -> {
+            // Clear the database
+            clearApplicationService.clearDatabase();
+            // Assert that the database is empty
             assertTrue( clearApplicationService.isDatabaseEmpty(), "Error: Database is not empty" );
-        } );
+        }, "Error: Failed to clear database");
     }
 
 }

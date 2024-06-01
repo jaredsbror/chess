@@ -9,26 +9,33 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class LoginServiceTest {
+    private RegisterService registerService;
+    private LoginService loginService;
+    private ClearApplicationService clearApplicationService;
 
     @Test
     public void logInAfterRegistering() {
-        // Create the database and clear it
-        RegisterService registerService = new RegisterService(new RegisterRequest(service.Test.username, service.Test.password, service.Test.email));
-        LoginService loginService = new LoginService(new LoginRequest(service.Test.username, service.Test.password));
-        ClearApplicationService clearApplicationService = new ClearApplicationService();
-        assertDoesNotThrow(clearApplicationService::clearDatabase, "Error: Failed to clear database");
-        // Register the new user
-        assertDoesNotThrow(registerService::register, "Error: Failed to register new user");
+        assertDoesNotThrow( () -> {
+            // Create the database and clear it
+            clearApplicationService = new ClearApplicationService();
+            clearApplicationService.clearDatabase();
+            // Register the new user
+            registerService = new RegisterService(new RegisterRequest(service.Test.username, service.Test.password, service.Test.email));
+            registerService.register();
+            loginService = new LoginService(new LoginRequest(service.Test.username, service.Test.password));
+        }, "Error: Failed to setup for login" );
         // Log in as user
         assertDoesNotThrow(loginService::login, "Error: Failed to log in user in LoginServiceTest.logInAfterRegistering()");
     }
 
     @Test
     public void logInWithoutRegistering() {
-        // Create the database and clear it
-        LoginService loginService = new LoginService(new LoginRequest(service.Test.username, service.Test.password));
-        ClearApplicationService clearApplicationService = new ClearApplicationService();
-        assertDoesNotThrow(clearApplicationService::clearDatabase, "Error: Failed to clear database");
+        assertDoesNotThrow( () -> {
+            // Create the database and clear it
+            clearApplicationService = new ClearApplicationService();
+            clearApplicationService.clearDatabase();
+            loginService = new LoginService(new LoginRequest(service.Test.username, service.Test.password));
+        }, "Error: Failed to setup for login" );
         // Log in the user (403)
         assertThrows(Error401Unauthorized.class, loginService::login, "Error: Should not have reregistered user in RegisterServiceTest.logInWithoutRegistering()");
     }

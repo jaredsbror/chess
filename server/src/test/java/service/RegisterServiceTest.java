@@ -8,24 +8,29 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class RegisterServiceTest {
+    private RegisterService registerService;
+    private ClearApplicationService clearApplicationService;
 
+    @Test
+    public void setupForRegister() {
+        assertDoesNotThrow( () -> {
+            // Create the database and clear it
+            clearApplicationService = new ClearApplicationService();
+            clearApplicationService.clearDatabase();
+            registerService = new RegisterService(new RegisterRequest(service.Test.username, service.Test.password, service.Test.email));
+        } , "Error: Failed to setup to register new user");
+    }
 
     @Test
     public void registerNewUser() {
-        // Create the database and clear it
-        RegisterService registerService = new RegisterService(new RegisterRequest(service.Test.username, service.Test.password, service.Test.email));
-        ClearApplicationService clearApplicationService = new ClearApplicationService();
-        assertDoesNotThrow(clearApplicationService::clearDatabase, "Error: Failed to clear database");
+        setupForRegister();
         // Register the new user
         assertDoesNotThrow(registerService::register,"Error: Failed to register new user");
     }
 
     @Test
     public void registerUserAgain() {
-        // Create the database and clear it
-        RegisterService registerService = new RegisterService(new RegisterRequest(service.Test.username, service.Test.password, service.Test.email));
-        ClearApplicationService clearApplicationService = new ClearApplicationService();
-        assertDoesNotThrow(clearApplicationService::clearDatabase, "Error: Failed to clear database");
+        setupForRegister();
         // Register the new user
         assertDoesNotThrow(registerService::register, "Error: Failed to register new user");
         // Register the user again (403)

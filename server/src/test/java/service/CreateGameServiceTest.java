@@ -22,13 +22,13 @@ class CreateGameServiceTest {
     public void setupForCreateGame() {
         assertDoesNotThrow( () -> {
             // Create the database and clear it
-            registerService = new RegisterService( new RegisterRequest( service.Test.username, service.Test.password, service.Test.email ) );
-            loginService = new LoginService( new LoginRequest( service.Test.username, service.Test.password ) );
             clearApplicationService = new ClearApplicationService();
             clearApplicationService.clearDatabase();
             // Register the new user
+            registerService = new RegisterService( new RegisterRequest( service.Test.username, service.Test.password, service.Test.email ) );
             registerService.register();
             // Log in as user and save authToken
+            loginService = new LoginService( new LoginRequest( service.Test.username, service.Test.password ) );
             authToken = loginService.login();
         }, "Error: Failed to setup for game creation" );
     }
