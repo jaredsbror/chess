@@ -41,7 +41,7 @@ public class SQLAuthDAO implements AuthDAO {
         String authToken = UUID.randomUUID().toString();
         statement = "INSERT into authTable (authToken, username) VALUES ('" + authToken + "', '" + username + "')";
         // Execute the statement and return the authToken
-        DatabaseManager.executeStatementAndMaybeReturnSingleRow(statement);
+        DatabaseManager.executeStatementInChess(statement);
         return authToken;
     }
 
@@ -50,11 +50,7 @@ public class SQLAuthDAO implements AuthDAO {
         // Get resultList data
         statement = "SELECT authToken, username FROM authTable WHERE authToken = '" + authToken + "'";
         // Return whether the resultSet of the request is empty
-        try {
-            return (!DatabaseManager.executeStatementAndReturnEmpty(statement));
-        } catch (DataAccessException dataAccessException) {
-            throw new DataAccessException(dataAccessException.getMessage());
-        }
+        return (!DatabaseManager.executeStatementAndReturnEmpty(statement));
     }
 
     // Delete authData within authTable given authToken
@@ -73,11 +69,7 @@ public class SQLAuthDAO implements AuthDAO {
     public Boolean isEmpty() throws DataAccessException {
         // Get resultList data
         statement = "SELECT * FROM authTable";
-        try {
-            return DatabaseManager.executeStatementAndReturnEmpty(statement);
-        } catch (DataAccessException dataAccessException) {
-            throw new DataAccessException(dataAccessException.getMessage());
-        }
+        return DatabaseManager.executeStatementAndReturnEmpty(statement);
     }
 
 //    public String toString() {
