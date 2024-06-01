@@ -26,12 +26,16 @@ public class LoginService {
         // Get corresponding user data from userTable
         UserData tableData = sqlUserDAO.getUser(username);
         // Make sure the passwords match (after making sure tableData is not null)
-        if (tableData == null) throw new Error401Unauthorized();
-        if (!this.password.equals(tableData.password())) throw new Error401Unauthorized();
-        // Eliminate
+        if (tableData == null) {
+            throw new Error401Unauthorized();
+        }
+        if (!this.password.equals(tableData.password())) {
+            throw new Error401Unauthorized();
+        }
         // Create a new authData entry in the authTable for the username
+        String authToken = sqlAuthDao.createAuthToken( username );
         // Return the generated authToken
-        return sqlAuthDao.createAuthToken(username);
+        return authToken;
     }
 
 }

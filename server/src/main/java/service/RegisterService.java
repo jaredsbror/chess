@@ -34,8 +34,9 @@ public class RegisterService {
         // Add UserData into userTable
         sqlUserDAO.insertUser( username, password, email );
         // Add AuthData into authTable
+        String authToken = sqlAuthDao.createAuthToken( username );
         // Return the generated authToken
-        return sqlAuthDao.createAuthToken( username );
+        return authToken;
     }
 
 
