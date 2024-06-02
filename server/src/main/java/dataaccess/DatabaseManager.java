@@ -116,7 +116,6 @@ public class DatabaseManager {
 
     /**
      * Generically execute a statement at the URL in MySQL
-     *
      * @param statement
      */
     public static void executeStatementInChess( String statement ) throws DataAccessException {
@@ -133,7 +132,6 @@ public class DatabaseManager {
 
     /**
      * Generically execute a statement in the database in MySQL and returns whether the result is empty
-     *
      * @param statement
      */
     public static Boolean executeStatementAndReturnEmpty( String statement ) throws DataAccessException {

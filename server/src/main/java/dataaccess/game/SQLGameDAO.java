@@ -35,10 +35,10 @@ public class SQLGameDAO implements GameDAO {private Connection connection;
         newGameID++;
         // Add the game to the gameTable and return the gameID
         String chessGameString = new ChessGame().toString();
-        statement = "INSERT INTO gameTable (gameID, whiteUsername, blackUsername, gameName, game) " +
+        this.statement = "INSERT INTO gameTable (gameID, whiteUsername, blackUsername, gameName, game) " +
                 "VALUES (" + newGameID + ", null, null, '" + gameName + "', '" + chessGameString + "')";
         DatabaseManager.executeStatementInChess( statement );
-        String string = (new SQLGameDAO().getGameArrayList().toString());
+        String string = getGameArrayList().toString();
         return newGameID;
     }
 
@@ -78,9 +78,8 @@ public class SQLGameDAO implements GameDAO {private Connection connection;
     public ArrayList<GameData> getGameArrayList() throws DataAccessException {
         // Get the gameData from the table, but this time with multiple Lists<Object>.
         statement = "SELECT * FROM gameTable";
-        // Make sure the gameTable is not empty before continuing
         // Return the final list
-        return new ArrayList<>();
+        return (ArrayList<GameData>) DatabaseManager.executeStatementAndReturnGameTable( statement );
     }
 
     public boolean isEmpty() throws DataAccessException {
