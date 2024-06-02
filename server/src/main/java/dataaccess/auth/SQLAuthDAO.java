@@ -23,7 +23,7 @@ public class SQLAuthDAO implements AuthDAO {
     public AuthData getAuthDataGivenAuthToken(String authToken) throws DataAccessException {
         // Get resultList data
         statement = "SELECT authToken, username FROM authTable WHERE authToken = '" + authToken + "'";
-        List<Object> resultList = DatabaseManager.executeStatementAndMaybeReturnSingleRow(statement);
+        List<Object> resultList = DatabaseManager.executeStatementAndReturnSingleRow(statement);
         // If the resultList is empty, return null
         if (resultList.isEmpty()) return null;
         // Parse resultList

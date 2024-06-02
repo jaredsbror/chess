@@ -23,7 +23,7 @@ public class SQLUserDAO implements UserDAO {private Connection connection;
     public UserData getUser(String username) throws DataAccessException {
         // Get resultList data
         statement = "SELECT username, password, email FROM userTable WHERE username = '" + username + "'";
-        List<Object> resultList = DatabaseManager.executeStatementAndMaybeReturnSingleRow(statement);
+        List<Object> resultList = DatabaseManager.executeStatementAndReturnSingleRow(statement);
         // If the resultList is empty, return null
         if (resultList.isEmpty()) return null;
         if (resultList.size() < 3) throw new DataAccessException( "Error: Did not receive resultList of size 3 or greater in SQLUserDAO.getUser()" );

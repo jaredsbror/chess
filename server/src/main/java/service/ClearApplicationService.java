@@ -3,14 +3,14 @@ package service;
 
 import dataaccess.DataAccessException;
 import dataaccess.auth.SQLAuthDAO;
-import dataaccess.game.MemoryGameDAO;
+import dataaccess.game.SQLGameDAO;
 import dataaccess.user.SQLUserDAO;
 
 
 // Service to clear the database of all data
 public class ClearApplicationService {
     private final SQLUserDAO sqlUserDAO = new SQLUserDAO();
-    private final MemoryGameDAO memoryGameDAO = new MemoryGameDAO();
+    private final SQLGameDAO sqlGameDAO = new SQLGameDAO();
     private final SQLAuthDAO sqlAuthDao;
 
     public ClearApplicationService() throws DataAccessException {
@@ -19,11 +19,11 @@ public class ClearApplicationService {
 
     public void clearDatabase() throws DataAccessException {
         sqlAuthDao.clear();
-        memoryGameDAO.clear();
+        sqlGameDAO.clear();
         sqlUserDAO.clear();
     }
 
     public Boolean isDatabaseEmpty() throws DataAccessException {
-        return (sqlAuthDao.isEmpty() && memoryGameDAO.isEmpty() && sqlUserDAO.isEmpty());
+        return (sqlAuthDao.isEmpty() && sqlGameDAO.isEmpty() && sqlUserDAO.isEmpty());
     }
 }

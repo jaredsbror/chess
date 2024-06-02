@@ -1,7 +1,11 @@
 package dataaccess;
 
 
+import chess.ChessBoard;
+import chess.ChessGame;
+import chess.ChessPiece;
 import chess.Constants;
+import model.original.GameData;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -154,7 +158,7 @@ public class DatabaseManager {
      *
      * @param statement
      */
-    public static List<Object> executeStatementAndMaybeReturnSingleRow( String statement ) throws DataAccessException {
+    public static List<Object> executeStatementAndReturnSingleRow( String statement ) throws DataAccessException {
         List<Object> resultList = new ArrayList<>();
         // Establish a connection and prepare the statement to be executed.
         try ( Connection connection = DriverManager.getConnection( CONNECTION_URL, USER, PASSWORD ) ) {
@@ -200,9 +204,39 @@ public class DatabaseManager {
         }
     }
 
-
-    ;
-
+    /**
+     * Executes a statement in the database in MySQL and returns a list of objects (strings, ints, etc)
+     * @param statement
+     */
+    public static List<GameData> executeStatementAndReturnGameTable( String statement ) throws DataAccessException {
+        List<GameData> resultList = new ArrayList<>();
+        // Establish a connection and prepare the statement to be executed.
+        try ( Connection connection = DriverManager.getConnection( CONNECTION_URL, USER, PASSWORD ) ) {
+            try ( PreparedStatement preparedStatement = connection.prepareStatement( statement ) ) {
+                // Execute the statement. Check if it returned a result set.
+                if ( preparedStatement.execute() ) {
+                    ResultSet resultSet = preparedStatement.getResultSet();
+                    // If the result set is empty, return an empty list
+                    if ( !resultSet.next() ) return resultList;
+                    // Process resultData
+                    int gameID = (int) resultSet.getObject( Constants.gameID );
+                    String whiteUsername = (String) resultSet.getObject( Constants.whiteUsername );
+                    String blackUsername = (String) resultSet.getObject( Constants.blackUsername );
+                    String gameName = (String) resultSet.getObject( Constants.gameName );
+                    String gameString = (String) resultSet.getObject( Constants.game );
+                    // Process the gameString into a ChessGame object
+                    ChessGame.TeamColor teamColor = ChessBoard.parseColor( gameString );
+                    ChessPiece[][] board = ChessBoard.parseBoard( gameString );
+                    ChessGame chessGame = new ChessGame(teamColor, board);
+                    // Add the GameData to the resultList
+                    resultList.add( new GameData( gameID, whiteUsername, blackUsername, gameName, chessGame ));
+                }
+            }
+            return resultList;
+        } catch ( SQLException e ) {
+            throw new DataAccessException( e.getMessage() );
+        }
+    }
 
     /**
      * Creates the database if it does not already exist.
@@ -226,15 +260,15 @@ public class DatabaseManager {
         switch ( tableChoice ) {
             case AUTHTABLE:
                 statement = String.join( " ", createAuthTableStatement );
-                executeStatementAndMaybeReturnSingleRow( statement );
+                executeStatementAndReturnSingleRow( statement );
                 break;
             case GAMETABLE:
                 statement = String.join( " ", createGameTableStatement );
-                executeStatementAndMaybeReturnSingleRow( statement );
+                executeStatementAndReturnSingleRow( statement );
                 break;
             case USERTABLE:
                 statement = String.join( " ", createUserTableStatement );
-                executeStatementAndMaybeReturnSingleRow( statement );
+                executeStatementAndReturnSingleRow( statement );
                 break;
             default:
                 break;
@@ -244,7 +278,7 @@ public class DatabaseManager {
     public static void pingDatabase() throws DataAccessException {
         // Attempt to execute a harmless statement in order to test the SQL connection to the database
         try {
-            DatabaseManager.executeStatementAndMaybeReturnSingleRow( "SELECT 1" );
+            DatabaseManager.executeStatementAndReturnSingleRow( "SELECT 1" );
         } catch ( DataAccessException e ) {
             throw new DataAccessException( e.getMessage() );
         }
@@ -254,10 +288,10 @@ public class DatabaseManager {
     public static void pingTables() throws DataAccessException {
         // Attempt to execute harmless statements in order to test the SQL connection to the tables
         try {
-            DatabaseManager.executeStatementAndMaybeReturnSingleRow( "USE chess" );
-            DatabaseManager.executeStatementAndMaybeReturnSingleRow( "SELECT * FROM authTable" );
-            DatabaseManager.executeStatementAndMaybeReturnSingleRow( "SELECT * FROM gameTable" );
-            DatabaseManager.executeStatementAndMaybeReturnSingleRow( "SELECT * FROM userTable" );
+            DatabaseManager.executeStatementAndReturnSingleRow( "USE chess" );
+            DatabaseManager.executeStatementAndReturnSingleRow( "SELECT * FROM authTable" );
+            DatabaseManager.executeStatementAndReturnSingleRow( "SELECT * FROM gameTable" );
+            DatabaseManager.executeStatementAndReturnSingleRow( "SELECT * FROM userTable" );
         } catch ( DataAccessException e ) {
             throw new DataAccessException( e.getMessage() );
         }

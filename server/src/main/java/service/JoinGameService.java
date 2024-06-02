@@ -6,14 +6,14 @@ import dataaccess.auth.SQLAuthDAO;
 import dataaccess.exceptions.Error400BadRequest;
 import dataaccess.exceptions.Error401Unauthorized;
 import dataaccess.exceptions.Error403AlreadyTaken;
-import dataaccess.game.MemoryGameDAO;
+import dataaccess.game.SQLGameDAO;
 import model.custom.JoinRequest;
 import model.original.AuthData;
 import model.original.GameData;
 
 public class JoinGameService {
     private final SQLAuthDAO sqlAuthDAO;
-    private final MemoryGameDAO memoryGameDAO = new MemoryGameDAO();
+    private final SQLGameDAO sqlGameDAO = new SQLGameDAO();
     private final String authToken;
     private final String playerColor;
     private final int gameID;
@@ -30,7 +30,7 @@ public class JoinGameService {
         AuthData authData = sqlAuthDAO.getAuthDataGivenAuthToken(authToken);
         if (authData == null) throw new Error401Unauthorized();
         // Verify that there exists a corresponding GameData object
-        GameData gameData = memoryGameDAO.getGameData(gameID);
+        GameData gameData = sqlGameDAO.getGameData(gameID);
         if (gameData == null) throw new Error400BadRequest();
         // Verify that the playerColor is not already taken
         if (playerColor.equalsIgnoreCase("white")) {
@@ -41,7 +41,7 @@ public class JoinGameService {
             throw new Error400BadRequest();
         }
         // Update the game with new username on corresponding color team
-        memoryGameDAO.updateGame(gameID, authData.username(), playerColor);
+        sqlGameDAO.updateGame(gameID, authData.username(), playerColor);
     }
 
 }

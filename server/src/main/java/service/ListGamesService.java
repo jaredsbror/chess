@@ -4,7 +4,7 @@ package service;
 import dataaccess.DataAccessException;
 import dataaccess.auth.SQLAuthDAO;
 import dataaccess.exceptions.Error401Unauthorized;
-import dataaccess.game.MemoryGameDAO;
+import dataaccess.game.SQLGameDAO;
 import model.custom.ListRequest;
 import model.original.GameData;
 
@@ -12,7 +12,7 @@ import java.util.ArrayList;
 
 public class ListGamesService {
     private final SQLAuthDAO sqlAuthDao;
-    private final MemoryGameDAO memoryGameDAO = new MemoryGameDAO();
+    private final SQLGameDAO sqlGameDAO = new SQLGameDAO();
     private final String authToken;
 
     public ListGamesService(ListRequest listRequest) throws DataAccessException {
@@ -24,6 +24,6 @@ public class ListGamesService {
         // Verify that the authToken already exists
         if (!sqlAuthDao.verifyAuthToken(authToken)) throw new Error401Unauthorized();
         // Return the list of games
-        return memoryGameDAO.getGameArrayList();
+        return sqlGameDAO.getGameArrayList();
     }
 }
