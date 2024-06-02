@@ -216,20 +216,20 @@ public class DatabaseManager {
                 // Execute the statement. Check if it returned a result set.
                 if ( preparedStatement.execute() ) {
                     ResultSet resultSet = preparedStatement.getResultSet();
-                    // If the result set is empty, return an empty list
-                    if ( !resultSet.next() ) return resultList;
-                    // Process resultData
-                    int gameID = (int) resultSet.getObject( Constants.gameID );
-                    String whiteUsername = (String) resultSet.getObject( Constants.whiteUsername );
-                    String blackUsername = (String) resultSet.getObject( Constants.blackUsername );
-                    String gameName = (String) resultSet.getObject( Constants.gameName );
-                    String gameString = (String) resultSet.getObject( Constants.game );
-                    // Process the gameString into a ChessGame object
-                    ChessGame.TeamColor teamColor = ChessBoard.parseColor( gameString );
-                    ChessPiece[][] board = ChessBoard.parseBoard( gameString );
-                    ChessGame chessGame = new ChessGame(teamColor, board);
-                    // Add the GameData to the resultList
-                    resultList.add( new GameData( gameID, whiteUsername, blackUsername, gameName, chessGame ));
+                    while (resultSet.next()) {
+                        // Process resultData
+                        int gameID = (int) resultSet.getObject( Constants.gameID );
+                        String whiteUsername = (String) resultSet.getObject( Constants.whiteUsername );
+                        String blackUsername = (String) resultSet.getObject( Constants.blackUsername );
+                        String gameName = (String) resultSet.getObject( Constants.gameName );
+                        String gameString = (String) resultSet.getObject( Constants.game );
+                        // Process the gameString into a ChessGame object
+                        ChessGame.TeamColor teamColor = ChessBoard.parseColor( gameString );
+                        ChessPiece[][] board = ChessBoard.parseBoard( gameString );
+                        ChessGame chessGame = new ChessGame( teamColor, board );
+                        // Add the GameData to the resultList
+                        resultList.add( new GameData( gameID, whiteUsername, blackUsername, gameName, chessGame ) );
+                    }
                 }
             }
             return resultList;
