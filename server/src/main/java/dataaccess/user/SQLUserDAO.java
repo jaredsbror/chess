@@ -49,5 +49,6 @@ public class SQLUserDAO implements UserDAO {private Connection connection;
     public boolean isEmpty() throws DataAccessException {
         // Get resultList data
         statement = "SELECT * FROM userTable";
+        return (DatabaseManager.executeSingleRowQuery( statement, DatabaseManager.TableSource.USERTABLE ).isEmpty());
     };
 }

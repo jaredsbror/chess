@@ -95,27 +95,20 @@ public class DatabaseManager {
         USERTABLE
     };
 
-    public static PreparedStatement createPreparedStatement(String statement, Object... params) throws DataAccessException {
+    public static PreparedStatement createPreparedStatement(Connection connection, String statement, Object... params) throws SQLException {
         // Establish a connection and prepare the statement to be executed.
-        try ( var connection = DriverManager.getConnection( CONNECTION_URL, USER, PASSWORD ) ) {
-            try ( var preparedStatement = connection.prepareStatement( statement, RETURN_GENERATED_KEYS) ) {
-                // Substitute the given params into the prepared statement to be executed
-                for ( var i = 0; i < params.length; i++ ) {
-                    var param = params[i];
-                    switch ( param ) {
-                        case String string -> preparedStatement.setString( i + 1, string );
-                        case Integer integer -> preparedStatement.setInt( i + 1, integer );
-                        case null -> preparedStatement.setNull( i + 1, NULL );
-                        default -> throw new DataAccessException( "Unexpected parameter type: " + param.getClass().getName() );
-                    }
-                }
-                return preparedStatement;
-            } catch ( SQLException e ) {
-                throw new DataAccessException( e.getMessage() );
+        var preparedStatement = connection.prepareStatement( statement, RETURN_GENERATED_KEYS);
+        // Substitute the given params into the prepared statement to be executed
+        for ( var i = 0; i < params.length; i++ ) {
+            var param = params[i];
+            switch ( param ) {
+                case String string -> preparedStatement.setString( i + 1, string );
+                case Integer integer -> preparedStatement.setInt( i + 1, integer );
+                case null -> preparedStatement.setNull( i + 1, NULL );
+                default -> throw new SQLException( "Unexpected parameter type: " + param.getClass().getName() );
             }
-        } catch ( SQLException e ) {
-            throw new DataAccessException( e.getMessage() );
         }
+        return preparedStatement;
     }
 
     /**
@@ -124,7 +117,8 @@ public class DatabaseManager {
      */
     public static Object executeUpdate( String statement, Object... params ) throws DataAccessException {
         // Establish a connection and prepare the statement to be executed.
-        try (var preparedStatement = createPreparedStatement( statement, params )) {
+        try (Connection connection = DatabaseManager.getConnection();
+            PreparedStatement preparedStatement = createPreparedStatement(connection, statement, params )) {
                 // Execute the statement. Check if it returned an empty returnSet.
                 preparedStatement.executeUpdate();
                 // Get generated keys
@@ -146,7 +140,8 @@ public class DatabaseManager {
      */
     public static List<Object> executeSingleRowQuery( String statement, TableSource tableSource, Object... params ) throws DataAccessException {
         // Establish a connection and prepare the statement to be executed.
-        try (var preparedStatement = createPreparedStatement( statement, params )) {
+        try (Connection connection = DatabaseManager.getConnection();
+             PreparedStatement preparedStatement = createPreparedStatement(connection, statement, params )) {
             List<Object> resultList = new ArrayList<>();
             // Execute the statement. Check if it returned a result set.
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
@@ -187,7 +182,8 @@ public class DatabaseManager {
      */
     public static List<Object> executeMultipleRowQuery( String statement, TableSource tableSource, Object... params ) throws DataAccessException {
         // Establish a connection and prepare the statement to be executed.
-        try (var preparedStatement = createPreparedStatement( statement, params )) {
+        try (Connection connection = DatabaseManager.getConnection();
+             PreparedStatement preparedStatement = createPreparedStatement(connection, statement, params )) {
             List<Object> resultList = new ArrayList<>();
             // Execute the statement. Check if it returned a result set.
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
