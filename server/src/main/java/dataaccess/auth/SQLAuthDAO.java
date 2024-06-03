@@ -36,8 +36,6 @@ public class SQLAuthDAO implements AuthDAO {
     // Create a new authToken in authTable given a username
     public String createAuthToken(String username) throws DataAccessException {
         // If there already exists an authToken for the user, delete it.
-        statement = "DELETE FROM authTable WHERE username = ?";
-        DatabaseManager.executeUpdate( statement, username );
         // Create the authToken and statement
         String authToken = UUID.randomUUID().toString();
         statement = "INSERT into authTable (authToken, username) VALUES (?, ?)";
