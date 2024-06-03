@@ -5,12 +5,17 @@ import chess.ChessBoard;
 import chess.ChessGame;
 import chess.ChessPiece;
 import chess.Constants;
+import model.original.AuthData;
 import model.original.GameData;
+import model.original.UserData;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
+
+import static java.sql.Statement.RETURN_GENERATED_KEYS;
+import static java.sql.Types.NULL;
 
 
 public class DatabaseManager {
@@ -37,7 +42,7 @@ public class DatabaseManager {
     private static final String[] createGameTableStatement = {
             """
             CREATE TABLE IF NOT EXISTS  gameTable (
-              gameID INT NOT NULL,
+              gameID INT NOT NULL AUTO_INCREMENT,
               whiteUsername VARCHAR(255),
               blackUsername VARCHAR(255),
               gameName VARCHAR(255) NOT NULL,
@@ -84,116 +89,89 @@ public class DatabaseManager {
     }
 
 
-    // Check if a sql statement string contains certain word(s)
-    public static boolean containsKeywords( String sql, String... keywords ) {
-        // Convert SQL statement to lowercase for case-insensitive search
-        String lowercaseSQL = sql.toLowerCase();
-        // Check if the statement contains any of the specified keywords
-        for ( String keyword : keywords )
-            if ( lowercaseSQL.contains( keyword.toLowerCase() ) )
-                return true;
-        return false;
-    }
+    public enum TableSource {
+        AUTHTABLE,
+        GAMETABLE,
+        USERTABLE
+    };
 
-
-    /**
-     * Generically execute a statement at the URL in MySQL
-     *
-     * @param statement
-     */
-    public static void executeStatement( String statement ) throws DataAccessException {
-        // Establish a connection and prepare the statement to be executed.
-        try ( var connection = DriverManager.getConnection( LOCALHOST_PORT_URL, USER, PASSWORD ) ) {
-            try ( var preparedStatement = connection.prepareStatement( statement ) ) {
-                // Execute the statement. Check if it returned an empty returnSet.
-                preparedStatement.execute();
-            }
-        } catch ( SQLException e ) {
-            throw new DataAccessException( e.getMessage() );
-        }
-    }
-
-
-    /**
-     * Generically execute a statement at the URL in MySQL
-     * @param statement
-     */
-    public static void executeStatementInChess( String statement ) throws DataAccessException {
+    public static PreparedStatement createPreparedStatement(String statement, Object... params) throws DataAccessException {
         // Establish a connection and prepare the statement to be executed.
         try ( var connection = DriverManager.getConnection( CONNECTION_URL, USER, PASSWORD ) ) {
-            try ( var preparedStatement = connection.prepareStatement( statement ) ) {
-                // Execute the statement. Check if it returned an empty returnSet.
-                preparedStatement.execute();
-            }
-        } catch ( SQLException e ) {
-            throw new DataAccessException( e.getMessage() );
-        }
-    }
-
-    /**
-     * Generically execute a statement in the database in MySQL and returns whether the result is empty
-     * @param statement
-     */
-    public static Boolean executeStatementAndReturnEmpty( String statement ) throws DataAccessException {
-        // Establish a connection and prepare the statement to be executed.
-        try ( var connection = DriverManager.getConnection( CONNECTION_URL, USER, PASSWORD ) ) {
-            try ( var preparedStatement = connection.prepareStatement( statement ) ) {
-                // Execute the statement. Check if it returned an empty returnSet.
-                if ( preparedStatement.execute() ) {
-                    return ( !preparedStatement.getResultSet().next() );
-                } else {
-                    return true;
+            try ( var preparedStatement = connection.prepareStatement( statement, RETURN_GENERATED_KEYS) ) {
+                // Substitute the given params into the prepared statement to be executed
+                for ( var i = 0; i < params.length; i++ ) {
+                    var param = params[i];
+                    switch ( param ) {
+                        case String string -> preparedStatement.setString( i + 1, string );
+                        case Integer integer -> preparedStatement.setInt( i + 1, integer );
+                        case null -> preparedStatement.setNull( i + 1, NULL );
+                        default -> throw new DataAccessException( "Unexpected parameter type: " + param.getClass().getName() );
+                    }
                 }
+                return preparedStatement;
+            } catch ( SQLException e ) {
+                throw new DataAccessException( e.getMessage() );
             }
         } catch ( SQLException e ) {
             throw new DataAccessException( e.getMessage() );
         }
     }
 
+    /**
+     * Generically execute an update at the URL in MySQL and return any generated keys
+     * @param statement
+     */
+    public static Object executeUpdate( String statement, Object... params ) throws DataAccessException {
+        // Establish a connection and prepare the statement to be executed.
+        try (var preparedStatement = createPreparedStatement( statement, params )) {
+                // Execute the statement. Check if it returned an empty returnSet.
+                preparedStatement.executeUpdate();
+                // Get generated keys
+                try (var keys = preparedStatement.getGeneratedKeys()) {
+                    if ( keys.next() ) {
+                        return keys.getObject( 1 );
+                    }
+                }
+                return null;
+        } catch ( SQLException e ) {
+            throw new DataAccessException( e.getMessage() );
+        }
+    }
 
     /**
      * Executes a statement in the database in MySQL and returns a list of objects (strings, ints, etc)
      *
      * @param statement
      */
-    public static List<Object> executeStatementAndReturnSingleRow( String statement ) throws DataAccessException {
-        List<Object> resultList = new ArrayList<>();
+    public static List<Object> executeSingleRowQuery( String statement, TableSource tableSource, Object... params ) throws DataAccessException {
         // Establish a connection and prepare the statement to be executed.
-        try ( Connection connection = DriverManager.getConnection( CONNECTION_URL, USER, PASSWORD ) ) {
-            try ( PreparedStatement preparedStatement = connection.prepareStatement( statement ) ) {
-                // Execute the statement. Check if it returned a result set.
-                if ( preparedStatement.execute() ) {
-                    ResultSet resultSet = preparedStatement.getResultSet();
-                    // If the result set is empty, return an empty list
-                    if ( !resultSet.next() ) return resultList;
-                    // Process resultData returned depending on the statement executed.
-                    if ( containsKeywords( statement, Constants.authTable ) ) {
-                        // Check for what individual values are needed and add them.
-                        if ( containsKeywords( statement, Constants.authToken ) )
-                            resultList.add( resultSet.getObject( Constants.authToken ) );
-                        if ( containsKeywords( statement, Constants.username ) )
-                            resultList.add( resultSet.getObject( Constants.username ) );
-                    } else if ( containsKeywords( statement, Constants.gameTable ) ) {
-                        // Check for what individual values are needed and add them.
-                        if ( containsKeywords( statement, Constants.gameID ) )
-                            resultList.add( resultSet.getObject( Constants.gameID ) );
-                        if ( containsKeywords( statement, Constants.whiteUsername ) )
-                            resultList.add( resultSet.getObject( Constants.whiteUsername ) );
-                        if ( containsKeywords( statement, Constants.blackUsername ) )
-                            resultList.add( resultSet.getObject( Constants.blackUsername ) );
-                        if ( containsKeywords( statement, Constants.gameName ) )
-                            resultList.add( resultSet.getObject( Constants.gameName ) );
-                        if ( containsKeywords( statement, Constants.game ) )
-                            resultList.add( resultSet.getObject( Constants.game ) );
-                    } else if ( containsKeywords( statement, Constants.userTable ) ) {
-                        // Check for what individual values are needed and add them.
-                        if ( containsKeywords( statement, Constants.username ) )
-                            resultList.add( resultSet.getObject( Constants.username ) );
-                        if ( containsKeywords( statement, Constants.password ) )
-                            resultList.add( resultSet.getObject( Constants.password ) );
-                        if ( containsKeywords( statement, Constants.email ) )
-                            resultList.add( resultSet.getObject( Constants.email ) );
-                    }
+        try (var preparedStatement = createPreparedStatement( statement, params )) {
+            List<Object> resultList = new ArrayList<>();
+            // Execute the statement. Check if it returned a result set.
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                // If the result set is empty, return an empty list
+                if ( !resultSet.next() ) return resultList;
+                // Process resultData returned depending on the statement executed.
+                switch (tableSource) {
+                    case AUTHTABLE:
+                        resultList.add( resultSet.getObject( Constants.authToken ) );
+                        resultList.add( resultSet.getObject( Constants.username ) );
+                        break;
+                    case GAMETABLE:
+                        resultList.add( resultSet.getObject( Constants.gameID ) );
+                        resultList.add( resultSet.getObject( Constants.whiteUsername ) );
+                        resultList.add( resultSet.getObject( Constants.blackUsername ) );
+                        resultList.add( resultSet.getObject( Constants.gameName ) );
+                        resultList.add( resultSet.getObject( Constants.game ) );
+                        break;
+                    case USERTABLE:
+                        resultList.add( resultSet.getObject( Constants.username ) );
+                        resultList.add( resultSet.getObject( Constants.password ) );
+                        resultList.add( resultSet.getObject( Constants.email ) );
+                        break;
+                    default:
+                        break;
                 }
             }
             return resultList;
@@ -202,33 +180,61 @@ public class DatabaseManager {
         }
     }
 
+
     /**
-     * Executes a statement in the database in MySQL and returns a list of objects (strings, ints, etc)
+     * Executes a statement in the database in MySQL and returns a list of objects (strings, ints,)
      * @param statement
      */
-    public static List<GameData> executeStatementAndReturnGameTable( String statement ) throws DataAccessException {
-        List<GameData> resultList = new ArrayList<>();
+    public static List<Object> executeMultipleRowQuery( String statement, TableSource tableSource, Object... params ) throws DataAccessException {
         // Establish a connection and prepare the statement to be executed.
-        try ( Connection connection = DriverManager.getConnection( CONNECTION_URL, USER, PASSWORD ) ) {
-            try ( PreparedStatement preparedStatement = connection.prepareStatement( statement ) ) {
-                // Execute the statement. Check if it returned a result set.
-                if ( preparedStatement.execute() ) {
-                    ResultSet resultSet = preparedStatement.getResultSet();
-                    while (resultSet.next()) {
-                        // Process resultData
-                        int gameID = (int) resultSet.getObject( Constants.gameID );
-                        String whiteUsername = (String) resultSet.getObject( Constants.whiteUsername );
-                        String blackUsername = (String) resultSet.getObject( Constants.blackUsername );
-                        String gameName = (String) resultSet.getObject( Constants.gameName );
-                        String gameString = (String) resultSet.getObject( Constants.game );
-                        // Process the gameString into a ChessGame object
-                        ChessGame.TeamColor teamColor = ChessBoard.parseColor( gameString );
-                        ChessPiece[][] board = ChessBoard.parseBoard( gameString );
-                        ChessGame chessGame = new ChessGame( teamColor, board );
-                        // Add the GameData to the resultList
-                        resultList.add( new GameData( gameID, whiteUsername, blackUsername, gameName, chessGame ) );
-                    }
+        try (var preparedStatement = createPreparedStatement( statement, params )) {
+            List<Object> resultList = new ArrayList<>();
+            // Execute the statement. Check if it returned a result set.
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                // If the result set is empty, return an empty list
+                if ( !resultSet.next() ) return resultList;
+                // Process the data depending on the table queried
+                switch (tableSource) {
+                    case AUTHTABLE:
+                        // Process the table data
+                        while ( resultSet.next() ) {
+                            // Process authData
+                            String authToken = (String) resultSet.getObject( Constants.authToken );
+                            String username = (String) resultSet.getObject( Constants.username );
+                            resultList.add( new AuthData( authToken, username ) );
+                        }
+                        break;
+                    case GAMETABLE:
+                        // Process the table data
+                        while ( resultSet.next() ) {
+                            // Process gameData
+                            int gameID = (int) resultSet.getObject( Constants.gameID );
+                            String whiteUsername = (String) resultSet.getObject( Constants.whiteUsername );
+                            String blackUsername = (String) resultSet.getObject( Constants.blackUsername );
+                            String gameName = (String) resultSet.getObject( Constants.gameName );
+                            String gameString = (String) resultSet.getObject( Constants.game );
+                            // Process the gameString into a ChessGame object
+                            ChessGame.TeamColor teamColor = ChessBoard.parseColor( gameString );
+                            ChessPiece[][] board = ChessBoard.parseBoard( gameString );
+                            ChessGame chessGame = new ChessGame( teamColor, board );
+                            // Add the GameData to the resultList
+                            resultList.add( new GameData( gameID, whiteUsername, blackUsername, gameName, chessGame ) );
+                        }
+                        break;
+                    case USERTABLE:
+                        // Process the table data
+                        while ( resultSet.next() ) {
+                            // Process userData
+                            String username = (String) resultSet.getObject( Constants.username );
+                            String password = (String) resultSet.getObject( Constants.password );
+                            String email = (String) resultSet.getObject( Constants.email );
+                            resultList.add( new UserData( username, password, email ) );
+                        }
+                        break;
+                    default:
+                        break;
                 }
+
             }
             return resultList;
         } catch ( SQLException e ) {
@@ -240,58 +246,35 @@ public class DatabaseManager {
      * Creates the database if it does not already exist.
      */
     public static void createDatabase() throws DataAccessException {
-        executeStatement( "CREATE DATABASE IF NOT EXISTS " + DATABASE_NAME );
-        createTable( TableChoice.AUTHTABLE );
-        createTable( TableChoice.GAMETABLE );
-        createTable( TableChoice.USERTABLE );
+        executeUpdate( "CREATE DATABASE IF NOT EXISTS " + DATABASE_NAME );
+        createTable( TableSource.AUTHTABLE );
+        createTable( TableSource.GAMETABLE );
+        createTable( TableSource.USERTABLE );
     }
 
 
     /**
      * Creates a table if it does not already exist.
-     *
-     * @param tableChoice (which of the tables to create)
+     * @param dataType (which of the tables to create)
      */
-    private static void createTable( TableChoice tableChoice ) throws DataAccessException {
+    private static void createTable( TableSource dataType ) throws DataAccessException {
         String statement;
         // Depending on tableChoice, get the statement
-        switch ( tableChoice ) {
+        switch ( dataType ) {
             case AUTHTABLE:
                 statement = String.join( " ", createAuthTableStatement );
-                executeStatementAndReturnSingleRow( statement );
+                executeUpdate( statement );
                 break;
             case GAMETABLE:
                 statement = String.join( " ", createGameTableStatement );
-                executeStatementAndReturnSingleRow( statement );
+                executeUpdate( statement );
                 break;
             case USERTABLE:
                 statement = String.join( " ", createUserTableStatement );
-                executeStatementAndReturnSingleRow( statement );
+                executeUpdate( statement );
                 break;
             default:
                 break;
-        }
-    }
-
-    public static void pingDatabase() throws DataAccessException {
-        // Attempt to execute a harmless statement in order to test the SQL connection to the database
-        try {
-            DatabaseManager.executeStatementAndReturnSingleRow( "SELECT 1" );
-        } catch ( DataAccessException e ) {
-            throw new DataAccessException( e.getMessage() );
-        }
-    }
-
-
-    public static void pingTables() throws DataAccessException {
-        // Attempt to execute harmless statements in order to test the SQL connection to the tables
-        try {
-            DatabaseManager.executeStatementAndReturnSingleRow( "USE chess" );
-            DatabaseManager.executeStatementAndReturnSingleRow( "SELECT * FROM authTable" );
-            DatabaseManager.executeStatementAndReturnSingleRow( "SELECT * FROM gameTable" );
-            DatabaseManager.executeStatementAndReturnSingleRow( "SELECT * FROM userTable" );
-        } catch ( DataAccessException e ) {
-            throw new DataAccessException( e.getMessage() );
         }
     }
 
@@ -316,32 +299,5 @@ public class DatabaseManager {
         } catch ( SQLException e ) {
             throw new DataAccessException( e.getMessage() );
         }
-    }
-
-
-    public static String getDatabaseName() {
-        return DATABASE_NAME;
-    }
-
-
-    public static String getUSER() {
-        return USER;
-    }
-
-
-    public static String getPASSWORD() {
-        return PASSWORD;
-    }
-
-
-    public static String getConnectionUrl() {
-        return CONNECTION_URL;
-    }
-
-
-    enum TableChoice {
-        AUTHTABLE,
-        GAMETABLE,
-        USERTABLE
     }
 }

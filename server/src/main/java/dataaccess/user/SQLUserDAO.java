@@ -22,11 +22,11 @@ public class SQLUserDAO implements UserDAO {private Connection connection;
 
     public UserData getUser(String username) throws DataAccessException {
         // Get resultList data
-        statement = "SELECT username, password, email FROM userTable WHERE username = '" + username + "'";
-        List<Object> resultList = DatabaseManager.executeStatementAndReturnSingleRow(statement);
+        statement = "SELECT username, password, email FROM userTable WHERE username = ?";
+        List<Object> resultList = DatabaseManager.executeSingleRowQuery(statement, DatabaseManager.TableSource.USERTABLE, username);
         // If the resultList is empty, return null
         if (resultList.isEmpty()) return null;
-        if (resultList.size() < 3) throw new DataAccessException( "Error: Did not receive resultList of size 3 or greater in SQLUserDAO.getUser()" );
+        if (resultList.size() != 3) throw new DataAccessException( "Error: Did not receive resultList of size 3 in SQLUserDAO.getUser()" );
         // Parse resultList
         String password = (String) resultList.get(1);
         String email = (String) resultList.get(2);
@@ -36,19 +36,18 @@ public class SQLUserDAO implements UserDAO {private Connection connection;
 
     public void insertUser(String username, String password, String email) throws DataAccessException {
         // Create  statement
-        statement = "INSERT INTO userTable (username, password, email) VALUES ('" + username + "', '" + password + "', '" + email + "')";
+        statement = "INSERT INTO userTable (username, password, email) VALUES (?, ?, ?)";
         // Execute the statement and return the authToken
-        DatabaseManager.executeStatementInChess(statement);
+        DatabaseManager.executeUpdate(statement, username, password, email);
     };
 
     public void clear() throws DataAccessException {
         statement = "DELETE FROM userTable";
-        DatabaseManager.executeStatementInChess(statement);
+        DatabaseManager.executeUpdate(statement);
     };
 
     public boolean isEmpty() throws DataAccessException {
         // Get resultList data
         statement = "SELECT * FROM userTable";
-        return DatabaseManager.executeStatementAndReturnEmpty(statement);
     };
 }

@@ -16,7 +16,6 @@ import java.util.List;
 
 public class SQLGameDAO implements GameDAO {private Connection connection;
     private String statement = null;
-    private static int newGameID = 1;
 
     // Constructor
     public SQLGameDAO() throws DataAccessException {
@@ -27,29 +26,27 @@ public class SQLGameDAO implements GameDAO {private Connection connection;
 
     public void clear() throws DataAccessException {
         statement = "DELETE FROM gameTable";
-        DatabaseManager.executeStatementInChess(statement);
+        DatabaseManager.executeUpdate(statement);
     }
 
     public int insertGame(String gameName) throws DataAccessException {
-        // Generate a new gameID
-        newGameID++;
+        // Generate a new gameID (done within the SQL table)
         // Add the game to the gameTable and return the gameID
         String chessGameString = new ChessGame().toString();
         this.statement = "INSERT INTO gameTable (gameID, whiteUsername, blackUsername, gameName, game) " +
-                "VALUES (" + newGameID + ", null, null, '" + gameName + "', '" + chessGameString + "')";
-        DatabaseManager.executeStatementInChess( statement );
-        String string = getGameArrayList().toString();
-        return newGameID;
+                "VALUES (?, ?, ?, ?)";
+        return (int) DatabaseManager.executeUpdate( statement, null, null, gameName, chessGameString );
     }
 
     public GameData getGameData(int gameID) throws DataAccessException {
-        statement = "SELECT gameID, whiteUsername, blackUsername, gameName, game FROM gameTable WHERE gameID = " + gameID;
-        List<Object> resultList =  DatabaseManager.executeStatementAndReturnSingleRow( statement );
+        statement = "SELECT gameID, whiteUsername, blackUsername, gameName, game FROM gameTable WHERE gameID = ?";
+        List<Object> resultList =  DatabaseManager.executeSingleRowQuery( statement, DatabaseManager.TableSource.GAMETABLE, gameID );
         // If the resultList is empty, return null
         if (resultList.isEmpty())
             return null;
-        if (resultList.size() < 5)
-            throw new DataAccessException( "Error: Did not receive resultList of size 5 or greater in SQLGameDAO.getData()" );
+        if (resultList.size() != 5)
+            throw new DataAccessException( "Error: Did not receive resultList of size 5 in SQLGameDAO.getData() -> Size = " + resultList.size() );
+
         // Parse resultList
         String whiteUsername = (String) resultList.get(1);
         String blackUsername = (String) resultList.get(2);
@@ -65,11 +62,11 @@ public class SQLGameDAO implements GameDAO {private Connection connection;
     public void updateGame(int gameID, String username, String playerColor) throws DataAccessException {
         // Update the corresponding game depending on the team color
         if (playerColor.equalsIgnoreCase("white")) {
-            statement = "UPDATE gameTable SET whiteUsername = '" + username + "' WHERE gameID = " + gameID;
-            DatabaseManager.executeStatementInChess( statement );
+            statement = "UPDATE gameTable SET whiteUsername = ? WHERE gameID = ?";
+            DatabaseManager.executeUpdate( statement, username, gameID );
         } else if ((playerColor.equalsIgnoreCase("black"))) {
-            statement = "UPDATE gameTable SET blackUsername = '" + username + "' WHERE gameID = " + gameID;
-            DatabaseManager.executeStatementInChess( statement );
+            statement = "UPDATE gameTable SET blackUsername = ? WHERE gameID = ?";
+            DatabaseManager.executeUpdate( statement, username, gameID );
         } else {
             throw new DataAccessException( "Error: Invalid color received in SQLGameDAO.updateGame()" );
         }
@@ -79,12 +76,18 @@ public class SQLGameDAO implements GameDAO {private Connection connection;
         // Get the gameData from the table, but this time with multiple Lists<Object>.
         statement = "SELECT * FROM gameTable";
         // Return the final list
-        return (ArrayList<GameData>) DatabaseManager.executeStatementAndReturnGameTable( statement );
+        List<Object> gameDataObjectLists = DatabaseManager.executeMultipleRowQuery( statement, DatabaseManager.TableSource.GAMETABLE );
+        ArrayList<GameData> gameDataList = new ArrayList<>();
+        // Convert the List<Object> to List<GameData>
+        for (var list: gameDataObjectLists) {
+            gameDataList.add((GameData) list);
+        }
+        return gameDataList;
     }
 
     public boolean isEmpty() throws DataAccessException {
         // Get resultList data
         statement = "SELECT * FROM gameTable";
-        return DatabaseManager.executeStatementAndReturnEmpty(statement);
+        return (DatabaseManager.executeMultipleRowQuery( statement, DatabaseManager.TableSource.GAMETABLE ).isEmpty());
     }
 }
