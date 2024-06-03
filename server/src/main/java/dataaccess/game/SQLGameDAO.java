@@ -9,6 +9,7 @@ import dataaccess.DatabaseManager;
 import dataaccess.GameDAO;
 import model.original.GameData;
 
+import java.math.BigInteger;
 import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.List;
@@ -35,7 +36,8 @@ public class SQLGameDAO implements GameDAO {private Connection connection;
         String chessGameString = new ChessGame().toString();
         this.statement = "INSERT INTO gameTable (whiteUsername, blackUsername, gameName, game) " +
                 "VALUES (?, ?, ?, ?)";
-        return (int) DatabaseManager.executeUpdate( statement, null, null, gameName, chessGameString );
+        BigInteger gameID =  (BigInteger) DatabaseManager.executeUpdate( statement, null, null, gameName, chessGameString );
+        return gameID.intValue();
     }
 
     public GameData getGameData(int gameID) throws DataAccessException {

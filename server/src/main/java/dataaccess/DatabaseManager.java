@@ -187,8 +187,6 @@ public class DatabaseManager {
             List<Object> resultList = new ArrayList<>();
             // Execute the statement. Check if it returned a result set.
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
-                // If the result set is empty, return an empty list
-                if ( !resultSet.next() ) return resultList;
                 // Process the data depending on the table queried
                 switch (tableSource) {
                     case AUTHTABLE:
