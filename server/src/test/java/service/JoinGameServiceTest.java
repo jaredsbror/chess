@@ -37,7 +37,7 @@ class JoinGameServiceTest {
             // Create a new game using previous authToken
             createGameService = new CreateGameService(new CreateRequest(authToken, service.Test.gameName));
             gameID = createGameService.createGame();
-        } );
+        }, "Error: Failed to setup for join game" );
     }
 
     @Test

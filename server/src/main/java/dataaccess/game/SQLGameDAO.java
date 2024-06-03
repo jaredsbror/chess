@@ -33,7 +33,7 @@ public class SQLGameDAO implements GameDAO {private Connection connection;
         // Generate a new gameID (done within the SQL table)
         // Add the game to the gameTable and return the gameID
         String chessGameString = new ChessGame().toString();
-        this.statement = "INSERT INTO gameTable (gameID, whiteUsername, blackUsername, gameName, game) " +
+        this.statement = "INSERT INTO gameTable (whiteUsername, blackUsername, gameName, game) " +
                 "VALUES (?, ?, ?, ?)";
         return (int) DatabaseManager.executeUpdate( statement, null, null, gameName, chessGameString );
     }

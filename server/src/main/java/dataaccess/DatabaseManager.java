@@ -119,15 +119,15 @@ public class DatabaseManager {
         // Establish a connection and prepare the statement to be executed.
         try (Connection connection = DatabaseManager.getConnection();
             PreparedStatement preparedStatement = createPreparedStatement(connection, statement, params )) {
-                // Execute the statement. Check if it returned an empty returnSet.
-                preparedStatement.executeUpdate();
-                // Get generated keys
-                try (var keys = preparedStatement.getGeneratedKeys()) {
-                    if ( keys.next() ) {
-                        return keys.getObject( 1 );
-                    }
+            // Execute the statement.
+            preparedStatement.executeUpdate();
+            // Get generated keys
+            try (var keys = preparedStatement.getGeneratedKeys()) {
+                if ( keys.next() ) {
+                    return keys.getObject( 1 );
                 }
-                return null;
+            }
+            return null;
         } catch ( SQLException e ) {
             throw new DataAccessException( e.getMessage() );
         }
