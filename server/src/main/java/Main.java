@@ -17,10 +17,5 @@ public class Main {
 
         Server spark = new Server();
         System.out.printf("Spark Port: %d", spark.run(8080));
-//        ChessGame chessGame = new ChessGame();
-//        String chessGameString = chessGame.toString();
-//        ChessGame.TeamColor color = ChessBoard.parseColor( chessGameString );
-//        ChessPiece[][] board = ChessBoard.parseBoard( chessGameString );
-
     }
 }

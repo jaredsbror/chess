@@ -33,10 +33,10 @@ public class DatabaseUtil {
             SQLAuthDAO sqlAuthDAO = new SQLAuthDAO();
             SQLUserDAO sqlUserDAO = new SQLUserDAO();
             // Register a new user
-            sqlUserDAO.insertUser( Constants.username, Constants.password, Constants.email );
+            sqlUserDAO.insertUser( Constants.USERNAME, Constants.PASSWORD, Constants.EMAIL );
             // Login as the new user
             // Return the authToken
-            return sqlAuthDAO.createAuthToken( Constants.username );
+            return sqlAuthDAO.createAuthToken( Constants.USERNAME );
         } catch (Exception exception) {
             throw new RuntimeException("Error: Failed to populate database", exception);
         }
@@ -48,9 +48,9 @@ public class DatabaseUtil {
             // Set up the database
             SQLGameDAO sqlGameDAO = new SQLGameDAO();
             // Create a new game
-            int gameID = sqlGameDAO.insertGame( Constants.gameName );
+            int gameID = sqlGameDAO.insertGame( Constants.GAME_NAME );
             // Add the user as white player in that game
-            sqlGameDAO.updateGame( gameID, Constants.username, "WHITE" );
+            sqlGameDAO.updateGame( gameID, Constants.USERNAME, "WHITE" );
             // If there are additional setup steps, add them here
             // Return the gameID
             return gameID;

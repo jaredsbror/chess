@@ -43,17 +43,14 @@ public interface Constants {
     boolean DEBUG_PAWN_MOVES_CALCULATOR = false;
     boolean DEBUG_PARSE_BOARD_IN_CHESSBOARD_JAVA = false;
 
-    String authTable = "authTable";
-    String gameTable = "gameTable";
-    String userTable = "userTable";
-    String username = "username";
-    String password = "password";
-    String email = "email";
-    String gameID = "gameID";
-    int gameIDInt = 700;
-    String whiteUsername = "whiteUsername";
-    String blackUsername = "blackUsername";
-    String gameName = "gameName";
-    String game = "game";
-    String authToken = "authToken";
+    String USERNAME = "username";
+    String PASSWORD = "password";
+    String EMAIL = "email";
+    String GAME_ID = "gameID";
+    int GAME_ID_INT = 0;
+    String WHITE_USERNAME = "whiteUsername";
+    String BLACK_USERNAME = "blackUsername";
+    String GAME_NAME = "gameName";
+    String GAME = "game";
+    String AUTH_TOKEN = "authToken";
 }

@@ -24,10 +24,10 @@ class LogoutServiceTest {
             clearApplicationService.clearDatabase();
             authToken = null;
             // Register the new user
-            registerService = new RegisterService(new RegisterRequest(service.Test.username, service.Test.password, service.Test.email));
+            registerService = new RegisterService(new RegisterRequest(service.Test.USERNAME, service.Test.PASSWORD, service.Test.EMAIL ));
             registerService.register();
             // Log in as user and save authToken
-            loginService = new LoginService(new LoginRequest(service.Test.username, service.Test.password));
+            loginService = new LoginService(new LoginRequest(service.Test.USERNAME, service.Test.PASSWORD ));
             authToken = loginService.login();
             // Logout user using previous authToken
             logoutService = new LogoutService(new LogoutRequest(authToken));
@@ -42,7 +42,7 @@ class LogoutServiceTest {
                     // Create the database and clear it
                     clearApplicationService = new ClearApplicationService();
                     clearApplicationService.clearDatabase();
-                    logoutService = new LogoutService( new LogoutRequest( service.Test.authToken ) );
+                    logoutService = new LogoutService( new LogoutRequest( service.Test.AUTH_TOKEN ) );
         }, "Error: Failed to setup for logout");
         // Logout user
         assertThrows(Error401Unauthorized.class, logoutService::logout, "Error: Should not logout user");

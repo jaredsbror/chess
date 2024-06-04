@@ -17,7 +17,7 @@ class RegisterServiceTest {
             // Create the database and clear it
             clearApplicationService = new ClearApplicationService();
             clearApplicationService.clearDatabase();
-            registerService = new RegisterService(new RegisterRequest(service.Test.username, service.Test.password, service.Test.email));
+            registerService = new RegisterService(new RegisterRequest(service.Test.USERNAME, service.Test.PASSWORD, service.Test.EMAIL ));
         } , "Error: Failed to setup to register new user");
     }
 

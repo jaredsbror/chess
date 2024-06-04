@@ -34,7 +34,7 @@ class ClearApplicationServiceTest {
             clearApplicationService = new ClearApplicationService();
             clearApplicationService.clearDatabase();
             // Register new user
-            registerService = new RegisterService( new RegisterRequest( service.Test.username, service.Test.password, service.Test.email ) );
+            registerService = new RegisterService( new RegisterRequest( service.Test.USERNAME, service.Test.PASSWORD, service.Test.EMAIL ) );
             registerService.register();
         }, "Error: Failed to setup to clear the database");
         assertDoesNotThrow( () -> {

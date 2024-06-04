@@ -85,8 +85,8 @@ public class ChessBoard {
         if (DEBUG_PARSE_BOARD_IN_CHESSBOARD_JAVA) System.out.println( "boardString: " + boardString );
 
         // Remove the outer brackets
-        final int BRACKET_WIDTH = 2;
-        boardString = boardString.substring( BRACKET_WIDTH, boardString.length() - BRACKET_WIDTH );
+        final int bracketWidth = 2;
+        boardString = boardString.substring( bracketWidth, boardString.length() - bracketWidth );
         // Split the rows
         String[] rows = boardString.split( "], \\[" );
 

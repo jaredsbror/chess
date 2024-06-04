@@ -29,10 +29,10 @@ class ListGamesServiceTest {
             clearApplicationService.clearDatabase();
             authToken = null;
             // Register the new user
-            registerService = new RegisterService(new RegisterRequest(service.Test.username, service.Test.password, service.Test.email));
+            registerService = new RegisterService(new RegisterRequest(service.Test.USERNAME, service.Test.PASSWORD, service.Test.EMAIL ));
             registerService.register();
             // Log in as user and save authToken
-            loginService = new LoginService(new LoginRequest(service.Test.username, service.Test.password));
+            loginService = new LoginService(new LoginRequest(service.Test.USERNAME, service.Test.PASSWORD ));
             authToken = loginService.login();
             // Create three new games using previous authToken
             createGameService = new CreateGameService(new CreateRequest(authToken, UUID.randomUUID().toString()));
@@ -57,7 +57,7 @@ class ListGamesServiceTest {
         setupForListGame();
         // List games using invalid authToken
         assertDoesNotThrow( () -> {
-            listGamesService = new ListGamesService(new ListRequest(service.Test.authToken));
+            listGamesService = new ListGamesService(new ListRequest(service.Test.AUTH_TOKEN ));
         } );
         assertThrows( Error401Unauthorized.class, listGamesService::getGameList, "Error: Should not list games");
     }

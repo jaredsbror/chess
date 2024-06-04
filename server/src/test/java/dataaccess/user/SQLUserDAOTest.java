@@ -22,9 +22,9 @@ class SQLUserDAOTest {
         assertDoesNotThrow( () -> {
             DatabaseUtil.refreshDatabase();
             DatabaseUtil.populateDatabaseWithUser();
-            UserData userData = sqlUserDAO.getUser( Constants.username );
+            UserData userData = sqlUserDAO.getUser( Constants.USERNAME );
             assertNotNull( userData, "Error: UserData should not be null" );
-            assertEquals( userData, new UserData( Constants.username, Constants.password, Constants.email ), "Error: Did not retrieve correct UserData" );
+            assertEquals( userData, new UserData( Constants.USERNAME, Constants.PASSWORD, Constants.EMAIL ), "Error: Did not retrieve correct UserData" );
         });
     }
 

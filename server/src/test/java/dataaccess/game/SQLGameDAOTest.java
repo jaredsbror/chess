@@ -49,7 +49,7 @@ class SQLGameDAOTest {
     void insertNewGame() {
         assertDoesNotThrow( () -> {
             DatabaseUtil.refreshDatabase();
-            sqlGameDAO.insertGame( Constants.gameName );
+            sqlGameDAO.insertGame( Constants.GAME_NAME );
             assertFalse( sqlGameDAO.isEmpty(), "Error: GameTable should not be empty" );
         });
     }
@@ -60,8 +60,8 @@ class SQLGameDAOTest {
     void insertGameWithSameName() {
         assertDoesNotThrow( () -> {
             DatabaseUtil.refreshDatabase();
-            int gameID1 = sqlGameDAO.insertGame( Constants.gameName );
-            int gameID2 = sqlGameDAO.insertGame( Constants.gameName );
+            int gameID1 = sqlGameDAO.insertGame( Constants.GAME_NAME );
+            int gameID2 = sqlGameDAO.insertGame( Constants.GAME_NAME );
             GameData gameData1 = sqlGameDAO.getGameData( gameID1 );
             GameData gameData2 = sqlGameDAO.getGameData( gameID2 );
             assertEquals( gameData1.gameName(), gameData2.gameName(), "Error: Game names should be equal" );
@@ -75,7 +75,7 @@ class SQLGameDAOTest {
     void getGameDataFromEmptyGameTable() {
         assertDoesNotThrow( DatabaseUtil::refreshDatabase );
         assertDoesNotThrow( () -> {
-            GameData gameData = sqlGameDAO.getGameData( Constants.gameIDInt );
+            GameData gameData = sqlGameDAO.getGameData( Constants.GAME_ID_INT );
             assertNull( gameData, "Error: GameData should be null" );
         });
     }
@@ -102,7 +102,7 @@ class SQLGameDAOTest {
             DatabaseUtil.refreshDatabase();
             authToken = DatabaseUtil.populateDatabaseWithUser();
             gameID = DatabaseUtil.populateDatabaseWithGame( authToken );
-            assertDoesNotThrow( () -> sqlGameDAO.updateGame( gameID, Constants.username, "BLACK" ) );
+            assertDoesNotThrow( () -> sqlGameDAO.updateGame( gameID, Constants.USERNAME, "BLACK" ) );
         });
     }
 
@@ -114,7 +114,7 @@ class SQLGameDAOTest {
             DatabaseUtil.refreshDatabase();
             authToken = DatabaseUtil.populateDatabaseWithUser();
             gameID = DatabaseUtil.populateDatabaseWithGame( authToken );
-            assertThrows( DataAccessException.class, () -> sqlGameDAO.updateGame( gameID, Constants.username, "oogabooga" ), "Error: Should have returned DataAccessException" );
+            assertThrows( DataAccessException.class, () -> sqlGameDAO.updateGame( gameID, Constants.USERNAME, "oogabooga" ), "Error: Should have returned DataAccessException" );
         });
     }
 

@@ -27,7 +27,7 @@ public class DatabaseManager {
     /**
      * Initial parameters to set up the authTable in mySQL
      */
-    private static final String[] createAuthTableStatement = {
+    private static final String[] CREATE_AUTH_TABLE_STATEMENT = {
             """
             CREATE TABLE IF NOT EXISTS authTable (
               authToken VARCHAR(255) NOT NULL,
@@ -39,7 +39,7 @@ public class DatabaseManager {
     /**
      * Initial parameters to set up the gameTable in mySQL
      */
-    private static final String[] createGameTableStatement = {
+    private static final String[] CREATE_GAME_TABLE_STATEMENT = {
             """
             CREATE TABLE IF NOT EXISTS  gameTable (
               gameID INT NOT NULL AUTO_INCREMENT,
@@ -54,7 +54,7 @@ public class DatabaseManager {
     /**
      * Initial parameters to set up the userTable in mySQL
      */
-    private static final String[] createUserTableStatement = {
+    private static final String[] CREATE_USER_TABLE_STATEMENT = {
             """
             CREATE TABLE IF NOT EXISTS  userTable (
               username VARCHAR(255) NOT NULL,
@@ -93,7 +93,7 @@ public class DatabaseManager {
         AUTHTABLE,
         GAMETABLE,
         USERTABLE
-    };
+    }
 
     public static PreparedStatement createPreparedStatement(Connection connection, String statement, Object... params) throws SQLException {
         // Establish a connection and prepare the statement to be executed.
@@ -150,20 +150,20 @@ public class DatabaseManager {
                 // Process resultData returned depending on the statement executed.
                 switch (tableSource) {
                     case AUTHTABLE:
-                        resultList.add( resultSet.getObject( Constants.authToken ) );
-                        resultList.add( resultSet.getObject( Constants.username ) );
+                        resultList.add( resultSet.getObject( Constants.AUTH_TOKEN ) );
+                        resultList.add( resultSet.getObject( Constants.USERNAME ) );
                         break;
                     case GAMETABLE:
-                        resultList.add( resultSet.getObject( Constants.gameID ) );
-                        resultList.add( resultSet.getObject( Constants.whiteUsername ) );
-                        resultList.add( resultSet.getObject( Constants.blackUsername ) );
-                        resultList.add( resultSet.getObject( Constants.gameName ) );
-                        resultList.add( resultSet.getObject( Constants.game ) );
+                        resultList.add( resultSet.getObject( Constants.GAME_ID ) );
+                        resultList.add( resultSet.getObject( Constants.WHITE_USERNAME ) );
+                        resultList.add( resultSet.getObject( Constants.BLACK_USERNAME ) );
+                        resultList.add( resultSet.getObject( Constants.GAME_NAME ) );
+                        resultList.add( resultSet.getObject( Constants.GAME ) );
                         break;
                     case USERTABLE:
-                        resultList.add( resultSet.getObject( Constants.username ) );
-                        resultList.add( resultSet.getObject( Constants.password ) );
-                        resultList.add( resultSet.getObject( Constants.email ) );
+                        resultList.add( resultSet.getObject( Constants.USERNAME ) );
+                        resultList.add( resultSet.getObject( Constants.PASSWORD ) );
+                        resultList.add( resultSet.getObject( Constants.EMAIL ) );
                         break;
                     default:
                         break;
@@ -193,8 +193,8 @@ public class DatabaseManager {
                         // Process the table data
                         while ( resultSet.next() ) {
                             // Process authData
-                            String authToken = (String) resultSet.getObject( Constants.authToken );
-                            String username = (String) resultSet.getObject( Constants.username );
+                            String authToken = (String) resultSet.getObject( Constants.AUTH_TOKEN );
+                            String username = (String) resultSet.getObject( Constants.USERNAME );
                             resultList.add( new AuthData( authToken, username ) );
                         }
                         break;
@@ -202,11 +202,11 @@ public class DatabaseManager {
                         // Process the table data
                         while ( resultSet.next() ) {
                             // Process gameData
-                            int gameID = (int) resultSet.getObject( Constants.gameID );
-                            String whiteUsername = (String) resultSet.getObject( Constants.whiteUsername );
-                            String blackUsername = (String) resultSet.getObject( Constants.blackUsername );
-                            String gameName = (String) resultSet.getObject( Constants.gameName );
-                            String gameString = (String) resultSet.getObject( Constants.game );
+                            int gameID = (int) resultSet.getObject( Constants.GAME_ID );
+                            String whiteUsername = (String) resultSet.getObject( Constants.WHITE_USERNAME );
+                            String blackUsername = (String) resultSet.getObject( Constants.BLACK_USERNAME );
+                            String gameName = (String) resultSet.getObject( Constants.GAME_NAME );
+                            String gameString = (String) resultSet.getObject( Constants.GAME );
                             // Process the gameString into a ChessGame object
                             ChessGame.TeamColor teamColor = ChessBoard.parseColor( gameString );
                             ChessPiece[][] board = ChessBoard.parseBoard( gameString );
@@ -219,9 +219,9 @@ public class DatabaseManager {
                         // Process the table data
                         while ( resultSet.next() ) {
                             // Process userData
-                            String username = (String) resultSet.getObject( Constants.username );
-                            String password = (String) resultSet.getObject( Constants.password );
-                            String email = (String) resultSet.getObject( Constants.email );
+                            String username = (String) resultSet.getObject( Constants.USERNAME );
+                            String password = (String) resultSet.getObject( Constants.PASSWORD );
+                            String email = (String) resultSet.getObject( Constants.EMAIL );
                             resultList.add( new UserData( username, password, email ) );
                         }
                         break;
@@ -256,15 +256,15 @@ public class DatabaseManager {
         // Depending on tableChoice, get the statement
         switch ( dataType ) {
             case AUTHTABLE:
-                statement = String.join( " ", createAuthTableStatement );
+                statement = String.join( " ", CREATE_AUTH_TABLE_STATEMENT );
                 executeUpdate( statement );
                 break;
             case GAMETABLE:
-                statement = String.join( " ", createGameTableStatement );
+                statement = String.join( " ", CREATE_GAME_TABLE_STATEMENT );
                 executeUpdate( statement );
                 break;
             case USERTABLE:
-                statement = String.join( " ", createUserTableStatement );
+                statement = String.join( " ", CREATE_USER_TABLE_STATEMENT );
                 executeUpdate( statement );
                 break;
             default:
@@ -288,28 +288,6 @@ public class DatabaseManager {
     public static Connection getConnection() throws DataAccessException {
         try {
             var conn = DriverManager.getConnection( CONNECTION_URL, USER, PASSWORD );
-            conn.setCatalog( DATABASE_NAME );
-            return conn;
-        } catch ( SQLException e ) {
-            throw new DataAccessException( e.getMessage() );
-        }
-    }
-
-    /**
-     * Create a connection to the database and sets the catalog based upon the
-     * properties specified in db.properties. Connections to the database should
-     * be short-lived, and you must close the connection when you are done with it.
-     * The easiest way to do that is with a try-with-resource block.
-     * <br/>
-     * <code>
-     * try (var conn = DbInfo.getConnection(databaseName)) {
-     * // execute SQL statements.
-     * }
-     * </code>
-     */
-    public static Connection getConnectionNotIncludingChess() throws DataAccessException {
-        try {
-            var conn = DriverManager.getConnection( LOCALHOST_PORT_URL, USER, PASSWORD );
             conn.setCatalog( DATABASE_NAME );
             return conn;
         } catch ( SQLException e ) {

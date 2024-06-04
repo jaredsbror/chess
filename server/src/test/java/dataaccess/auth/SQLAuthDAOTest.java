@@ -19,10 +19,10 @@ class SQLAuthDAOTest {
     @Test
     @Order( 1 )
     @DisplayName( "Get AuthData from Empty AuthTable Given AuthToken" )
-    public void GetAuthDataFromEmptyTableGivenAuthToken() {
+    public void getAuthDataFromEmptyTableGivenAuthToken() {
         assertDoesNotThrow( () -> {
             DatabaseUtil.refreshDatabase();
-            authData = sqlAuthDAO.getAuthDataGivenAuthToken( Constants.authToken );
+            authData = sqlAuthDAO.getAuthDataGivenAuthToken( Constants.AUTH_TOKEN );
         }, "Error: Failed to get AuthData" );
         assertNull( authData, "Error: Returned AuthData should be null");
     }
@@ -30,13 +30,13 @@ class SQLAuthDAOTest {
     @Test
     @Order( 2 )
     @DisplayName( "Get AuthData from Populated AuthTable Given AuthToken" )
-    public void GetAuthDataFromPopulatedTableGivenAuthToken() {
+    public void getAuthDataFromPopulatedTableGivenAuthToken() {
         assertDoesNotThrow( () -> {
             DatabaseUtil.refreshDatabase();
             authToken = DatabaseUtil.populateDatabaseWithUser();
             authData = sqlAuthDAO.getAuthDataGivenAuthToken( authToken );
         }, "Error: Failed to get AuthData" );
-        assertEquals( authData, new AuthData( authToken, Constants.username ), "Error: Failed to return correct AuthData" );
+        assertEquals( authData, new AuthData( authToken, Constants.USERNAME ), "Error: Failed to return correct AuthData" );
     }
 
     @Test
@@ -45,7 +45,7 @@ class SQLAuthDAOTest {
     public void createAuthToken() {
         assertDoesNotThrow( () -> {
             DatabaseUtil.refreshDatabase();
-            sqlAuthDAO.createAuthToken( Constants.username );
+            sqlAuthDAO.createAuthToken( Constants.USERNAME );
         }, "Error: Failed to create authToken" );
     }
 
@@ -65,7 +65,7 @@ class SQLAuthDAOTest {
     public void verifyAuthTokenFromEmptyTable() {
         assertDoesNotThrow( () -> {
             DatabaseUtil.refreshDatabase();
-            assertFalse( sqlAuthDAO.verifyAuthToken( Constants.authToken ), "Error: Should not have returned true" );
+            assertFalse( sqlAuthDAO.verifyAuthToken( Constants.AUTH_TOKEN ), "Error: Should not have returned true" );
         } );
     }
 
@@ -99,7 +99,7 @@ class SQLAuthDAOTest {
     public void deleteAuthDataFromPopulatedTableGivenAuthToken() {
         assertDoesNotThrow( () -> {
             DatabaseUtil.refreshDatabase();
-            sqlAuthDAO.deleteAuthDataGivenAuthToken( Constants.authToken );
+            sqlAuthDAO.deleteAuthDataGivenAuthToken( Constants.AUTH_TOKEN );
             assertTrue( sqlAuthDAO.isEmpty(), "Error: AuthTable is not empty" );
         } );
     }
