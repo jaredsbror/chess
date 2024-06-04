@@ -28,6 +28,8 @@ public class SQLAuthDAO implements AuthDAO {
 
     // Create a new authToken in authTable given a username
     public String createAuthToken(String username) throws DataAccessException {
+        // If username is null, throw an error
+        if (username == null) throw new DataAccessException( "Error: Null username in createAuthToken()" );
         // Create the authToken and statement
         String authToken = UUID.randomUUID().toString();
         statement = "INSERT into authTable (authToken, username) VALUES (?, ?)";
