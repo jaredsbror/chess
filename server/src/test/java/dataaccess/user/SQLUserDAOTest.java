@@ -1,16 +1,18 @@
 package dataaccess.user;
 
 
+import chess.Constants;
 import dataaccess.DatabaseUtil;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Order;
-import org.junit.jupiter.api.Test;
+import model.original.AuthData;
+import model.original.UserData;
+import org.junit.jupiter.api.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-
+@TestMethodOrder( MethodOrderer.OrderAnnotation.class)
 class SQLUserDAOTest {
     private String authToken = null;
+    private AuthData authData = null;
     private final SQLUserDAO sqlUserDAO = new SQLUserDAO();
 
     @Test
@@ -19,7 +21,10 @@ class SQLUserDAOTest {
     void getUserDataWithValidUsername() {
         assertDoesNotThrow( () -> {
             DatabaseUtil.refreshDatabase();
-
+            DatabaseUtil.populateDatabaseWithUser();
+            UserData userData = sqlUserDAO.getUser( Constants.username );
+            assertNotNull( userData, "Error: UserData should not be null" );
+            assertEquals( userData, new UserData( Constants.username, Constants.password, Constants.email ), "Error: Did not retrieve correct UserData" );
         });
     }
 
@@ -29,7 +34,8 @@ class SQLUserDAOTest {
     void getUserDataWithInvalidUsername() {
         assertDoesNotThrow( () -> {
             DatabaseUtil.refreshDatabase();
-
+            DatabaseUtil.populateDatabaseWithUser();
+            assertNull( sqlUserDAO.getUser( "oogabooga" ), "Error: Userdata should be null" );
         });
     }
 
@@ -39,7 +45,7 @@ class SQLUserDAOTest {
     void insertUser() {
         assertDoesNotThrow( () -> {
             DatabaseUtil.refreshDatabase();
-
+            assertDoesNotThrow( DatabaseUtil::populateDatabaseWithUser, "Error: Should not have thrown error when inserting user");
         });
     }
 
@@ -49,7 +55,8 @@ class SQLUserDAOTest {
     void insertRepeatedUser() {
         assertDoesNotThrow( () -> {
             DatabaseUtil.refreshDatabase();
-
+            DatabaseUtil.populateDatabaseWithUser();
+            assertThrows( Exception.class, DatabaseUtil::populateDatabaseWithUser, "Error: Should have thrown error for having duplicate usernames (i.e. primary keys)");
         });
     }
 

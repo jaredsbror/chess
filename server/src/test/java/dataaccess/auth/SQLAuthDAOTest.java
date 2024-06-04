@@ -5,13 +5,11 @@ import chess.Constants;
 import dataaccess.DataAccessException;
 import dataaccess.DatabaseUtil;
 import model.original.AuthData;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Order;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-
+@TestMethodOrder( MethodOrderer.OrderAnnotation.class)
 class SQLAuthDAOTest {
     private AuthData authData = null;
     private String authToken = null;

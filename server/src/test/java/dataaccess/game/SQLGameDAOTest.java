@@ -2,22 +2,18 @@ package dataaccess.game;
 
 
 import chess.Constants;
+import dataaccess.DataAccessException;
 import dataaccess.DatabaseUtil;
 import model.original.GameData;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Order;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-
+@TestMethodOrder( MethodOrderer.OrderAnnotation.class)
 class SQLGameDAOTest {
     private int gameID = 0;
-    private String whiteUsername = null;
-    private String blackUsername = null;
-    private String gameName = null;
     private GameData gameData = null;
     private String authToken = null;
     private final SQLGameDAO sqlGameDAO = new SQLGameDAO();
@@ -53,16 +49,22 @@ class SQLGameDAOTest {
     void insertNewGame() {
         assertDoesNotThrow( () -> {
             DatabaseUtil.refreshDatabase();
+            sqlGameDAO.insertGame( Constants.gameName );
+            assertFalse( sqlGameDAO.isEmpty(), "Error: GameTable should not be empty" );
         });
     }
 
     @Test
     @Order( 4 )
-    @DisplayName( "Insert Game with Same " )
+    @DisplayName( "Insert Game with Same Name" )
     void insertGameWithSameName() {
         assertDoesNotThrow( () -> {
             DatabaseUtil.refreshDatabase();
-
+            int gameID1 = sqlGameDAO.insertGame( Constants.gameName );
+            int gameID2 = sqlGameDAO.insertGame( Constants.gameName );
+            GameData gameData1 = sqlGameDAO.getGameData( gameID1 );
+            GameData gameData2 = sqlGameDAO.getGameData( gameID2 );
+            assertEquals( gameData1.gameName(), gameData2.gameName(), "Error: Game names should be equal" );
         });
     }
 
@@ -94,21 +96,25 @@ class SQLGameDAOTest {
 
     @Test
     @Order( 7 )
-    @DisplayName( "Update GameData with Valid gameID" )
-    void updateGameDataWithValidGameID() {
+    @DisplayName( "Update GameData with Valid TeamColor" )
+    void updateGameDataWithValidTeamColor() {
         assertDoesNotThrow( () -> {
             DatabaseUtil.refreshDatabase();
-
+            authToken = DatabaseUtil.populateDatabaseWithUser();
+            gameID = DatabaseUtil.populateDatabaseWithGame( authToken );
+            assertDoesNotThrow( () -> sqlGameDAO.updateGame( gameID, Constants.username, "BLACK" ) );
         });
     }
 
     @Test
     @Order( 8 )
-    @DisplayName( "Update GameData with Invalid gameID" )
-    void updateGameDataWithInvalidGameID() {
+    @DisplayName( "Update GameData with Invalid TeamColor" )
+    void updateGameDataWithInvalidTeamColor() {
         assertDoesNotThrow( () -> {
             DatabaseUtil.refreshDatabase();
-
+            authToken = DatabaseUtil.populateDatabaseWithUser();
+            gameID = DatabaseUtil.populateDatabaseWithGame( authToken );
+            assertThrows( DataAccessException.class, () -> sqlGameDAO.updateGame( gameID, Constants.username, "oogabooga" ), "Error: Should have returned DataAccessException" );
         });
     }
 
