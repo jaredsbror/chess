@@ -15,15 +15,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class SQLGameDAO implements GameDAO {private Connection connection;
+public class SQLGameDAO implements GameDAO {
     private String statement = null;
-
-    // Constructor
-    public SQLGameDAO() throws DataAccessException {
-        // Verify the connection to the SQL database
-//        DatabaseManager.pingDatabase();
-//        DatabaseManager.pingTables();
-    }
 
     public void clear() throws DataAccessException {
         statement = "DELETE FROM gameTable";

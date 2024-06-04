@@ -12,13 +12,6 @@ import java.util.UUID;
 public class SQLAuthDAO implements AuthDAO {
     private String statement = null;
 
-    // Constructor
-    public SQLAuthDAO() throws DataAccessException {
-        // Verify the connection to the SQL database
-//        DatabaseManager.pingDatabase();
-//        DatabaseManager.pingTables();
-    }
-
     // Get AuthData object from authTable given an authToken
     public AuthData getAuthDataGivenAuthToken(String authToken) throws DataAccessException {
         // Get resultList data
@@ -35,7 +28,6 @@ public class SQLAuthDAO implements AuthDAO {
 
     // Create a new authToken in authTable given a username
     public String createAuthToken(String username) throws DataAccessException {
-        // If there already exists an authToken for the user, delete it.
         // Create the authToken and statement
         String authToken = UUID.randomUUID().toString();
         statement = "INSERT into authTable (authToken, username) VALUES (?, ?)";

@@ -8,6 +8,7 @@ import dataaccess.exceptions.Error403AlreadyTaken;
 import dataaccess.user.SQLUserDAO;
 import model.custom.RegisterRequest;
 import model.original.UserData;
+import org.mindrot.jbcrypt.BCrypt;
 
 
 public class RegisterService {
@@ -16,6 +17,7 @@ public class RegisterService {
     private final String username;
     private final String password;
     private final String email;
+
 
     public RegisterService(RegisterRequest registerRequest) throws DataAccessException {
         // Process registerRequest variables
@@ -32,7 +34,8 @@ public class RegisterService {
         UserData userData = sqlUserDAO.getUser( username );
         if ( userData != null ) throw new Error403AlreadyTaken();
         // Add UserData into userTable
-        sqlUserDAO.insertUser( username, password, email );
+        String hashedPassword = BCrypt.hashpw(password, BCrypt.gensalt());
+        sqlUserDAO.insertUser( username, hashedPassword, email );
         // Add AuthData into authTable
         String authToken = sqlAuthDao.createAuthToken( username );
         // Return the generated authToken
