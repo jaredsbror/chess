@@ -25,65 +25,65 @@ class SQLGameDAOTest {
 
     @Test
     @Order( 3 )
-    @DisplayName(  )
-    void insertGame() {
+    @DisplayName( "Insert New Game" )
+    void insertNewGame() {
     }
 
     @Test
     @Order( 4 )
-    @DisplayName(  )
-    void insertGame() {
+    @DisplayName( "Insert Game with Same " )
+    void insertGameWithSameName() {
     }
 
 
     @Test
     @Order( 5 )
-    @DisplayName(  )
-    void getGameData() {
+    @DisplayName( "Get GameData with Valid gameID" )
+    void getGameDataWithValidGameID() {
     }
 
     @Test
     @Order( 6 )
-    @DisplayName(  )
-    void getGameData() {
+    @DisplayName( "Get GameData with Invalid gameID" )
+    void getGameDataWithInvalidGameID() {
     }
 
 
     @Test
     @Order( 7 )
-    @DisplayName(  )
-    void updateGame() {
+    @DisplayName( "Update GameData with Valid gameID" )
+    void updateGameDataWithValidGameID() {
     }
 
     @Test
     @Order( 8 )
-    @DisplayName(  )
-    void updateGame() {
+    @DisplayName( "Update GameData with Invalid gameID" )
+    void updateGameDataWithInvalidGameID() {
     }
 
 
     @Test
     @Order( 9 )
-    @DisplayName(  )
-    void getGameArrayList() {
+    @DisplayName( "Get GameData from Empty GameTable" )
+    void getGameDataFromEmptyGameTable() {
     }
 
     @Test
     @Order( 10 )
-    @DisplayName(  )
-    void getGameArrayList() {
+    @DisplayName( "Get GameData from Populated GameTable" )
+    void getGameDataFromPopulatedGameTable() {
     }
 
 
     @Test
     @Order( 11 )
-    @DisplayName(  )
+    @DisplayName( "Is Empty" )
     void isEmpty() {
     }
 
     @Test
     @Order( 12 )
-    @DisplayName(  )
-    void isEmpty() {
+    @DisplayName( "Is Not Empty" )
+    void isNotEmpty() {
     }
 }
