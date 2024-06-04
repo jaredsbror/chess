@@ -1,6 +1,7 @@
 package dataaccess.user;
 
 
+import dataaccess.DatabaseUtil;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
@@ -9,6 +10,8 @@ import static org.junit.jupiter.api.Assertions.*;
 
 
 class SQLUserDAOTest {
+    private String authToken = null;
+    private final SQLUserDAO sqlUserDAO = new SQLUserDAO();
 
     @Test
     @Order( 1 )
@@ -36,25 +39,43 @@ class SQLUserDAOTest {
 
     @Test
     @Order( 5 )
-    @DisplayName( "Clear Empty Table" )
+    @DisplayName( "Clear Empty UserTable" )
     void clearEmptyTable() {
+        assertDoesNotThrow( () -> {
+            DatabaseUtil.refreshDatabase();
+            assertTrue( sqlUserDAO.isEmpty(), "Error: UserTable is not empty" );
+        });
     }
 
     @Test
     @Order( 6 )
-    @DisplayName( "Clear Populated Table" )
+    @DisplayName( "Clear Populated UserTable" )
     void clearPopulatedTable() {
+        assertDoesNotThrow( () -> {
+            DatabaseUtil.refreshDatabase();
+            DatabaseUtil.populateDatabaseWithUser();
+            assertTrue( sqlUserDAO.isEmpty(), "Error: UserTable is not empty" );
+        });
     }
 
     @Test
     @Order( 7 )
-    @DisplayName( "Is Empty" )
-    void isEmpty() {
+    @DisplayName( "Is Empty UserTable Empty" )
+    void isEmptyTableEmpty() {
+        assertDoesNotThrow( () -> {
+            DatabaseUtil.refreshDatabase();
+            assertTrue( sqlUserDAO.isEmpty(), "Error: UserTable is not empty" );
+        });
     }
 
     @Test
     @Order( 8 )
-    @DisplayName( "Is Not Empty" )
-    void isNotEmpty() {
+    @DisplayName( "Is Populated UserTable Not Empty" )
+    void isPopulatedTableNotEmpty() {
+        assertDoesNotThrow( () -> {
+            DatabaseUtil.refreshDatabase();
+            DatabaseUtil.populateDatabaseWithUser();
+            assertFalse( sqlUserDAO.isEmpty(), "Error: UserTable should not be empty" );
+        });
     }
 }

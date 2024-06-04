@@ -13,9 +13,9 @@ import static org.junit.jupiter.api.Assertions.*;
 
 
 class SQLAuthDAOTest {
-    private AuthData authData;
-    private String authToken;
-    private SQLAuthDAO sqlAuthDAO = new SQLAuthDAO();
+    private AuthData authData = null;
+    private String authToken = null;
+    private final SQLAuthDAO sqlAuthDAO = new SQLAuthDAO();
 
 
     @Test

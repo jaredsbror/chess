@@ -294,4 +294,26 @@ public class DatabaseManager {
             throw new DataAccessException( e.getMessage() );
         }
     }
+
+    /**
+     * Create a connection to the database and sets the catalog based upon the
+     * properties specified in db.properties. Connections to the database should
+     * be short-lived, and you must close the connection when you are done with it.
+     * The easiest way to do that is with a try-with-resource block.
+     * <br/>
+     * <code>
+     * try (var conn = DbInfo.getConnection(databaseName)) {
+     * // execute SQL statements.
+     * }
+     * </code>
+     */
+    public static Connection getConnectionNotIncludingChess() throws DataAccessException {
+        try {
+            var conn = DriverManager.getConnection( LOCALHOST_PORT_URL, USER, PASSWORD );
+            conn.setCatalog( DATABASE_NAME );
+            return conn;
+        } catch ( SQLException e ) {
+            throw new DataAccessException( e.getMessage() );
+        }
+    }
 }
