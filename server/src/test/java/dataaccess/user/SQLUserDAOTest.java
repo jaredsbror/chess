@@ -17,24 +17,40 @@ class SQLUserDAOTest {
     @Order( 1 )
     @DisplayName( "Get UserData with Valid Username" )
     void getUserDataWithValidUsername() {
+        assertDoesNotThrow( () -> {
+            DatabaseUtil.refreshDatabase();
+
+        });
     }
 
     @Test
     @Order( 2 )
     @DisplayName( "Get UserData with Invalid Username" )
     void getUserDataWithInvalidUsername() {
+        assertDoesNotThrow( () -> {
+            DatabaseUtil.refreshDatabase();
+
+        });
     }
 
     @Test
     @Order( 3 )
     @DisplayName( "Insert User" )
     void insertUser() {
+        assertDoesNotThrow( () -> {
+            DatabaseUtil.refreshDatabase();
+
+        });
     }
 
     @Test
     @Order( 4 )
     @DisplayName( "Insert Repeated User" )
     void insertRepeatedUser() {
+        assertDoesNotThrow( () -> {
+            DatabaseUtil.refreshDatabase();
+
+        });
     }
 
     @Test
@@ -43,6 +59,7 @@ class SQLUserDAOTest {
     void clearEmptyTable() {
         assertDoesNotThrow( () -> {
             DatabaseUtil.refreshDatabase();
+            sqlUserDAO.clear();
             assertTrue( sqlUserDAO.isEmpty(), "Error: UserTable is not empty" );
         });
     }
@@ -54,6 +71,7 @@ class SQLUserDAOTest {
         assertDoesNotThrow( () -> {
             DatabaseUtil.refreshDatabase();
             DatabaseUtil.populateDatabaseWithUser();
+            sqlUserDAO.clear();
             assertTrue( sqlUserDAO.isEmpty(), "Error: UserTable is not empty" );
         });
     }

@@ -50,6 +50,7 @@ public interface Constants {
     String password = "password";
     String email = "email";
     String gameID = "gameID";
+    int gameIDInt = 700;
     String whiteUsername = "whiteUsername";
     String blackUsername = "blackUsername";
     String gameName = "gameName";
