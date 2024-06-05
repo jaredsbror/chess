@@ -89,15 +89,9 @@ public class DatabaseManager {
     }
 
 
-    public enum TableSource {
-        AUTHTABLE,
-        GAMETABLE,
-        USERTABLE
-    }
-
-    public static PreparedStatement createPreparedStatement(Connection connection, String statement, Object... params) throws SQLException {
+    public static PreparedStatement createPreparedStatement( Connection connection, String statement, Object... params ) throws SQLException {
         // Establish a connection and prepare the statement to be executed.
-        var preparedStatement = connection.prepareStatement( statement, RETURN_GENERATED_KEYS);
+        var preparedStatement = connection.prepareStatement( statement, RETURN_GENERATED_KEYS );
         // Substitute the given params into the prepared statement to be executed
         for ( var i = 0; i < params.length; i++ ) {
             var param = params[i];
@@ -111,18 +105,20 @@ public class DatabaseManager {
         return preparedStatement;
     }
 
+
     /**
      * Generically execute an update at the URL in MySQL and return any generated keys
+     *
      * @param statement
      */
     public static Object executeUpdate( String statement, Object... params ) throws DataAccessException {
         // Establish a connection and prepare the statement to be executed.
-        try (Connection connection = DatabaseManager.getConnection();
-            PreparedStatement preparedStatement = createPreparedStatement(connection, statement, params )) {
+        try ( Connection connection = DatabaseManager.getConnection();
+              PreparedStatement preparedStatement = createPreparedStatement( connection, statement, params ) ) {
             // Execute the statement.
             preparedStatement.executeUpdate();
             // Get generated keys
-            try (var keys = preparedStatement.getGeneratedKeys()) {
+            try ( var keys = preparedStatement.getGeneratedKeys() ) {
                 if ( keys.next() ) {
                     return keys.getObject( 1 );
                 }
@@ -133,6 +129,7 @@ public class DatabaseManager {
         }
     }
 
+
     /**
      * Executes a statement in the database in MySQL and returns a list of objects (strings, ints, etc)
      *
@@ -140,15 +137,15 @@ public class DatabaseManager {
      */
     public static List<Object> executeSingleRowQuery( String statement, TableSource tableSource, Object... params ) throws DataAccessException {
         // Establish a connection and prepare the statement to be executed.
-        try (Connection connection = DatabaseManager.getConnection();
-             PreparedStatement preparedStatement = createPreparedStatement(connection, statement, params )) {
+        try ( Connection connection = DatabaseManager.getConnection();
+              PreparedStatement preparedStatement = createPreparedStatement( connection, statement, params ) ) {
             List<Object> resultList = new ArrayList<>();
             // Execute the statement. Check if it returned a result set.
-            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+            try ( ResultSet resultSet = preparedStatement.executeQuery() ) {
                 // If the result set is empty, return an empty list
                 if ( !resultSet.next() ) return resultList;
                 // Process resultData returned depending on the statement executed.
-                switch (tableSource) {
+                switch ( tableSource ) {
                     case AUTHTABLE:
                         resultList.add( resultSet.getObject( Constants.AUTH_TOKEN ) );
                         resultList.add( resultSet.getObject( Constants.USERNAME ) );
@@ -178,17 +175,18 @@ public class DatabaseManager {
 
     /**
      * Executes a statement in the database in MySQL and returns a list of objects (strings, ints,)
+     *
      * @param statement
      */
     public static List<Object> executeMultipleRowQuery( String statement, TableSource tableSource, Object... params ) throws DataAccessException {
         // Establish a connection and prepare the statement to be executed.
-        try (Connection connection = DatabaseManager.getConnection();
-             PreparedStatement preparedStatement = createPreparedStatement(connection, statement, params )) {
+        try ( Connection connection = DatabaseManager.getConnection();
+              PreparedStatement preparedStatement = createPreparedStatement( connection, statement, params ) ) {
             List<Object> resultList = new ArrayList<>();
             // Execute the statement. Check if it returned a result set.
-            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+            try ( ResultSet resultSet = preparedStatement.executeQuery() ) {
                 // Process the data depending on the table queried
-                switch (tableSource) {
+                switch ( tableSource ) {
                     case AUTHTABLE:
                         // Process the table data
                         while ( resultSet.next() ) {
@@ -236,6 +234,7 @@ public class DatabaseManager {
         }
     }
 
+
     /**
      * Creates the database if it does not already exist.
      */
@@ -249,6 +248,7 @@ public class DatabaseManager {
 
     /**
      * Creates a table if it does not already exist.
+     *
      * @param dataType (which of the tables to create)
      */
     private static void createTable( TableSource dataType ) throws DataAccessException {
@@ -293,5 +293,12 @@ public class DatabaseManager {
         } catch ( SQLException e ) {
             throw new DataAccessException( e.getMessage() );
         }
+    }
+
+
+    public enum TableSource {
+        AUTHTABLE,
+        GAMETABLE,
+        USERTABLE
     }
 }

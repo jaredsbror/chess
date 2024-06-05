@@ -9,11 +9,13 @@ import org.junit.jupiter.api.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@TestMethodOrder( MethodOrderer.OrderAnnotation.class)
+
+@TestMethodOrder( MethodOrderer.OrderAnnotation.class )
 class SQLUserDAOTest {
-    private String authToken = null;
-    private AuthData authData = null;
     private final SQLUserDAO sqlUserDAO = new SQLUserDAO();
+    private final String authToken = null;
+    private final AuthData authData = null;
+
 
     @Test
     @Order( 1 )
@@ -25,8 +27,9 @@ class SQLUserDAOTest {
             UserData userData = sqlUserDAO.getUser( Constants.USERNAME );
             assertNotNull( userData, "Error: UserData should not be null" );
             assertEquals( userData, new UserData( Constants.USERNAME, Constants.PASSWORD, Constants.EMAIL ), "Error: Did not retrieve correct UserData" );
-        });
+        } );
     }
+
 
     @Test
     @Order( 2 )
@@ -36,8 +39,9 @@ class SQLUserDAOTest {
             DatabaseUtil.refreshDatabase();
             DatabaseUtil.populateDatabaseWithUser();
             assertNull( sqlUserDAO.getUser( "oogabooga" ), "Error: Userdata should be null" );
-        });
+        } );
     }
+
 
     @Test
     @Order( 3 )
@@ -45,9 +49,10 @@ class SQLUserDAOTest {
     void insertUser() {
         assertDoesNotThrow( () -> {
             DatabaseUtil.refreshDatabase();
-            assertDoesNotThrow( DatabaseUtil::populateDatabaseWithUser, "Error: Should not have thrown error when inserting user");
-        });
+            assertDoesNotThrow( DatabaseUtil::populateDatabaseWithUser, "Error: Should not have thrown error when inserting user" );
+        } );
     }
+
 
     @Test
     @Order( 4 )
@@ -56,9 +61,10 @@ class SQLUserDAOTest {
         assertDoesNotThrow( () -> {
             DatabaseUtil.refreshDatabase();
             DatabaseUtil.populateDatabaseWithUser();
-            assertThrows( Exception.class, DatabaseUtil::populateDatabaseWithUser, "Error: Should have thrown error for having duplicate usernames (i.e. primary keys)");
-        });
+            assertThrows( Exception.class, DatabaseUtil::populateDatabaseWithUser, "Error: Should have thrown error for having duplicate usernames (i.e. primary keys)" );
+        } );
     }
+
 
     @Test
     @Order( 5 )
@@ -68,8 +74,9 @@ class SQLUserDAOTest {
             DatabaseUtil.refreshDatabase();
             sqlUserDAO.clear();
             assertTrue( sqlUserDAO.isEmpty(), "Error: UserTable is not empty" );
-        });
+        } );
     }
+
 
     @Test
     @Order( 6 )
@@ -80,8 +87,9 @@ class SQLUserDAOTest {
             DatabaseUtil.populateDatabaseWithUser();
             sqlUserDAO.clear();
             assertTrue( sqlUserDAO.isEmpty(), "Error: UserTable is not empty" );
-        });
+        } );
     }
+
 
     @Test
     @Order( 7 )
@@ -90,8 +98,9 @@ class SQLUserDAOTest {
         assertDoesNotThrow( () -> {
             DatabaseUtil.refreshDatabase();
             assertTrue( sqlUserDAO.isEmpty(), "Error: UserTable is not empty" );
-        });
+        } );
     }
+
 
     @Test
     @Order( 8 )
@@ -101,6 +110,6 @@ class SQLUserDAOTest {
             DatabaseUtil.refreshDatabase();
             DatabaseUtil.populateDatabaseWithUser();
             assertFalse( sqlUserDAO.isEmpty(), "Error: UserTable should not be empty" );
-        });
+        } );
     }
 }

@@ -1,4 +1,5 @@
 package model.custom;
 
-public record ClearResult(String message) {
+
+public record ClearResult( String message ) {
 }

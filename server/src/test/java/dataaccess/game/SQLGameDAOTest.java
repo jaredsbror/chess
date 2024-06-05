@@ -11,12 +11,14 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@TestMethodOrder( MethodOrderer.OrderAnnotation.class)
+
+@TestMethodOrder( MethodOrderer.OrderAnnotation.class )
 class SQLGameDAOTest {
+    private final SQLGameDAO sqlGameDAO = new SQLGameDAO();
     private int gameID = 0;
     private GameData gameData = null;
     private String authToken = null;
-    private final SQLGameDAO sqlGameDAO = new SQLGameDAO();
+
 
     @Test
     @Order( 1 )
@@ -26,8 +28,9 @@ class SQLGameDAOTest {
             DatabaseUtil.refreshDatabase();
             sqlGameDAO.clear();
             assertTrue( sqlGameDAO.isEmpty(), "Error: GameTable is not empty" );
-        });
+        } );
     }
+
 
     @Test
     @Order( 2 )
@@ -39,7 +42,7 @@ class SQLGameDAOTest {
             DatabaseUtil.populateDatabaseWithGame( authToken );
             sqlGameDAO.clear();
             assertTrue( sqlGameDAO.isEmpty(), "Error: GameTable is not empty" );
-        });
+        } );
     }
 
 
@@ -51,8 +54,9 @@ class SQLGameDAOTest {
             DatabaseUtil.refreshDatabase();
             sqlGameDAO.insertGame( Constants.GAME_NAME );
             assertFalse( sqlGameDAO.isEmpty(), "Error: GameTable should not be empty" );
-        });
+        } );
     }
+
 
     @Test
     @Order( 4 )
@@ -65,7 +69,7 @@ class SQLGameDAOTest {
             GameData gameData1 = sqlGameDAO.getGameData( gameID1 );
             GameData gameData2 = sqlGameDAO.getGameData( gameID2 );
             assertEquals( gameData1.gameName(), gameData2.gameName(), "Error: Game names should be equal" );
-        });
+        } );
     }
 
 
@@ -77,8 +81,9 @@ class SQLGameDAOTest {
         assertDoesNotThrow( () -> {
             GameData gameData = sqlGameDAO.getGameData( Constants.GAME_ID_INT );
             assertNull( gameData, "Error: GameData should be null" );
-        });
+        } );
     }
+
 
     @Test
     @Order( 6 )
@@ -90,7 +95,7 @@ class SQLGameDAOTest {
             gameID = DatabaseUtil.populateDatabaseWithGame( authToken );
             gameData = sqlGameDAO.getGameData( gameID );
             assertNotNull( gameData, "Error: GameData should not be null" );
-        });
+        } );
     }
 
 
@@ -103,8 +108,9 @@ class SQLGameDAOTest {
             authToken = DatabaseUtil.populateDatabaseWithUser();
             gameID = DatabaseUtil.populateDatabaseWithGame( authToken );
             assertDoesNotThrow( () -> sqlGameDAO.updateGame( gameID, Constants.USERNAME, "BLACK" ) );
-        });
+        } );
     }
+
 
     @Test
     @Order( 8 )
@@ -115,7 +121,7 @@ class SQLGameDAOTest {
             authToken = DatabaseUtil.populateDatabaseWithUser();
             gameID = DatabaseUtil.populateDatabaseWithGame( authToken );
             assertThrows( DataAccessException.class, () -> sqlGameDAO.updateGame( gameID, Constants.USERNAME, "oogabooga" ), "Error: Should have returned DataAccessException" );
-        });
+        } );
     }
 
 
@@ -125,10 +131,11 @@ class SQLGameDAOTest {
     void getGameDataListFromEmptyGameTable() {
         assertDoesNotThrow( () -> {
             DatabaseUtil.refreshDatabase();
-            List<GameData> gameDataList = sqlGameDAO.getGameArrayList( );
+            List<GameData> gameDataList = sqlGameDAO.getGameArrayList();
             assertTrue( gameDataList.isEmpty(), "Error: GameDataList should be empty" );
-        });
+        } );
     }
+
 
     @Test
     @Order( 10 )
@@ -138,9 +145,9 @@ class SQLGameDAOTest {
             DatabaseUtil.refreshDatabase();
             authToken = DatabaseUtil.populateDatabaseWithUser();
             gameID = DatabaseUtil.populateDatabaseWithGame( authToken );
-            List<GameData> gameDataList  = sqlGameDAO.getGameArrayList();
+            List<GameData> gameDataList = sqlGameDAO.getGameArrayList();
             assertFalse( gameDataList.isEmpty(), "Error: GameDataList should not be empty" );
-        });
+        } );
     }
 
 
@@ -151,8 +158,9 @@ class SQLGameDAOTest {
         assertDoesNotThrow( () -> {
             DatabaseUtil.refreshDatabase();
             assertTrue( sqlGameDAO.isEmpty(), "Error: GameTable is not empty" );
-        });
+        } );
     }
+
 
     @Test
     @Order( 12 )
@@ -163,6 +171,6 @@ class SQLGameDAOTest {
             authToken = DatabaseUtil.populateDatabaseWithUser();
             DatabaseUtil.populateDatabaseWithGame( authToken );
             assertFalse( sqlGameDAO.isEmpty(), "Error: GameTable should not be empty" );
-        });
+        } );
     }
 }

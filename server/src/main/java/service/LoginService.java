@@ -16,7 +16,8 @@ public class LoginService {
     private final String username;
     private final String password;
 
-    public LoginService(LoginRequest loginRequest) throws DataAccessException {
+
+    public LoginService( LoginRequest loginRequest ) throws DataAccessException {
         this.username = loginRequest.username();
         this.password = loginRequest.password();
         sqlAuthDao = new SQLAuthDAO();
@@ -24,15 +25,14 @@ public class LoginService {
     }
 
 
-
     public String login() throws Error401Unauthorized, DataAccessException {
         // Get corresponding user data from userTable
-        UserData tableData = sqlUserDAO.getUser(username);
+        UserData tableData = sqlUserDAO.getUser( username );
         // Make sure the passwords match (after making sure tableData is not null)
-        if (tableData == null) {
+        if ( tableData == null ) {
             throw new Error401Unauthorized();
         }
-        if (!BCrypt.checkpw(password, tableData.password() ) ) {
+        if ( !BCrypt.checkpw( password, tableData.password() ) ) {
             throw new Error401Unauthorized();
         }
         // Create a new authData entry in the authTable for the username

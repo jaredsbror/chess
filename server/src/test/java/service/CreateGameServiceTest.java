@@ -18,6 +18,7 @@ class CreateGameServiceTest {
     ClearApplicationService clearApplicationService;
     String authToken;
 
+
     @Test
     public void setupForCreateGame() {
         assertDoesNotThrow( () -> {
@@ -32,6 +33,7 @@ class CreateGameServiceTest {
             authToken = loginService.login();
         }, "Error: Failed to setup for game creation" );
     }
+
 
     @Test
     public void createGameWithValidAuthToken() {

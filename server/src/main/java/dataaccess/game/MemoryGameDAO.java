@@ -1,57 +1,67 @@
 package dataaccess.game;
 
+
 import chess.ChessGame;
 import dataaccess.GameDAO;
 import model.original.GameData;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+
 
 // Contains and modifies GameData in Chess application
 public class MemoryGameDAO implements GameDAO {
-    private static Map<Integer, GameData> gameTable = new HashMap<>();
+    private static final Map<Integer, GameData> gameTable = new HashMap<>();
     private static int newGameID = 1;
+
 
     public void clear() {
         gameTable.clear();
     }
 
-    public int insertGame(String gameName) {
+
+    public int insertGame( String gameName ) {
         // Generate a new gameID
         newGameID++;
         // Add the game to the gameTable and return the gameID
-        gameTable.put(newGameID, new GameData(newGameID, null, null, gameName, new ChessGame()));
+        gameTable.put( newGameID, new GameData( newGameID, null, null, gameName, new ChessGame() ) );
         return newGameID;
     }
 
-    public GameData getGameData(int gameID) {
-        return gameTable.get(gameID);
+
+    public GameData getGameData( int gameID ) {
+        return gameTable.get( gameID );
     }
 
-    public void updateGame(int gameID, String username, String playerColor) {
+
+    public void updateGame( int gameID, String username, String playerColor ) {
         // Since records are immutable, first save a copy of the record.
         // Then delete it from the hashmap.
-        GameData gameData = gameTable.get(gameID);
-        gameTable.remove(gameID);
+        GameData gameData = gameTable.get( gameID );
+        gameTable.remove( gameID );
         // Update the corresponding game depending on the team color
-        if (playerColor.equalsIgnoreCase("white")) {
-            gameTable.put(gameID, new GameData(gameID, username, gameData.blackUsername(), gameData.gameName(), gameData.game()));
+        if ( playerColor.equalsIgnoreCase( "white" ) ) {
+            gameTable.put( gameID, new GameData( gameID, username, gameData.blackUsername(), gameData.gameName(), gameData.game() ) );
         } else {
-            gameTable.put(gameID, new GameData(gameID, gameData.whiteUsername(), username, gameData.gameName(), gameData.game()));
+            gameTable.put( gameID, new GameData( gameID, gameData.whiteUsername(), username, gameData.gameName(), gameData.game() ) );
         }
     }
+
 
     public ArrayList<GameData> getGameArrayList() {
         // Convert the gameTable map to a list
         ArrayList<GameData> gameDataArrayList = new ArrayList<>();
         // Make sure the gameTable is not empty before continuing
-        if (gameTable.isEmpty()) return gameDataArrayList;
+        if ( gameTable.isEmpty() ) return gameDataArrayList;
         // Iterate over the gameTable and add each gameData to the new list
-        for (var gameData: gameTable.entrySet()) {
-            gameDataArrayList.add(gameData.getValue());
+        for ( var gameData : gameTable.entrySet() ) {
+            gameDataArrayList.add( gameData.getValue() );
         }
         // Return the final list
         return gameDataArrayList;
     }
+
 
     public boolean isEmpty() {
         return gameTable.isEmpty();

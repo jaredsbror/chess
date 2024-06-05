@@ -1,41 +1,52 @@
 package server;
 
+
 import com.google.gson.Gson;
-import spark.*;
-import java.util.*;
+import spark.Request;
+import spark.Response;
+import spark.Spark;
+
+import java.util.ArrayList;
+import java.util.Map;
+
 
 public class ServerExample {
-    private ArrayList<String> names = new ArrayList<>();
+    private final ArrayList<String> names = new ArrayList<>();
 
-    public static void main(String[] args) {
+
+    public static void main( String[] args ) {
         new ServerExample().run();
     }
 
+
     private void run() {
         // Specify the port you want the server to listen on
-        Spark.port(8080);
+        Spark.port( 8080 );
 
         // Register a directory for hosting static files
-        Spark.externalStaticFileLocation("public");
+        Spark.externalStaticFileLocation( "public" );
 
         // Register handlers for each endpoint using the method reference syntax
-        Spark.post("/name/:name", this::addName);
-        Spark.get("/name", this::listNames);
-        Spark.delete("/name/:name", this::deleteName);
+        Spark.post( "/name/:name", this::addName );
+        Spark.get( "/name", this::listNames );
+        Spark.delete( "/name/:name", this::deleteName );
     }
 
-    private Object addName(Request req, Response res) {
-        names.add(req.params(":name"));
-        return listNames(req, res);
+
+    private Object addName( Request req, Response res ) {
+        names.add( req.params( ":name" ) );
+        return listNames( req, res );
     }
 
-    private Object listNames(Request req, Response res) {
-        res.type("application/json");
-        return new Gson().toJson(Map.of("name", names));
+
+    private Object listNames( Request req, Response res ) {
+        res.type( "application/json" );
+        return new Gson().toJson( Map.of( "name", names ) );
     }
 
-    private Object deleteName(Request req, Response res) {
-        names.remove(req.params(":name"));
-        return listNames(req, res);
+
+    private Object deleteName( Request req, Response res ) {
+        names.remove( req.params( ":name" ) );
+        return listNames( req, res );
     }
 }

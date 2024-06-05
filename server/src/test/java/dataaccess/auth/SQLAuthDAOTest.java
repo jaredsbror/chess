@@ -9,11 +9,12 @@ import org.junit.jupiter.api.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@TestMethodOrder( MethodOrderer.OrderAnnotation.class)
+
+@TestMethodOrder( MethodOrderer.OrderAnnotation.class )
 class SQLAuthDAOTest {
+    private final SQLAuthDAO sqlAuthDAO = new SQLAuthDAO();
     private AuthData authData = null;
     private String authToken = null;
-    private final SQLAuthDAO sqlAuthDAO = new SQLAuthDAO();
 
 
     @Test
@@ -24,8 +25,9 @@ class SQLAuthDAOTest {
             DatabaseUtil.refreshDatabase();
             authData = sqlAuthDAO.getAuthDataGivenAuthToken( Constants.AUTH_TOKEN );
         }, "Error: Failed to get AuthData" );
-        assertNull( authData, "Error: Returned AuthData should be null");
+        assertNull( authData, "Error: Returned AuthData should be null" );
     }
+
 
     @Test
     @Order( 2 )
@@ -39,6 +41,7 @@ class SQLAuthDAOTest {
         assertEquals( authData, new AuthData( authToken, Constants.USERNAME ), "Error: Failed to return correct AuthData" );
     }
 
+
     @Test
     @Order( 3 )
     @DisplayName( "Create AuthToken with Valid Username" )
@@ -48,6 +51,7 @@ class SQLAuthDAOTest {
             sqlAuthDAO.createAuthToken( Constants.USERNAME );
         }, "Error: Failed to create authToken" );
     }
+
 
     @Test
     @Order( 4 )
@@ -59,6 +63,7 @@ class SQLAuthDAOTest {
         }, "Error: Should not have created authToken" );
     }
 
+
     @Test
     @Order( 5 )
     @DisplayName( "Verify AuthToken from Empty AuthTable" )
@@ -68,6 +73,7 @@ class SQLAuthDAOTest {
             assertFalse( sqlAuthDAO.verifyAuthToken( Constants.AUTH_TOKEN ), "Error: Should not have returned true" );
         } );
     }
+
 
     @Test
     @Order( 6 )
@@ -81,6 +87,7 @@ class SQLAuthDAOTest {
 
     }
 
+
     @Test
     @Order( 7 )
     @DisplayName( "Delete AuthData from Empty AuthTable Given AuthToken" )
@@ -93,6 +100,7 @@ class SQLAuthDAOTest {
         } );
     }
 
+
     @Test
     @Order( 8 )
     @DisplayName( "Delete AuthData from Populated AuthTable With AuthToken" )
@@ -104,6 +112,7 @@ class SQLAuthDAOTest {
         } );
     }
 
+
     @Test
     @Order( 9 )
     @DisplayName( "Clear Empty AuthTable" )
@@ -114,6 +123,7 @@ class SQLAuthDAOTest {
             assertTrue( sqlAuthDAO.isEmpty(), "Error: AuthTable is not empty" );
         } );
     }
+
 
     @Test
     @Order( 10 )
@@ -127,6 +137,7 @@ class SQLAuthDAOTest {
         } );
     }
 
+
     @Test
     @Order( 11 )
     @DisplayName( "Is Empty AuthTable Empty" )
@@ -134,8 +145,9 @@ class SQLAuthDAOTest {
         assertDoesNotThrow( () -> {
             DatabaseUtil.refreshDatabase();
             assertTrue( sqlAuthDAO.isEmpty(), "Error: AuthTable is not empty" );
-        });
+        } );
     }
+
 
     @Test
     @Order( 12 )
@@ -145,6 +157,6 @@ class SQLAuthDAOTest {
             DatabaseUtil.refreshDatabase();
             DatabaseUtil.populateDatabaseWithUser();
             assertFalse( sqlAuthDAO.isEmpty(), "Error: AuthTable is empty" );
-        });
+        } );
     }
 }
