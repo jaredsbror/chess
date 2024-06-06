@@ -1,4 +1,5 @@
 package model.custom;
 
-public record ListRequest(String authToken) {
+
+public record ListRequest( String authToken ) {
 }

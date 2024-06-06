@@ -12,12 +12,13 @@ class ClearApplicationServiceTest {
     private ClearApplicationService clearApplicationService;
     private RegisterService registerService;
 
+
     @Test
     public void clearEmptyDatabase() {
         assertDoesNotThrow( () -> {
             // Create database
             clearApplicationService = new ClearApplicationService();
-        }, "Error: Failed to setup to clear the database");
+        }, "Error: Failed to setup to clear the database" );
         assertDoesNotThrow( () -> {
             // Clear the database
             clearApplicationService.clearDatabase();
@@ -34,15 +35,15 @@ class ClearApplicationServiceTest {
             clearApplicationService = new ClearApplicationService();
             clearApplicationService.clearDatabase();
             // Register new user
-            registerService = new RegisterService( new RegisterRequest( service.Test.username, service.Test.password, service.Test.email ) );
+            registerService = new RegisterService( new RegisterRequest( service.Test.USERNAME, service.Test.PASSWORD, service.Test.EMAIL ) );
             registerService.register();
-        }, "Error: Failed to setup to clear the database");
+        }, "Error: Failed to setup to clear the database" );
         assertDoesNotThrow( () -> {
             // Clear the database
             clearApplicationService.clearDatabase();
             // Assert that the database is empty
             assertTrue( clearApplicationService.isDatabaseEmpty(), "Error: Database is not empty" );
-        }, "Error: Failed to clear database");
+        }, "Error: Failed to clear database" );
     }
 
 }

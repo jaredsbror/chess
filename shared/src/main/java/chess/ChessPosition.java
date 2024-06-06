@@ -1,6 +1,8 @@
 package chess;
 
+
 import java.util.Objects;
+
 
 /**
  * Represents a single square position on a chess board
@@ -10,15 +12,17 @@ import java.util.Objects;
  */
 public class ChessPosition {
 
-    private int row;
-    private int column;
+    private final int row;
+    private final int column;
+
 
     // Constructor
-    public ChessPosition(int row, int column) {
+    public ChessPosition( int row, int column ) {
         this.row = row;
         this.column = column;
         // Optional debug
-        if (Constants.DEBUG_GLOBAL || Constants.DEBUG_CHESS_POSITION) System.out.println("Creating Chess" + this.toString());
+        if ( Constants.DEBUG_GLOBAL || Constants.DEBUG_CHESS_POSITION )
+            System.out.println( "Creating Chess" + this.toString() );
     }
 
 
@@ -26,25 +30,33 @@ public class ChessPosition {
      * @return which row this position is in
      * 1 codes for the bottom row
      */
-    public int getRow() { return row; }
+    public int getRow() {
+        return row;
+    }
+
 
     /**
      * @return which column this position is in
      * 1 codes for the left row
      */
-    public int getColumn() { return column; }
+    public int getColumn() {
+        return column;
+    }
+
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof ChessPosition that)) return false;
+    public boolean equals( Object o ) {
+        if ( this == o ) return true;
+        if ( !( o instanceof ChessPosition that ) ) return false;
         return row == that.row && column == that.column;
     }
 
+
     @Override
     public int hashCode() {
-        return Objects.hash(row, column);
+        return Objects.hash( row, column );
     }
+
 
     @Override
     public String toString() {

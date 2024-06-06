@@ -18,6 +18,7 @@ class CreateGameServiceTest {
     ClearApplicationService clearApplicationService;
     String authToken;
 
+
     @Test
     public void setupForCreateGame() {
         assertDoesNotThrow( () -> {
@@ -25,20 +26,21 @@ class CreateGameServiceTest {
             clearApplicationService = new ClearApplicationService();
             clearApplicationService.clearDatabase();
             // Register the new user
-            registerService = new RegisterService( new RegisterRequest( service.Test.username, service.Test.password, service.Test.email ) );
+            registerService = new RegisterService( new RegisterRequest( service.Test.USERNAME, service.Test.PASSWORD, service.Test.EMAIL ) );
             registerService.register();
             // Log in as user and save authToken
-            loginService = new LoginService( new LoginRequest( service.Test.username, service.Test.password ) );
+            loginService = new LoginService( new LoginRequest( service.Test.USERNAME, service.Test.PASSWORD ) );
             authToken = loginService.login();
         }, "Error: Failed to setup for game creation" );
     }
+
 
     @Test
     public void createGameWithValidAuthToken() {
         setupForCreateGame();
         // Create a new game using previous authToken
         assertDoesNotThrow( () -> {
-            createGameService = new CreateGameService( new CreateRequest( authToken, service.Test.gameName ) );
+            createGameService = new CreateGameService( new CreateRequest( authToken, service.Test.GAME_NAME ) );
             createGameService.createGame();
         }, "Error: Failed to create game" );
     }
@@ -49,7 +51,7 @@ class CreateGameServiceTest {
         setupForCreateGame();
         // Create a new game using an invalid authToken
         assertDoesNotThrow( () -> {
-            createGameService = new CreateGameService( new CreateRequest( service.Test.authToken, service.Test.gameName ) );
+            createGameService = new CreateGameService( new CreateRequest( service.Test.AUTH_TOKEN, service.Test.GAME_NAME ) );
         } );
         assertThrows( Error401Unauthorized.class, createGameService::createGame, "Error: Should not have created game" );
     }

@@ -15,7 +15,7 @@ import static chess.Constants.DEBUG_PARSE_BOARD_IN_CHESSBOARD_JAVA;
 public class ChessBoard {
 
     // Variables
-    private ChessPiece[][] board = new ChessPiece[Constants.BOARD_NUM_ROWS][Constants.BOARD_NUM_COLUMNS];
+    private final ChessPiece[][] board = new ChessPiece[Constants.BOARD_NUM_ROWS][Constants.BOARD_NUM_COLUMNS];
 
 
     // Default Constructor
@@ -82,11 +82,11 @@ public class ChessBoard {
         int boardEndIndex = gameString.lastIndexOf( "]]" ) + 2;
 
         String boardString = gameString.substring( boardStartIndex, boardEndIndex );
-        if (DEBUG_PARSE_BOARD_IN_CHESSBOARD_JAVA) System.out.println( "boardString: " + boardString );
+        if ( DEBUG_PARSE_BOARD_IN_CHESSBOARD_JAVA ) System.out.println( "boardString: " + boardString );
 
         // Remove the outer brackets
-        final int BRACKET_WIDTH = 2;
-        boardString = boardString.substring( BRACKET_WIDTH, boardString.length() - BRACKET_WIDTH );
+        final int bracketWidth = 2;
+        boardString = boardString.substring( bracketWidth, boardString.length() - bracketWidth );
         // Split the rows
         String[] rows = boardString.split( "], \\[" );
 
@@ -110,12 +110,13 @@ public class ChessBoard {
                         piece = piece.substring( piece.indexOf( "BLACK" ) );
                     else
                         throw new RuntimeException( "Error: Did not receive string 'piece' containing either 'WHITE' or 'BLACK' (piece = " + piece );
-                    if (DEBUG_PARSE_BOARD_IN_CHESSBOARD_JAVA) System.out.println( "Piece: " + piece );
+                    if ( DEBUG_PARSE_BOARD_IN_CHESSBOARD_JAVA ) System.out.println( "Piece: " + piece );
                     String[] pieceParts = piece.replace( "Piece[", "" ).replace( "]", "" ).split( "\\s+" );
                     // Convert the piecePart strings to objects and/or enums
-                    if (DEBUG_PARSE_BOARD_IN_CHESSBOARD_JAVA) System.out.println( "Pieceparts" + Arrays.toString( pieceParts ) );
+                    if ( DEBUG_PARSE_BOARD_IN_CHESSBOARD_JAVA )
+                        System.out.println( "Pieceparts" + Arrays.toString( pieceParts ) );
                     ChessGame.TeamColor pieceColor = pieceParts[0].equalsIgnoreCase( "white" ) ? ChessGame.TeamColor.WHITE : ChessGame.TeamColor.BLACK;
-                    if (DEBUG_PARSE_BOARD_IN_CHESSBOARD_JAVA) System.out.println( pieceColor );
+                    if ( DEBUG_PARSE_BOARD_IN_CHESSBOARD_JAVA ) System.out.println( pieceColor );
                     ChessPiece.PieceType pieceType = switch ( pieceParts[1] ) {
                         case "QUEEN" -> QUEEN;
                         case "KING" -> KING;

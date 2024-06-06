@@ -13,9 +13,11 @@ public class ClearApplicationService {
     private final SQLGameDAO sqlGameDAO = new SQLGameDAO();
     private final SQLAuthDAO sqlAuthDao;
 
+
     public ClearApplicationService() throws DataAccessException {
         sqlAuthDao = new SQLAuthDAO();
     }
+
 
     public void clearDatabase() throws DataAccessException {
         sqlAuthDao.clear();
@@ -23,7 +25,8 @@ public class ClearApplicationService {
         sqlUserDAO.clear();
     }
 
+
     public Boolean isDatabaseEmpty() throws DataAccessException {
-        return (sqlAuthDao.isEmpty() && sqlGameDAO.isEmpty() && sqlUserDAO.isEmpty());
+        return ( sqlAuthDao.isEmpty() && sqlGameDAO.isEmpty() && sqlUserDAO.isEmpty() );
     }
 }

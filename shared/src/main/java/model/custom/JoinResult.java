@@ -1,4 +1,5 @@
 package model.custom;
 
-public record JoinResult(Boolean success, String message) {
+
+public record JoinResult( Boolean success, String message ) {
 }

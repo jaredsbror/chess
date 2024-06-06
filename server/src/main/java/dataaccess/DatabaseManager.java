@@ -23,11 +23,10 @@ public class DatabaseManager {
     private static final String USER;
     private static final String PASSWORD;
     private static final String CONNECTION_URL;
-    private static final String LOCALHOST_PORT_URL;
     /**
      * Initial parameters to set up the authTable in mySQL
      */
-    private static final String[] createAuthTableStatement = {
+    private static final String[] CREATE_AUTH_TABLE_STATEMENT = {
             """
             CREATE TABLE IF NOT EXISTS authTable (
               authToken VARCHAR(255) NOT NULL,
@@ -39,7 +38,7 @@ public class DatabaseManager {
     /**
      * Initial parameters to set up the gameTable in mySQL
      */
-    private static final String[] createGameTableStatement = {
+    private static final String[] CREATE_GAME_TABLE_STATEMENT = {
             """
             CREATE TABLE IF NOT EXISTS  gameTable (
               gameID INT NOT NULL AUTO_INCREMENT,
@@ -54,7 +53,7 @@ public class DatabaseManager {
     /**
      * Initial parameters to set up the userTable in mySQL
      */
-    private static final String[] createUserTableStatement = {
+    private static final String[] CREATE_USER_TABLE_STATEMENT = {
             """
             CREATE TABLE IF NOT EXISTS  userTable (
               username VARCHAR(255) NOT NULL,
@@ -80,8 +79,7 @@ public class DatabaseManager {
 
                 var host = props.getProperty( "db.host" );
                 var port = Integer.parseInt( props.getProperty( "db.port" ) );
-                CONNECTION_URL = String.format( "jdbc:mysql://%s:%d/%s", host, port, DATABASE_NAME );
-                LOCALHOST_PORT_URL = String.format( "jdbc:mysql://%s:%d", host, port );
+                CONNECTION_URL = String.format( "jdbc:mysql://%s:%d", host, port);
             }
         } catch ( Exception ex ) {
             throw new RuntimeException( "unable to process db.properties. " + ex.getMessage() );
@@ -89,15 +87,9 @@ public class DatabaseManager {
     }
 
 
-    public enum TableSource {
-        AUTHTABLE,
-        GAMETABLE,
-        USERTABLE
-    };
-
-    public static PreparedStatement createPreparedStatement(Connection connection, String statement, Object... params) throws SQLException {
+    public static PreparedStatement createPreparedStatement( Connection connection, String statement, Object... params ) throws SQLException {
         // Establish a connection and prepare the statement to be executed.
-        var preparedStatement = connection.prepareStatement( statement, RETURN_GENERATED_KEYS);
+        var preparedStatement = connection.prepareStatement( statement, RETURN_GENERATED_KEYS );
         // Substitute the given params into the prepared statement to be executed
         for ( var i = 0; i < params.length; i++ ) {
             var param = params[i];
@@ -111,18 +103,20 @@ public class DatabaseManager {
         return preparedStatement;
     }
 
+
     /**
      * Generically execute an update at the URL in MySQL and return any generated keys
+     *
      * @param statement
      */
     public static Object executeUpdate( String statement, Object... params ) throws DataAccessException {
         // Establish a connection and prepare the statement to be executed.
-        try (Connection connection = DatabaseManager.getConnection();
-            PreparedStatement preparedStatement = createPreparedStatement(connection, statement, params )) {
+        try ( Connection connection = DatabaseManager.getConnection();
+              PreparedStatement preparedStatement = createPreparedStatement( connection, statement, params ) ) {
             // Execute the statement.
             preparedStatement.executeUpdate();
             // Get generated keys
-            try (var keys = preparedStatement.getGeneratedKeys()) {
+            try ( var keys = preparedStatement.getGeneratedKeys() ) {
                 if ( keys.next() ) {
                     return keys.getObject( 1 );
                 }
@@ -133,6 +127,7 @@ public class DatabaseManager {
         }
     }
 
+
     /**
      * Executes a statement in the database in MySQL and returns a list of objects (strings, ints, etc)
      *
@@ -140,30 +135,30 @@ public class DatabaseManager {
      */
     public static List<Object> executeSingleRowQuery( String statement, TableSource tableSource, Object... params ) throws DataAccessException {
         // Establish a connection and prepare the statement to be executed.
-        try (Connection connection = DatabaseManager.getConnection();
-             PreparedStatement preparedStatement = createPreparedStatement(connection, statement, params )) {
+        try ( Connection connection = DatabaseManager.getConnection();
+              PreparedStatement preparedStatement = createPreparedStatement( connection, statement, params ) ) {
             List<Object> resultList = new ArrayList<>();
             // Execute the statement. Check if it returned a result set.
-            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+            try ( ResultSet resultSet = preparedStatement.executeQuery() ) {
                 // If the result set is empty, return an empty list
                 if ( !resultSet.next() ) return resultList;
                 // Process resultData returned depending on the statement executed.
-                switch (tableSource) {
+                switch ( tableSource ) {
                     case AUTHTABLE:
-                        resultList.add( resultSet.getObject( Constants.authToken ) );
-                        resultList.add( resultSet.getObject( Constants.username ) );
+                        resultList.add( resultSet.getObject( Constants.AUTH_TOKEN ) );
+                        resultList.add( resultSet.getObject( Constants.USERNAME ) );
                         break;
                     case GAMETABLE:
-                        resultList.add( resultSet.getObject( Constants.gameID ) );
-                        resultList.add( resultSet.getObject( Constants.whiteUsername ) );
-                        resultList.add( resultSet.getObject( Constants.blackUsername ) );
-                        resultList.add( resultSet.getObject( Constants.gameName ) );
-                        resultList.add( resultSet.getObject( Constants.game ) );
+                        resultList.add( resultSet.getObject( Constants.GAME_ID ) );
+                        resultList.add( resultSet.getObject( Constants.WHITE_USERNAME ) );
+                        resultList.add( resultSet.getObject( Constants.BLACK_USERNAME ) );
+                        resultList.add( resultSet.getObject( Constants.GAME_NAME ) );
+                        resultList.add( resultSet.getObject( Constants.GAME ) );
                         break;
                     case USERTABLE:
-                        resultList.add( resultSet.getObject( Constants.username ) );
-                        resultList.add( resultSet.getObject( Constants.password ) );
-                        resultList.add( resultSet.getObject( Constants.email ) );
+                        resultList.add( resultSet.getObject( Constants.USERNAME ) );
+                        resultList.add( resultSet.getObject( Constants.PASSWORD ) );
+                        resultList.add( resultSet.getObject( Constants.EMAIL ) );
                         break;
                     default:
                         break;
@@ -178,23 +173,24 @@ public class DatabaseManager {
 
     /**
      * Executes a statement in the database in MySQL and returns a list of objects (strings, ints,)
+     *
      * @param statement
      */
     public static List<Object> executeMultipleRowQuery( String statement, TableSource tableSource, Object... params ) throws DataAccessException {
         // Establish a connection and prepare the statement to be executed.
-        try (Connection connection = DatabaseManager.getConnection();
-             PreparedStatement preparedStatement = createPreparedStatement(connection, statement, params )) {
+        try ( Connection connection = DatabaseManager.getConnection();
+              PreparedStatement preparedStatement = createPreparedStatement( connection, statement, params ) ) {
             List<Object> resultList = new ArrayList<>();
             // Execute the statement. Check if it returned a result set.
-            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+            try ( ResultSet resultSet = preparedStatement.executeQuery() ) {
                 // Process the data depending on the table queried
-                switch (tableSource) {
+                switch ( tableSource ) {
                     case AUTHTABLE:
                         // Process the table data
                         while ( resultSet.next() ) {
                             // Process authData
-                            String authToken = (String) resultSet.getObject( Constants.authToken );
-                            String username = (String) resultSet.getObject( Constants.username );
+                            String authToken = (String) resultSet.getObject( Constants.AUTH_TOKEN );
+                            String username = (String) resultSet.getObject( Constants.USERNAME );
                             resultList.add( new AuthData( authToken, username ) );
                         }
                         break;
@@ -202,11 +198,11 @@ public class DatabaseManager {
                         // Process the table data
                         while ( resultSet.next() ) {
                             // Process gameData
-                            int gameID = (int) resultSet.getObject( Constants.gameID );
-                            String whiteUsername = (String) resultSet.getObject( Constants.whiteUsername );
-                            String blackUsername = (String) resultSet.getObject( Constants.blackUsername );
-                            String gameName = (String) resultSet.getObject( Constants.gameName );
-                            String gameString = (String) resultSet.getObject( Constants.game );
+                            int gameID = (int) resultSet.getObject( Constants.GAME_ID );
+                            String whiteUsername = (String) resultSet.getObject( Constants.WHITE_USERNAME );
+                            String blackUsername = (String) resultSet.getObject( Constants.BLACK_USERNAME );
+                            String gameName = (String) resultSet.getObject( Constants.GAME_NAME );
+                            String gameString = (String) resultSet.getObject( Constants.GAME );
                             // Process the gameString into a ChessGame object
                             ChessGame.TeamColor teamColor = ChessBoard.parseColor( gameString );
                             ChessPiece[][] board = ChessBoard.parseBoard( gameString );
@@ -219,9 +215,9 @@ public class DatabaseManager {
                         // Process the table data
                         while ( resultSet.next() ) {
                             // Process userData
-                            String username = (String) resultSet.getObject( Constants.username );
-                            String password = (String) resultSet.getObject( Constants.password );
-                            String email = (String) resultSet.getObject( Constants.email );
+                            String username = (String) resultSet.getObject( Constants.USERNAME );
+                            String password = (String) resultSet.getObject( Constants.PASSWORD );
+                            String email = (String) resultSet.getObject( Constants.EMAIL );
                             resultList.add( new UserData( username, password, email ) );
                         }
                         break;
@@ -236,11 +232,20 @@ public class DatabaseManager {
         }
     }
 
+
     /**
      * Creates the database if it does not already exist.
      */
     public static void createDatabase() throws DataAccessException {
-        executeUpdate( "CREATE DATABASE IF NOT EXISTS " + DATABASE_NAME );
+        String statement = "CREATE DATABASE IF NOT EXISTS " + DATABASE_NAME;
+        // Establish a connection and prepare the statement to be executed.
+        try ( Connection connection = DriverManager.getConnection(CONNECTION_URL, USER, PASSWORD);
+              PreparedStatement preparedStatement = connection.prepareStatement( statement ) ) {
+            // Execute the statement.
+            preparedStatement.executeUpdate();
+        } catch ( SQLException e ) {
+            throw new DataAccessException( e.getMessage() );
+        }
         createTable( TableSource.AUTHTABLE );
         createTable( TableSource.GAMETABLE );
         createTable( TableSource.USERTABLE );
@@ -249,6 +254,7 @@ public class DatabaseManager {
 
     /**
      * Creates a table if it does not already exist.
+     *
      * @param dataType (which of the tables to create)
      */
     private static void createTable( TableSource dataType ) throws DataAccessException {
@@ -256,15 +262,15 @@ public class DatabaseManager {
         // Depending on tableChoice, get the statement
         switch ( dataType ) {
             case AUTHTABLE:
-                statement = String.join( " ", createAuthTableStatement );
+                statement = String.join( " ", CREATE_AUTH_TABLE_STATEMENT );
                 executeUpdate( statement );
                 break;
             case GAMETABLE:
-                statement = String.join( " ", createGameTableStatement );
+                statement = String.join( " ", CREATE_GAME_TABLE_STATEMENT );
                 executeUpdate( statement );
                 break;
             case USERTABLE:
-                statement = String.join( " ", createUserTableStatement );
+                statement = String.join( " ", CREATE_USER_TABLE_STATEMENT );
                 executeUpdate( statement );
                 break;
             default:
@@ -293,5 +299,12 @@ public class DatabaseManager {
         } catch ( SQLException e ) {
             throw new DataAccessException( e.getMessage() );
         }
+    }
+
+
+    public enum TableSource {
+        AUTHTABLE,
+        GAMETABLE,
+        USERTABLE
     }
 }

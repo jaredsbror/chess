@@ -19,7 +19,7 @@ public class RegisterService {
     private final String email;
 
 
-    public RegisterService(RegisterRequest registerRequest) throws DataAccessException {
+    public RegisterService( RegisterRequest registerRequest ) throws DataAccessException {
         // Process registerRequest variables
         this.username = registerRequest.username();
         this.password = registerRequest.password();
@@ -29,18 +29,18 @@ public class RegisterService {
         sqlUserDAO = new SQLUserDAO();
     }
 
+
     public String register() throws Error400BadRequest, Error403AlreadyTaken, DataAccessException {
         // Verify that the user does not exist
         UserData userData = sqlUserDAO.getUser( username );
         if ( userData != null ) throw new Error403AlreadyTaken();
         // Add UserData into userTable
-        String hashedPassword = BCrypt.hashpw(password, BCrypt.gensalt());
+        String hashedPassword = BCrypt.hashpw( password, BCrypt.gensalt() );
         sqlUserDAO.insertUser( username, hashedPassword, email );
         // Add AuthData into authTable
         String authToken = sqlAuthDao.createAuthToken( username );
         // Return the generated authToken
         return authToken;
     }
-
 
 }

@@ -21,10 +21,11 @@ public class DatabaseUtil {
             sqlUserDAO.clear();
 
             // If there are additional setup steps, you can add them here
-        } catch (Exception exception) {
-            throw new RuntimeException("Error: Failed to refresh database", exception);
+        } catch ( Exception exception ) {
+            throw new RuntimeException( "Error: Failed to refresh database", exception );
         }
     }
+
 
     // Populate the database with a user (used for testing)
     public static String populateDatabaseWithUser() {
@@ -33,29 +34,30 @@ public class DatabaseUtil {
             SQLAuthDAO sqlAuthDAO = new SQLAuthDAO();
             SQLUserDAO sqlUserDAO = new SQLUserDAO();
             // Register a new user
-            sqlUserDAO.insertUser( Constants.username, Constants.password, Constants.email );
+            sqlUserDAO.insertUser( Constants.USERNAME, Constants.PASSWORD, Constants.EMAIL );
             // Login as the new user
             // Return the authToken
-            return sqlAuthDAO.createAuthToken( Constants.username );
-        } catch (Exception exception) {
-            throw new RuntimeException("Error: Failed to populate database", exception);
+            return sqlAuthDAO.createAuthToken( Constants.USERNAME );
+        } catch ( Exception exception ) {
+            throw new RuntimeException( "Error: Failed to populate database", exception );
         }
     }
 
+
     // Populate the database with a game (used for testing)
-    public static int populateDatabaseWithGame(String authToken) {
+    public static int populateDatabaseWithGame( String authToken ) {
         try {
             // Set up the database
             SQLGameDAO sqlGameDAO = new SQLGameDAO();
             // Create a new game
-            int gameID = sqlGameDAO.insertGame( Constants.gameName );
+            int gameID = sqlGameDAO.insertGame( Constants.GAME_NAME );
             // Add the user as white player in that game
-            sqlGameDAO.updateGame( gameID, Constants.username, "WHITE" );
+            sqlGameDAO.updateGame( gameID, Constants.USERNAME, "WHITE" );
             // If there are additional setup steps, add them here
             // Return the gameID
             return gameID;
-        } catch (Exception exception) {
-            throw new RuntimeException("Error: Failed to populate database", exception);
+        } catch ( Exception exception ) {
+            throw new RuntimeException( "Error: Failed to populate database", exception );
         }
     }
 }

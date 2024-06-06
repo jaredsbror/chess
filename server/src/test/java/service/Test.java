@@ -1,11 +1,11 @@
 package service;
 
 public interface Test {
-    String username = "username";
-    String password = "password";
-    String email = "blank@gmail.com";
-    String authToken = "authToken";
-    String gameName = "gameName";
-    int gameID = 0;
-    String white = "WHITE";
+    String USERNAME = "username";
+    String PASSWORD = "password";
+    String EMAIL = "blank@gmail.com";
+    String AUTH_TOKEN = "authToken";
+    String GAME_NAME = "gameName";
+    int GAME_ID = 0;
+    String WHITE = "WHITE";
 }

@@ -6,6 +6,7 @@ import dataaccess.exceptions.Error500Internal;
 import handlers.*;
 import spark.Spark;
 
+
 public class Server {
 
     private final ClearApplicationHandler clearApplicationHandler;
@@ -16,6 +17,7 @@ public class Server {
     private final LogoutHandler logoutHandler;
     private final RegisterHandler registerHandler;
 
+
     public Server() {
         try {
             clearApplicationHandler = new ClearApplicationHandler();
@@ -25,47 +27,49 @@ public class Server {
             loginHandler = new LoginHandler();
             logoutHandler = new LogoutHandler();
             registerHandler = new RegisterHandler();
-        } catch (Error500Internal e) {
-            throw new RuntimeException(e.getMessage());
+        } catch ( Error500Internal e ) {
+            throw new RuntimeException( e.getMessage() );
         }
     }
 
-    public int run(int desiredPort) {
-        Spark.port(desiredPort);
+
+    public int run( int desiredPort ) {
+        Spark.port( desiredPort );
         try {
             DatabaseManager.createDatabase();
-        } catch (Exception exception) {
+        } catch ( Exception exception ) {
             exception.printStackTrace();
-            throw new RuntimeException(exception);
+            throw new RuntimeException( exception );
         }
 
-        Spark.staticFiles.location("web");
+        Spark.staticFiles.location( "web" );
 
         // Register your endpoints and handle exceptions here.
         // Clear Application
-        Spark.delete("/db", clearApplicationHandler);
+        Spark.delete( "/db", clearApplicationHandler );
 
         // Register user
-        Spark.post("/user", registerHandler);
+        Spark.post( "/user", registerHandler );
 
         // Login user
-        Spark.post("/session", loginHandler);
+        Spark.post( "/session", loginHandler );
 
         // Logout user
-        Spark.delete("/session", logoutHandler);
+        Spark.delete( "/session", logoutHandler );
 
         // Create game
-        Spark.post("/game", createGameHandler);
+        Spark.post( "/game", createGameHandler );
 
         // Join game
-        Spark.put("/game", joinGameHandler);
+        Spark.put( "/game", joinGameHandler );
 
         // List games
-        Spark.get("/game", listGamesHandler);
+        Spark.get( "/game", listGamesHandler );
 
         Spark.awaitInitialization();
         return Spark.port();
     }
+
 
     public void stop() {
         Spark.stop();

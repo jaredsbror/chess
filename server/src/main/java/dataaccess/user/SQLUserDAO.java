@@ -6,12 +6,12 @@ import dataaccess.DatabaseManager;
 import dataaccess.UserDAO;
 import model.original.UserData;
 
-import java.sql.Connection;
 import java.util.List;
 
 
 public class SQLUserDAO implements UserDAO {
     private String statement = null;
+
 
     public UserData getUser( String username ) throws DataAccessException {
         // Get resultList data
