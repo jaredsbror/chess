@@ -56,9 +56,7 @@ class SQLAuthDAOTest {
     @DisplayName( "Create AuthToken with Empty Username" )
     public void createAuthTokenWithInvalidUsername() {
         assertDoesNotThrow( DatabaseUtil::refreshDatabase );
-        assertThrows( DataAccessException.class, () -> {
-            sqlAuthDAO.createAuthToken( null );
-        }, "Error: Should not have created authToken" );
+        assertThrows( DataAccessException.class, () -> sqlAuthDAO.createAuthToken( null ), "Error: Should not have created authToken" );
     }
 
     @Test
