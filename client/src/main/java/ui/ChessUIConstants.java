@@ -49,20 +49,6 @@ public class ChessUIConstants {
     public static final String SET_BG_COLOR_WHITE = SET_BG_COLOR + "15m";
     public static final String RESET_BG_COLOR = UNICODE_ESCAPE + "[49m";
 
-    public static final String WHITE_KING = " ♔ ";
-    public static final String WHITE_QUEEN = " ♕ ";
-    public static final String WHITE_BISHOP = " ♗ ";
-    public static final String WHITE_KNIGHT = " ♘ ";
-    public static final String WHITE_ROOK = " ♖ ";
-    public static final String WHITE_PAWN = " ♙ ";
-    public static final String BLACK_KING = " ♚ ";
-    public static final String BLACK_QUEEN = " ♛ ";
-    public static final String BLACK_BISHOP = " ♝ ";
-    public static final String BLACK_KNIGHT = " ♞ ";
-    public static final String BLACK_ROOK = " ♜ ";
-    public static final String BLACK_PAWN = " ♟ ";
-    public static final String EMPTY = " \u2003 ";
-
     public static final String CHESS_EDGE_BACKGROUND = SET_BG_COLOR_TAN;
     public static final String CHESS_EDGE_FOREGROUND = SET_TEXT_COLOR_BLACK;
     public static final String CHESS_WHITE_BACKGROUND = SET_BG_COLOR_WHITE;
@@ -74,10 +60,40 @@ public class ChessUIConstants {
     public static final int CHESS_EDGE_SIZE_IN_SQUARES = 10;
     public static final int CHESS_BOARD_SIZE_IN_SQUARES = 8;
     public static final String CHESS_SQUARE_BUFFER = " ";
-    public static final String[] CHESS_EDGE_LABEL_LETTERS_WHITE = { " ", "A", "B", "C", "D", "E", "F", "G", "H", " " };
+    public static final String[] CHESS_EDGE_LABEL_LETTERS_WHITE = {
+            " ",
+            CHESS_SQUARE_BUFFER + "A",
+            "B",
+            "C", "D", "E", "F", "G", "H", " " };
     public static final String[] CHESS_EDGE_LABEL_LETTERS_BLACK = { " ", "H", "G", "F", "E", "D", "C", "B", "A", " " };
     public static final String[] CHESS_EDGE_LABEL_NUMBERS_WHITE = { " ", "1", "2", "3", "4", "5", "6", "7", "8", " " };
     public static final String[] CHESS_EDGE_LABEL_NUMBERS_BLACK = { " ", "8", "7", "6", "5", "4", "3", "2", "1", " " };
+
+    public static final String WHITE_KING = CHESS_SQUARE_BUFFER + "♔" + CHESS_SQUARE_BUFFER;
+    public static final String WHITE_QUEEN = CHESS_SQUARE_BUFFER + "♕" + CHESS_SQUARE_BUFFER;
+    public static final String WHITE_BISHOP = CHESS_SQUARE_BUFFER + "♗" + CHESS_SQUARE_BUFFER;
+    public static final String WHITE_KNIGHT = CHESS_SQUARE_BUFFER + "♘" + CHESS_SQUARE_BUFFER;
+    public static final String WHITE_ROOK = CHESS_SQUARE_BUFFER + "♖" + CHESS_SQUARE_BUFFER;
+    public static final String WHITE_PAWN = CHESS_SQUARE_BUFFER + "♙" + CHESS_SQUARE_BUFFER;
+    public static final String BLACK_KING = CHESS_SQUARE_BUFFER + "♚" + CHESS_SQUARE_BUFFER;
+    public static final String BLACK_QUEEN = CHESS_SQUARE_BUFFER + "♛" + CHESS_SQUARE_BUFFER;
+    public static final String BLACK_BISHOP = CHESS_SQUARE_BUFFER + "♝" + CHESS_SQUARE_BUFFER;
+    public static final String BLACK_KNIGHT = CHESS_SQUARE_BUFFER + "♞" + CHESS_SQUARE_BUFFER;
+    public static final String BLACK_ROOK = CHESS_SQUARE_BUFFER + "♜" + CHESS_SQUARE_BUFFER;
+    public static final String BLACK_PAWN = CHESS_SQUARE_BUFFER + "♟" + CHESS_SQUARE_BUFFER;
+    public static final String WHITE_KING_LETTER = CHESS_SQUARE_BUFFER + "K" + CHESS_SQUARE_BUFFER;
+    public static final String WHITE_QUEEN_LETTER = CHESS_SQUARE_BUFFER + "Q" + CHESS_SQUARE_BUFFER;
+    public static final String WHITE_BISHOP_LETTER = CHESS_SQUARE_BUFFER + "B" + CHESS_SQUARE_BUFFER;
+    public static final String WHITE_KNIGHT_LETTER = CHESS_SQUARE_BUFFER + "N" + CHESS_SQUARE_BUFFER;
+    public static final String WHITE_ROOK_LETTER = CHESS_SQUARE_BUFFER + "R" + CHESS_SQUARE_BUFFER;
+    public static final String WHITE_PAWN_LETTER = CHESS_SQUARE_BUFFER + "P" + CHESS_SQUARE_BUFFER;
+    public static final String BLACK_KING_LETTER = CHESS_SQUARE_BUFFER + "K" + CHESS_SQUARE_BUFFER;
+    public static final String BLACK_QUEEN_LETTER = CHESS_SQUARE_BUFFER + "Q" + CHESS_SQUARE_BUFFER;
+    public static final String BLACK_BISHOP_LETTER = CHESS_SQUARE_BUFFER + "B" + CHESS_SQUARE_BUFFER;
+    public static final String BLACK_KNIGHT_LETTER = CHESS_SQUARE_BUFFER + "N" + CHESS_SQUARE_BUFFER;
+    public static final String BLACK_ROOK_LETTER = CHESS_SQUARE_BUFFER + "R" + CHESS_SQUARE_BUFFER;
+    public static final String BLACK_PAWN_LETTER = CHESS_SQUARE_BUFFER + "P" + CHESS_SQUARE_BUFFER;
+    public static final String EMPTY = CHESS_SQUARE_BUFFER + "\u2003" + CHESS_SQUARE_BUFFER;
 
     public static String moveCursorToLocation(int x, int y) { return UNICODE_ESCAPE + "[" + y + ";" + x + "H"; }
 }

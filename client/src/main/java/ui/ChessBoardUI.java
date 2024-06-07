@@ -32,48 +32,48 @@ public class ChessBoardUI {
     private static void drawRow(PrintStream out, ChessSquare[] chessSquareRow) {
         // Iterate over the rows and columns to draw the board
         for (var chessSquare: chessSquareRow) {
-            setBackgroundForeground(  out, chessSquare.background(), chessSquare.foreground() );
+            setForegroundBackground(  out, chessSquare.foreground(), chessSquare.background() );
             out.print( chessSquare.text() );
         }
         out.println();
     }
 
-    private static void setBackgroundForeground( PrintStream out, String background, String foreground ) {
-        out.print( background );
+    private static void setForegroundBackground( PrintStream out, String foreground, String background ) {
         out.print( foreground );
+        out.print( background );
     }
 
 
     private static void setWhitePiece( PrintStream out ) {
-        setBackgroundForeground( out, SET_BG_COLOR_BLACK, SET_TEXT_COLOR_WHITE );
+        setForegroundBackground( out, SET_TEXT_COLOR_WHITE, SET_BG_COLOR_BLACK );
     }
 
 
     private static void setWhite( PrintStream out ) {
-        setBackgroundForeground( out, SET_BG_COLOR_WHITE, SET_TEXT_COLOR_WHITE );
+        setForegroundBackground( out, SET_TEXT_COLOR_WHITE, SET_BG_COLOR_WHITE );
     }
 
 
     private static void setBlackPiece( PrintStream out ) {
-        setBackgroundForeground( out, SET_BG_COLOR_WHITE, SET_TEXT_COLOR_RED );
+        setForegroundBackground( out, SET_TEXT_COLOR_RED, SET_BG_COLOR_WHITE );
     }
 
 
     private static void setBlack( PrintStream out ) {
-        setBackgroundForeground( out, SET_BG_COLOR_BLACK, SET_TEXT_COLOR_BLACK );
+        setForegroundBackground( out, SET_TEXT_COLOR_BLACK, SET_BG_COLOR_BLACK );
     }
 
 
     private static void setEdgeLabel( PrintStream out ) {
-        setBackgroundForeground( out, SET_BG_COLOR_TAN, SET_TEXT_COLOR_BLACK );
+        setForegroundBackground( out, SET_TEXT_COLOR_BLACK, SET_BG_COLOR_TAN );
     }
 
 
     private static void setEdge( PrintStream out ) {
-        setBackgroundForeground( out, SET_BG_COLOR_TAN, SET_TEXT_COLOR_TAN );
+        setForegroundBackground( out, SET_TEXT_COLOR_TAN, SET_BG_COLOR_TAN );
     }
 
     private static void resetTerminalColors( PrintStream out ) {
-        setBackgroundForeground( out, SET_BG_COLOR_BLACK, SET_TEXT_COLOR_WHITE );
+        setForegroundBackground( out, SET_TEXT_COLOR_WHITE, SET_BG_COLOR_BLACK );
     }
 }
