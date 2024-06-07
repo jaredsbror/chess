@@ -61,13 +61,49 @@ public class ChessUIConstants {
     public static final int CHESS_BOARD_SIZE_IN_SQUARES = 8;
     public static final String CHESS_SQUARE_BUFFER = " ";
     public static final String[] CHESS_EDGE_LABEL_LETTERS_WHITE = {
-            " ",
-            CHESS_SQUARE_BUFFER + "A",
-            "B",
-            "C", "D", "E", "F", "G", "H", " " };
-    public static final String[] CHESS_EDGE_LABEL_LETTERS_BLACK = { " ", "H", "G", "F", "E", "D", "C", "B", "A", " " };
-    public static final String[] CHESS_EDGE_LABEL_NUMBERS_WHITE = { " ", "1", "2", "3", "4", "5", "6", "7", "8", " " };
-    public static final String[] CHESS_EDGE_LABEL_NUMBERS_BLACK = { " ", "8", "7", "6", "5", "4", "3", "2", "1", " " };
+            CHESS_SQUARE_BUFFER + " " + CHESS_SQUARE_BUFFER,
+            CHESS_SQUARE_BUFFER + "A" + CHESS_SQUARE_BUFFER,
+            CHESS_SQUARE_BUFFER + "B" + CHESS_SQUARE_BUFFER,
+            CHESS_SQUARE_BUFFER + "C" + CHESS_SQUARE_BUFFER,
+            CHESS_SQUARE_BUFFER + "D" + CHESS_SQUARE_BUFFER,
+            CHESS_SQUARE_BUFFER + "E" + CHESS_SQUARE_BUFFER,
+            CHESS_SQUARE_BUFFER + "F" + CHESS_SQUARE_BUFFER,
+            CHESS_SQUARE_BUFFER + "G" + CHESS_SQUARE_BUFFER,
+            CHESS_SQUARE_BUFFER + "H" + CHESS_SQUARE_BUFFER,
+            CHESS_SQUARE_BUFFER + " " + CHESS_SQUARE_BUFFER };
+    public static final String[] CHESS_EDGE_LABEL_LETTERS_BLACK = {
+            CHESS_SQUARE_BUFFER + " " + CHESS_SQUARE_BUFFER,
+            CHESS_SQUARE_BUFFER + "H" + CHESS_SQUARE_BUFFER,
+            CHESS_SQUARE_BUFFER + "G" + CHESS_SQUARE_BUFFER,
+            CHESS_SQUARE_BUFFER + "F" + CHESS_SQUARE_BUFFER,
+            CHESS_SQUARE_BUFFER + "E" + CHESS_SQUARE_BUFFER,
+            CHESS_SQUARE_BUFFER + "D" + CHESS_SQUARE_BUFFER,
+            CHESS_SQUARE_BUFFER + "C" + CHESS_SQUARE_BUFFER,
+            CHESS_SQUARE_BUFFER + "B" + CHESS_SQUARE_BUFFER,
+            CHESS_SQUARE_BUFFER + "A" + CHESS_SQUARE_BUFFER,
+            CHESS_SQUARE_BUFFER + " " + CHESS_SQUARE_BUFFER };
+    public static final String[] CHESS_EDGE_LABEL_NUMBERS_WHITE = {
+            CHESS_SQUARE_BUFFER + " " + CHESS_SQUARE_BUFFER,
+            CHESS_SQUARE_BUFFER + "1" + CHESS_SQUARE_BUFFER,
+            CHESS_SQUARE_BUFFER + "2" + CHESS_SQUARE_BUFFER,
+            CHESS_SQUARE_BUFFER + "3" + CHESS_SQUARE_BUFFER,
+            CHESS_SQUARE_BUFFER + "4" + CHESS_SQUARE_BUFFER,
+            CHESS_SQUARE_BUFFER + "5" + CHESS_SQUARE_BUFFER,
+            CHESS_SQUARE_BUFFER + "6" + CHESS_SQUARE_BUFFER,
+            CHESS_SQUARE_BUFFER + "7" + CHESS_SQUARE_BUFFER,
+            CHESS_SQUARE_BUFFER + "8" + CHESS_SQUARE_BUFFER,
+            CHESS_SQUARE_BUFFER + " " + CHESS_SQUARE_BUFFER };
+    public static final String[] CHESS_EDGE_LABEL_NUMBERS_BLACK = {
+            CHESS_SQUARE_BUFFER + " " + CHESS_SQUARE_BUFFER,
+            CHESS_SQUARE_BUFFER + "8" + CHESS_SQUARE_BUFFER,
+            CHESS_SQUARE_BUFFER + "7" + CHESS_SQUARE_BUFFER,
+            CHESS_SQUARE_BUFFER + "6" + CHESS_SQUARE_BUFFER,
+            CHESS_SQUARE_BUFFER + "5" + CHESS_SQUARE_BUFFER,
+            CHESS_SQUARE_BUFFER + "4" + CHESS_SQUARE_BUFFER,
+            CHESS_SQUARE_BUFFER + "3" + CHESS_SQUARE_BUFFER,
+            CHESS_SQUARE_BUFFER + "2" + CHESS_SQUARE_BUFFER,
+            CHESS_SQUARE_BUFFER + "1" + CHESS_SQUARE_BUFFER,
+            CHESS_SQUARE_BUFFER + " " + CHESS_SQUARE_BUFFER };
 
     public static final String WHITE_KING = CHESS_SQUARE_BUFFER + "♔" + CHESS_SQUARE_BUFFER;
     public static final String WHITE_QUEEN = CHESS_SQUARE_BUFFER + "♕" + CHESS_SQUARE_BUFFER;
