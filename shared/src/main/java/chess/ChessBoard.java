@@ -70,13 +70,27 @@ public class ChessBoard {
     }
 
     // Tranpose an array of chess pieces
-    public void transposeBoard() {
-        int n = board.length;
-        for (int i = 0; i < n; i++) {
-            for (int j = i + 1; j < n; j++) {
-                ChessPiece temp = board[i][j];
-                board[i][j] = board[j][i];
-                board[j][i] = temp;
+    public void switchPerspective() {
+        int numRows = board.length;
+        int numCols = board[0].length;
+
+        // Reverse the array horizontally
+        for (int row = 0; row < numRows; row++) {
+            for (int col = 0; col < numCols / 2; col++) {
+                // Swap elements between left and right sides of the array
+                var temp = board[row][col];
+                board[row][col] = board[row][numCols - 1 - col];
+                board[row][numCols - 1 - col] = temp;
+            }
+        }
+
+        // Reverse the array vertically
+        for (int row = 0; row < numRows / 2; row++) {
+            for (int col = 0; col < numCols; col++) {
+                // Swap elements between top and bottom sides of the array
+                var temp = board[row][col];
+                board[row][col] = board[numRows - 1 - row][col];
+                board[numRows - 1 - row][col] = temp;
             }
         }
     }

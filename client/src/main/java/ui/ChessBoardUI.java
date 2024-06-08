@@ -1,6 +1,7 @@
 package ui;
 
 
+import chess.ChessBoard;
 import chess.ChessGame;
 
 import java.io.PrintStream;
@@ -13,18 +14,14 @@ public class ChessBoardUI {
     private static ExtendedChessBoard extendedChessBoard = new ExtendedChessBoard();
 
     // Draw entire board from either the white or black player's perspective
-    public static void drawBoard( ChessGame.TeamColor teamColor) {
+    public static void drawBoard( ChessBoard chessBoard, ChessGame.TeamColor teamColor) {
+        extendedChessBoard = new ExtendedChessBoard(chessBoard, teamColor);
         // Reset the terminal screen
         var out = new PrintStream( System.out, true, StandardCharsets.UTF_8 );
         out.print( ERASE_SCREEN );
 
-        // Determine which perspective to draw from
-        if (teamColor == ChessGame.TeamColor.WHITE) {
-            for (int row = 0; row < CHESS_EDGE_SIZE_IN_SQUARES; row++) {
-                drawRow( out,extendedChessBoard.getRow( row ) );
-            }
-        } else {
-
+        for (int row = 0; row < CHESS_EDGE_SIZE_IN_SQUARES; row++) {
+            drawRow( out, extendedChessBoard.getRow( row ) );
         }
 
         resetTerminalColors( out );
@@ -36,6 +33,7 @@ public class ChessBoardUI {
             setForegroundBackground(  out, chessSquare.foreground(), chessSquare.background() );
             out.print( chessSquare.text() );
         }
+        resetTerminalColors( out );
         out.println();
     }
 

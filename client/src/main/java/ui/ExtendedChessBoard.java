@@ -37,11 +37,7 @@ public class ExtendedChessBoard {
         row--;
         col--;
         // If the sum of row and column indices is even, it's a white square; otherwise, it's black.
-        if ((row + col) % 2 == 0) {
-            return ChessGame.TeamColor.WHITE;
-        } else {
-            return ChessGame.TeamColor.BLACK;
-        }
+        return  (row + col) % 2 == 0 ? ChessGame.TeamColor.WHITE : ChessGame.TeamColor.BLACK;
     }
 
     public ExtendedChessBoard(ChessBoard chessBoard, ChessGame.TeamColor teamColor ) {
@@ -72,10 +68,13 @@ public class ExtendedChessBoard {
                         foreground = ChessUIConstants.CHESS_EDGE_FOREGROUND;
                         background = ChessUIConstants.CHESS_EDGE_BACKGROUND;
                     } else {
-                        ChessPiece chessPiece =  chessBoard.getPiece( row, col);
+                        ChessPiece chessPiece =  chessBoard.getPiece( ChessUIConstants.CHESS_BOARD_SIZE_IN_SQUARES - row + 1, col);
                         // Determine chess square text value
                         if (chessPiece == null) {
                             squareValue = ChessUIConstants.EMPTY;
+                            // Determine foreground color
+                            // Determine the background color
+                            foreground = background = getSquareColor( row, col ) == ChessGame.TeamColor.WHITE ? ChessUIConstants.CHESS_WHITE_BACKGROUND : ChessUIConstants.CHESS_BLACK_BACKGROUND;
                         } else {
                             squareValue = switch ( chessPiece.getPieceType() ) {
                                 case KING -> ChessUIConstants.WHITE_KING_LETTER;
@@ -85,14 +84,10 @@ public class ExtendedChessBoard {
                                 case ROOK -> ChessUIConstants.WHITE_ROOK_LETTER;
                                 case PAWN -> ChessUIConstants.WHITE_PAWN_LETTER;
                             };
-                        }
-                        // Determine foreground color
-                        foreground = ChessUIConstants.CHESS_WHITE_PIECE_FOREGROUND;
-                        // Determine the background color
-                        if (getSquareColor( row, col ) == ChessGame.TeamColor.WHITE) {
-                            background = ChessUIConstants.CHESS_WHITE_BACKGROUND;
-                        } else {
-                            background = ChessUIConstants.CHESS_BLACK_BACKGROUND;
+                            // Determine foreground color
+                            foreground = chessPiece.getTeamColor() == ChessGame.TeamColor.WHITE ? ChessUIConstants.CHESS_WHITE_PIECE_FOREGROUND : ChessUIConstants.CHESS_BLACK_PIECE_FOREGROUND;
+                            // Determine the background color
+                            background = getSquareColor( row, col ) == ChessGame.TeamColor.WHITE ? ChessUIConstants.CHESS_WHITE_BACKGROUND : ChessUIConstants.CHESS_BLACK_BACKGROUND;
                         }
                     }
                     setSquare( row, col, squareValue, foreground, background);
@@ -106,8 +101,9 @@ public class ExtendedChessBoard {
                 setSquare( ChessUIConstants.CHESS_EDGE_SIZE_IN_SQUARES - 1, col, squareValue, foreground, background );
             }
         } else {
-            // Transpose ChessBoard
-            chessBoard.transposeBoard();
+            // Transpose chess board
+            ChessBoard rotatedChessBoard = new ChessBoard(chessBoard);
+            rotatedChessBoard.switchPerspective();
             // Top edge with labels
             for (int col = 0; col < ChessUIConstants.CHESS_EDGE_SIZE_IN_SQUARES; col++) {
                 squareValue = ChessUIConstants.CHESS_EDGE_LABEL_LETTERS_BLACK[col];
@@ -124,10 +120,13 @@ public class ExtendedChessBoard {
                         foreground = ChessUIConstants.CHESS_EDGE_FOREGROUND;
                         background = ChessUIConstants.CHESS_EDGE_BACKGROUND;
                     } else {
-                        ChessPiece chessPiece =  chessBoard.getPiece( row, col);
+                        ChessPiece chessPiece =  rotatedChessBoard.getPiece( ChessUIConstants.CHESS_BOARD_SIZE_IN_SQUARES - row + 1, col);
                         // Determine chess square text value
                         if (chessPiece == null) {
                             squareValue = ChessUIConstants.EMPTY;
+                            // Determine foreground color
+                            // Determine the background color
+                            foreground = background = getSquareColor( row, col ) == ChessGame.TeamColor.WHITE ? ChessUIConstants.CHESS_WHITE_BACKGROUND : ChessUIConstants.CHESS_BLACK_BACKGROUND;
                         } else {
                             squareValue = switch ( chessPiece.getPieceType() ) {
                                 case KING -> ChessUIConstants.BLACK_KING_LETTER;
@@ -137,14 +136,10 @@ public class ExtendedChessBoard {
                                 case ROOK -> ChessUIConstants.BLACK_ROOK_LETTER;
                                 case PAWN -> ChessUIConstants.BLACK_PAWN_LETTER;
                             };
-                        }
-                        // Determine foreground color
-                        foreground = ChessUIConstants.CHESS_BLACK_PIECE_FOREGROUND;
-                        // Determine the background color
-                        if (getSquareColor( row, col ) == ChessGame.TeamColor.WHITE) {
-                            background = ChessUIConstants.CHESS_WHITE_BACKGROUND;
-                        } else {
-                            background = ChessUIConstants.CHESS_BLACK_BACKGROUND;
+                            // Determine foreground color
+                            foreground = chessPiece.getTeamColor() == ChessGame.TeamColor.WHITE ? ChessUIConstants.CHESS_WHITE_PIECE_FOREGROUND : ChessUIConstants.CHESS_BLACK_PIECE_FOREGROUND;
+                            // Determine the background color
+                            background = getSquareColor( row, col ) == ChessGame.TeamColor.WHITE ? ChessUIConstants.CHESS_WHITE_BACKGROUND : ChessUIConstants.CHESS_BLACK_BACKGROUND;
                         }
                     }
                     setSquare( row, col, squareValue, foreground, background);
@@ -154,7 +149,7 @@ public class ExtendedChessBoard {
             for (int col = 0; col < ChessUIConstants.CHESS_EDGE_SIZE_IN_SQUARES; col++) {
                 foreground = ChessUIConstants.CHESS_EDGE_FOREGROUND;
                 background = ChessUIConstants.CHESS_EDGE_BACKGROUND;
-                squareValue = ChessUIConstants.CHESS_EDGE_LABEL_LETTERS_WHITE[col];
+                squareValue = ChessUIConstants.CHESS_EDGE_LABEL_LETTERS_BLACK[col];
                 setSquare( ChessUIConstants.CHESS_EDGE_SIZE_IN_SQUARES - 1, col, squareValue, foreground, background );
             }
         }
