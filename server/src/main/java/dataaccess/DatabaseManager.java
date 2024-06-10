@@ -23,6 +23,7 @@ public class DatabaseManager {
     private static final String USER;
     private static final String PASSWORD;
     private static final String CONNECTION_URL;
+    private static final String LOCALHOST_PORT_URL;
     /**
      * Initial parameters to set up the authTable in mySQL
      */
@@ -79,7 +80,8 @@ public class DatabaseManager {
 
                 var host = props.getProperty( "db.host" );
                 var port = Integer.parseInt( props.getProperty( "db.port" ) );
-                CONNECTION_URL = String.format( "jdbc:mysql://%s:%d", host, port);
+                CONNECTION_URL = String.format( "jdbc:mysql://%s:%d/%s", host, port, DATABASE_NAME );
+                LOCALHOST_PORT_URL = String.format( "jdbc:mysql://%s:%d", host, port );
             }
         } catch ( Exception ex ) {
             throw new RuntimeException( "unable to process db.properties. " + ex.getMessage() );
@@ -237,15 +239,7 @@ public class DatabaseManager {
      * Creates the database if it does not already exist.
      */
     public static void createDatabase() throws DataAccessException {
-        String statement = "CREATE DATABASE IF NOT EXISTS " + DATABASE_NAME;
-        // Establish a connection and prepare the statement to be executed.
-        try ( Connection connection = DriverManager.getConnection(CONNECTION_URL, USER, PASSWORD);
-              PreparedStatement preparedStatement = connection.prepareStatement( statement ) ) {
-            // Execute the statement.
-            preparedStatement.executeUpdate();
-        } catch ( SQLException e ) {
-            throw new DataAccessException( e.getMessage() );
-        }
+        executeUpdate( "CREATE DATABASE IF NOT EXISTS " + DATABASE_NAME );
         createTable( TableSource.AUTHTABLE );
         createTable( TableSource.GAMETABLE );
         createTable( TableSource.USERTABLE );
