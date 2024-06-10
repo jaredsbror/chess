@@ -36,9 +36,11 @@ public class Main {
             ListResult listResult = serverFacade.listGames( new ListRequest( loginResult.authToken() ) );
             System.out.println(listResult);
 
+            LogoutResult logoutResult = serverFacade.logout( new LogoutRequest( loginResult.authToken() ) );
+            System.out.println(logoutResult);
+
             GameUI.drawGameBoard(listResult.games().getFirst() );
             GameUI.drawGameBoard(new ChessBoard() );
-
 
         } catch ( Error500Internal | URISyntaxException | IOException e ) {
             throw new RuntimeException( e );
