@@ -1,9 +1,10 @@
-package ui;
+package datatypes;
 
 
 import chess.ChessBoard;
 import chess.ChessGame;
 import chess.ChessPiece;
+import ui.ChessUIConstants;
 
 
 public class ExtendedChessBoard {
