@@ -34,7 +34,7 @@ public class ClearApplicationHandler implements Route {
             return "{}";
         } catch ( DataAccessException exception ) {
             response.status( 500 );
-            return gson.toJson( new ClearResult( "Error: " + exception ) );
+            return gson.toJson( new ClearResult( false, "Error: " + exception ) );
         }
     }
 }

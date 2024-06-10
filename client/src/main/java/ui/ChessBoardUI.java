@@ -27,6 +27,19 @@ public class ChessBoardUI {
         resetTerminalColors( out );
     }
 
+    // Draw entire board from either the white or black player's perspective
+    public static void drawBoard( ExtendedChessBoard extendedChessBoardObject) {
+        // Reset the terminal screen
+        var out = new PrintStream( System.out, true, StandardCharsets.UTF_8 );
+        out.print( ERASE_SCREEN );
+
+        for (int row = 0; row < CHESS_EDGE_SIZE_IN_SQUARES; row++) {
+            drawRow( out, extendedChessBoardObject.getRow( row ) );
+        }
+
+        resetTerminalColors( out );
+    }
+
     private static void drawRow(PrintStream out, ChessSquare[] chessSquareRow) {
         // Iterate over the rows and columns to draw the board
         for (var chessSquare: chessSquareRow) {

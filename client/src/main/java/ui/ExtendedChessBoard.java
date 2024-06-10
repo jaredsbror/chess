@@ -8,6 +8,7 @@ import chess.ChessPiece;
 
 public class ExtendedChessBoard {
     private ChessSquare[][] extendedChessBoard;
+    private ChessGame.TeamColor teamColor;
     private String background;
     private String foreground;
     private String squareValue;
@@ -22,6 +23,7 @@ public class ExtendedChessBoard {
             }
         }
         background = foreground = squareValue = null;
+        teamColor = ChessGame.TeamColor.WHITE;
     }
 
     private void setSquare(int row, int col, String value, String foreground, String background) {
@@ -40,7 +42,9 @@ public class ExtendedChessBoard {
         return  (row + col) % 2 == 0 ? ChessGame.TeamColor.WHITE : ChessGame.TeamColor.BLACK;
     }
 
-    public ExtendedChessBoard(ChessBoard chessBoard, ChessGame.TeamColor teamColor ) {
+    public ExtendedChessBoard(ChessBoard chessBoard, ChessGame.TeamColor newTeamColor ) {
+        // Set the team color
+        teamColor = newTeamColor;
         // Initialize variables
         extendedChessBoard = new ChessSquare[ChessUIConstants.CHESS_EDGE_SIZE_IN_SQUARES][ChessUIConstants.CHESS_EDGE_SIZE_IN_SQUARES];
         // Properly initialize array

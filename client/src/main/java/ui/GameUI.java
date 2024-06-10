@@ -11,7 +11,7 @@ public class GameUI {
     public static void drawGameBoard() {
         chessBoard = new ChessBoard();
         chessBoard.resetBoard();
-        ChessBoardUI.drawBoard( chessBoard, ChessGame.TeamColor.WHITE );
+        ChessBoardUI.drawBoard( new ExtendedChessBoard(chessBoard, ChessGame.TeamColor.WHITE ));
         ChessBoardUI.drawBoard( chessBoard, ChessGame.TeamColor.BLACK );
     }
 
