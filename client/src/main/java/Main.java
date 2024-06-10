@@ -1,5 +1,6 @@
 import chess.ChessGame;
 import chess.ChessPiece;
+import connections.ServerFacade;
 import handlers.ClearApplicationHandler;
 import model.custom.ClearResult;
 import ui.GameUI;
