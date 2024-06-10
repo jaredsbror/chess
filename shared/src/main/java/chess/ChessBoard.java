@@ -15,11 +15,12 @@ import static chess.Constants.DEBUG_PARSE_BOARD_IN_CHESSBOARD_JAVA;
 public class ChessBoard {
 
     // Variables
-    private final ChessPiece[][] board = new ChessPiece[Constants.BOARD_NUM_ROWS][Constants.BOARD_NUM_COLUMNS];
+    private ChessPiece[][] board;
 
 
     // Default Constructor
     public ChessBoard() {
+        board = new ChessPiece[Constants.BOARD_NUM_ROWS][Constants.BOARD_NUM_COLUMNS];
         /// Reset the board completely with null pieces
         // Iterate over the chessboard rows and columns...
         for ( int row = 0; row < Constants.BOARD_NUM_ROWS; row++ ) {
@@ -46,9 +47,9 @@ public class ChessBoard {
             System.out.println( "Creating Chess" + this.toString() );
     }
 
-
     // Copy constructor (deep)
     public ChessBoard( ChessBoard original ) {
+        board = new ChessPiece[Constants.BOARD_NUM_ROWS][Constants.BOARD_NUM_COLUMNS];
         /// Create a deep copy of the original board in the new ChessBoard object
         // Iterate over the chessboard rows...
         for ( int row = Constants.BOARD_MIN_ONE_INDEX; row <= Constants.BOARD_MAX_ONE_INDEX; row++ ) {
@@ -68,6 +69,31 @@ public class ChessBoard {
             System.out.println( "Copy of Chess" + this.toString() );
     }
 
+    // Tranpose an array of chess pieces
+    public void switchPerspective() {
+        int numRows = board.length;
+        int numCols = board[0].length;
+
+        // Reverse the array horizontally
+        for (int row = 0; row < numRows; row++) {
+            for (int col = 0; col < numCols / 2; col++) {
+                // Swap elements between left and right sides of the array
+                var temp = board[row][col];
+                board[row][col] = board[row][numCols - 1 - col];
+                board[row][numCols - 1 - col] = temp;
+            }
+        }
+
+        // Reverse the array vertically
+        for (int row = 0; row < numRows / 2; row++) {
+            for (int col = 0; col < numCols; col++) {
+                // Swap elements between top and bottom sides of the array
+                var temp = board[row][col];
+                board[row][col] = board[numRows - 1 - row][col];
+                board[numRows - 1 - row][col] = temp;
+            }
+        }
+    }
 
     // Parse a string to determine
     public static ChessGame.TeamColor parseColor( String gameString ) {
