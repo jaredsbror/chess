@@ -3,6 +3,8 @@ import chess.ChessPiece;
 import connections.ServerFacade;
 import handlers.ClearApplicationHandler;
 import model.custom.ClearResult;
+import model.custom.RegisterRequest;
+import model.custom.RegisterResult;
 import ui.GameUI;
 
 
@@ -11,10 +13,15 @@ public class Main {
         var piece = new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.PAWN);
         System.out.println("♕ 240 Chess Client: " + piece);
 
-        ServerFacade serverFacade = new ServerFacade( "localhost", "8080" );
+        ServerFacade serverFacade = new ServerFacade();
         try {
+            RegisterResult registerResult = serverFacade.register( new RegisterRequest( "username", "password", "email@gmail.com" ) );
+            System.out.println(registerResult);
+
+
+
             ClearResult clearResult = serverFacade.clearApplication();
-            System.out.println("ClearResult " + (clearResult == null ? "==" : "!=") + " null");
+//            System.out.println("ClearResult " + (clearResult == null ? "==" : "!=") + " null");
 //            System.out.println((clearResult.success() ? "Success -> " : "Failure ->") + clearResult.message());
 
             ClearApplicationHandler clearApplicationHandler = new ClearApplicationHandler();

@@ -10,12 +10,9 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
-import static connections.HTTPClient.HttpRequest.*;
 
 
 public class HTTPClient {
@@ -101,8 +98,13 @@ public class HTTPClient {
         // Get the response body
         try ( InputStream respBody = httpURLConnection.getInputStream()) {
             InputStreamReader inputStreamReader = new InputStreamReader(respBody);
-            System.out.println(new Gson().fromJson(inputStreamReader, Map.class));
-            responseString = inputStreamReader.toString();
+//            System.out.println(new Gson().fromJson(inputStreamReader, Map.class));
+            StringBuilder stringBuilder = new StringBuilder();
+            int character;
+            while ((character = inputStreamReader.read()) != -1) {
+                stringBuilder.append((char) character);
+            }
+            responseString = stringBuilder.toString();
             return responseString;
         }
     }
