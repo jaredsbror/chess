@@ -1,11 +1,13 @@
 import chess.ChessGame;
 import chess.ChessPiece;
 import connections.ServerFacade;
+import dataaccess.exceptions.Error500Internal;
 import handlers.ClearApplicationHandler;
-import model.custom.ClearResult;
-import model.custom.RegisterRequest;
-import model.custom.RegisterResult;
+import model.custom.*;
 import ui.GameUI;
+
+import java.io.IOException;
+import java.net.URISyntaxException;
 
 
 public class Main {
@@ -15,19 +17,28 @@ public class Main {
 
         ServerFacade serverFacade = new ServerFacade();
         try {
+            ClearResult clearResult = serverFacade.clearApplication();
+            System.out.println(clearResult);
+
             RegisterResult registerResult = serverFacade.register( new RegisterRequest( "username", "password", "email@gmail.com" ) );
             System.out.println(registerResult);
 
+            LoginResult loginResult = serverFacade.login( new LoginRequest( "username", "password" ) );
+            System.out.println(loginResult);
+
+            CreateResult createResult = serverFacade.createGame( new CreateRequest( registerResult.authToken(), "game" ) );
+            System.out.println(createResult);
+
+            JoinResult joinResult = serverFacade.joinGame( new JoinRequest( loginResult.authToken(), "BLACK", createResult.gameID() ) );
+            System.out.println(joinResult);
 
 
-            ClearResult clearResult = serverFacade.clearApplication();
-//            System.out.println("ClearResult " + (clearResult == null ? "==" : "!=") + " null");
-//            System.out.println((clearResult.success() ? "Success -> " : "Failure ->") + clearResult.message());
+            ListResult listResult = serverFacade.listGames( new ListRequest( loginResult.authToken() ) );
+            System.out.println(listResult);
+            listResult.games()
 
-            ClearApplicationHandler clearApplicationHandler = new ClearApplicationHandler();
-        } catch ( Exception exception ) {
-            exception.printStackTrace();
-            throw new RuntimeException( exception);
+        } catch ( Error500Internal | URISyntaxException | IOException e ) {
+            throw new RuntimeException( e );
         }
 //        serverFacade.initServer();
 

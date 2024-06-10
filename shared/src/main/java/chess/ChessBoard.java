@@ -18,8 +18,7 @@ public class ChessBoard {
     private ChessPiece[][] board;
 
 
-    // Default Constructor
-    public ChessBoard() {
+    private void clearBoard() {
         board = new ChessPiece[Constants.BOARD_NUM_ROWS][Constants.BOARD_NUM_COLUMNS];
         /// Reset the board completely with null pieces
         // Iterate over the chessboard rows and columns...
@@ -29,6 +28,11 @@ public class ChessBoard {
                 board[row][col] = null;
             }
         }
+    }
+
+    // Default Constructor
+    public ChessBoard() {
+        clearBoard();
         // Optional debug
         if ( Constants.DEBUG_GLOBAL || Constants.DEBUG_CHESS_BOARD )
             System.out.println( "Creating Chess" + this.toString() );
@@ -36,11 +40,12 @@ public class ChessBoard {
 
 
     // Constructor to set the board to a custom board
-    public ChessBoard( ChessPiece[][] board ) {
+    public ChessBoard( ChessPiece[][] chessBoard ) {
+        clearBoard();
         // Iterate over the chessboard rows and columns...
         for ( int row = 0; row < Constants.BOARD_NUM_ROWS; row++ ) {
             // Initialize the piece to NULL
-            System.arraycopy( board[row], 0, this.board[row], 0, Constants.BOARD_NUM_COLUMNS );
+            System.arraycopy( chessBoard[row], 0, board[row], 0, Constants.BOARD_NUM_COLUMNS );
         }
         // Optional debug
         if ( Constants.DEBUG_GLOBAL || Constants.DEBUG_CHESS_BOARD )

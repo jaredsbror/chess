@@ -8,8 +8,7 @@ import model.custom.*;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URI;
+import java.net.*;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -41,7 +40,7 @@ public class HTTPClient {
         REGISTER
     }
 
-    public static String submitRequest(HttpRequestType request, String path, String method, String authToken, Object requestObject) throws Exception {
+    public static String submitRequest(HttpRequestType request, String path, String method, String authToken, Object requestObject) throws IOException, URISyntaxException, Error500Internal {
         // Specify the desired endpoint
         URI uri = new URI(baseURL + path);
         httpURLConnection = (HttpURLConnection) uri.toURL().openConnection();
@@ -93,10 +92,11 @@ public class HTTPClient {
         // Make the request
         httpURLConnection.connect();
 
-        // Get the response code
-        responseCode = httpURLConnection.getResponseCode();
         // Get the response body
         try ( InputStream respBody = httpURLConnection.getInputStream()) {
+            // Get the response code
+            responseCode = httpURLConnection.getResponseCode();
+            // Create a new input stream
             InputStreamReader inputStreamReader = new InputStreamReader(respBody);
 //            System.out.println(new Gson().fromJson(inputStreamReader, Map.class));
             StringBuilder stringBuilder = new StringBuilder();
