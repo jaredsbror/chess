@@ -21,10 +21,16 @@ public class ClearApplicationHandler implements Route {
         try {
             clearApplicationService = new ClearApplicationService();
             clearApplicationService.clearDatabase();
-            return "{}";
+            return gson.toJson( new ClearResult( true, null ));
         } catch ( DataAccessException exception ) {
             response.status( 500 );
             return gson.toJson( new ClearResult( false, "Error: " + exception ) );
         }
+    }
+
+    // Method to clear the database
+    public void clearDatabase() throws DataAccessException {
+        clearApplicationService = new ClearApplicationService();
+        clearApplicationService.clearDatabase();
     }
 }

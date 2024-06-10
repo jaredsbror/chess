@@ -1,6 +1,7 @@
 import com.google.gson.Gson;
 import com.google.gson.JsonParseException;
 import dataaccess.exceptions.Error500Internal;
+import handlers.ClearApplicationHandler;
 import model.custom.*;
 import passoff.exception.EndpointNotFoundException;
 import passoff.exception.ResponseParseException;
@@ -13,7 +14,7 @@ import java.net.URL;
 
 public class ServerFacade {
 
-    private static Server server;
+    private Server server;
     private final String baseUrl;
     private int statusCode;
     private final Gson gson = new Gson();
@@ -28,8 +29,8 @@ public class ServerFacade {
 
     public void initServer() {
         server = new Server();
-        var port = server.run(3306);
-        System.out.println("Started test HTTP server on " + port);
+        var port = server.run(0);
+        System.out.println("Started HTTP server on " + port);
     }
 
     public void stopServer() {
@@ -37,7 +38,9 @@ public class ServerFacade {
     }
 
     public ClearResult clearApplication() throws Error500Internal {
-        return sendRequest( "/db", "UPDATE", null, null, ClearResult.class );
+        ClearApplicationHandler clearApplicationHandler = new ClearApplicationHandler();
+        clearApplicationHandler.handle( null, ClearResult.class );
+        return sendRequest( "/db", "DELETE", null, null, ClearResult.class );
     }
 
     public CreateResult createGame( CreateRequest createRequest) throws Error500Internal {
