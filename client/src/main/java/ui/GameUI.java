@@ -4,13 +4,8 @@ package ui;
 import chess.ChessBoard;
 import chess.ChessGame;
 import connections.ServerFacade;
-import datatypes.ExtendedChessBoard;
-import model.custom.LoginRequest;
-import model.custom.LoginResult;
-import model.custom.RegisterRequest;
-import model.custom.RegisterResult;
+import model.custom.*;
 import model.original.GameData;
-import model.original.UserData;
 
 import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
@@ -25,20 +20,39 @@ public class GameUI {
     private static Scanner scanner = new Scanner( System.in );
     private static ServerFacade serverFacade = new ServerFacade();
 
-    private static void print(String string) {
-        out.print( string );
-    }
+    /*
+    Help	Displays text informing the user what actions they can take.
+    Quit	Exits the program.
+    Login	Prompts the user to input login information.
+            Calls the server login API to login the user.
+            When successfully logged in, the client should transition to the Postlogin UI.
+    Register	Prompts the user to input registration information.
+                Calls the server register API to register and login the user.
+                If successfully registered, the client should be logged in and transition
+                to the Postlogin UI.
+     */
+    public static void preLoginUI() {
+        // Reset the terminal screen
+        print( ERASE_SCREEN );
+        TerminalUI.resetTerminalColors( out );
+        // Print out the menu
+        println( "Welcome to CS 240 Chess! Type 'Help' to get started.");
 
-    private static void printf(String string) {
-        out.printf( string );
-    }
+        // Prompt for 'Help' input
+        waitForHelpInput();
 
-    private static void println(String string) {
-        out.println( string );
+        boolean exitPreLogin = false;
+        // Prelogin Menu loop
+        while (!exitPreLogin) {
+            printPreLoginMenu();
+            int integerInput = getValidIntegerInput(1, 4);
+            exitPreLogin = handlePreLoginMenuSelection(integerInput);
+        }
     }
 
     // Helper method to validate string input
-    private static String getStringInput() {
+    private static String getStringInput(String prompt) {
+        println(prompt);
         scanner = new Scanner( System.in );
         return scanner.nextLine();
     }
@@ -77,100 +91,83 @@ public class GameUI {
         }
     }
 
-    /*
-    Help	Displays text informing the user what actions they can take.
-    Quit	Exits the program.
-    Login	Prompts the user to input login information.
-            Calls the server login API to login the user.
-            When successfully logged in, the client should transition to the Postlogin UI.
-    Register	Prompts the user to input registration information.
-                Calls the server register API to register and login the user.
-                If successfully registered, the client should be logged in and transition
-                to the Postlogin UI.
-     */
-    public static void preLoginUI() {
-        // Reset the terminal screen
-        print( ERASE_SCREEN );
-        TerminalUI.resetTerminalColors( out );
-        // Print out the menu
-        println( "Welcome to CS 240 Chess! Type 'Help' to get started.");
-
-        // If the user types help, continue. Otherwise, keep scanning.
+    private static void waitForHelpInput() {
         while (true) {
-            scanner = new Scanner( System.in );
-            String inputString = scanner.nextLine();
-            if (inputString.equalsIgnoreCase( "Help" ))  {
-                println( "Good. You can follow instructions!" );
+            String inputString = scanner.nextLine().trim();
+            if (inputString.equalsIgnoreCase("Help")) {
+                println("Good. You can follow instructions!");
                 break;
             }
-            println( "Invalid input. Please spare me the misery and just type 'Help'..." );
-        }
-
-        // Prelogin Menu loop
-        while (true) {
-            println( "1. Register" );
-            println( "2. Login" );
-            println( "3. Quit (and leave me in peace...highly recommended)" );
-            println( "4. Help (and I'll be forced to print out this menu again)" );
-            print( "Please type a number: " );
-
-            // If the user types in a valid number, continue. Otherwise, keep scanning.
-            int integerInput = getValidIntegerInput( 1, 4 );
-
-            // Process the integer input
-            switch ( integerInput ) {
-                case 1:
-                    println("Fine. Let me collect some personal info first for blackmail purposes.");
-                    println("Username? ");
-                    String username = getStringInput();
-                    println("Password? ");
-                    String password = getStringInput();
-                    println("Email? ");
-                    String email = getStringInput();
-                    // Connect with the server
-                    try {
-                        RegisterResult registerResult = serverFacade.register( new RegisterRequest( username, password, email ) );
-                        if (registerResult.message() != null) {
-                            println("Error: " + registerResult.message());
-                            break;
-                        }
-                        LoginResult loginResult = serverFacade.login( new LoginRequest( username, password ) );
-                        if (loginResult.message() != null) {
-                            println("Error: " + loginResult.message());
-                            break;
-                        }
-                        postLoginUI();
-                        return;
-                    } catch ( Exception exception ) {
-                        throw new RuntimeException( exception );
-                    }
-                case 2:
-                    println("Remind me again what your username was?");
-                    username = getStringInput();
-                    println("And your password?");
-                    password = getStringInput();
-                    // Connect with the server
-                    try {
-                        LoginResult loginResult = serverFacade.login( new LoginRequest( username, password ) );
-                        if (loginResult.message() != null) {
-                            println("Error: " + loginResult.message());
-                            break;
-                        }
-                        postLoginUI();
-                        return;
-                    } catch ( Exception exception ) {
-                        throw new RuntimeException( exception );
-                    }
-                case 3: // Exit the program
-                    println( "Good riddance...They don't pay me nearly enough to deal with you guys." );
-                    return;
-                case 4: // Repeat the while loop
-                    break;
-                default:
-                    throw new RuntimeException( "Error: Invalid integer input in preLoginUI()" );
-            }
+            println("Invalid input. Please spare me the misery and just type 'Help'...");
         }
     }
+
+    private static void printPreLoginMenu() {
+        println( "1. Register" );
+        println( "2. Login" );
+        println( "3. Quit (and leave me in peace...highly recommended)" );
+        println( "4. Help (and I'll be forced to print out this menu again)" );
+        print( "Please type a number: " );
+    }
+
+    private static boolean handlePreLoginMenuSelection( int selection) {
+        try {
+            switch (selection) {
+                case 1:
+                    handleRegister();
+                    return true; // Exit pre-login UI after successful registration
+                case 2:
+                    handleLogin();
+                    return true; // Exit pre-login UI after successful login
+                case 3:
+                    println("Good riddance...They don't pay me nearly enough to deal with you guys.");
+                    System.exit(0);
+                case 4:
+                    break; // Will cause the menu to be printed again
+                default:
+                    throw new RuntimeException("Error: Invalid integer input in preLoginUI()");
+            }
+        } catch (Exception exception) {
+            println("Error: " + exception.getMessage());
+        }
+        return false; // Continue the pre-login UI loop
+    }
+
+    private static void handleRegister() throws Exception {
+        println("Fine. Let me collect some personal info first for blackmail purposes.");
+        String username = getStringInput("Username? ");
+        String password = getStringInput("Password? ");
+        String email = getStringInput("Email? ");
+
+        RegisterResult registerResult = serverFacade.register(new RegisterRequest(username, password, email));
+        if (registerResult.message() != null) {
+            println("Error: " + registerResult.message());
+            return;
+        }
+
+        LoginResult loginResult = serverFacade.login(new LoginRequest(username, password));
+        if (loginResult.message() != null) {
+            println("Error: " + loginResult.message());
+            return;
+        }
+
+        postLoginUI();
+    }
+
+    private static void handleLogin() throws Exception {
+        String username = getStringInput("Remind me again what your username was?");
+        String password = getStringInput("And your password?");
+
+        LoginResult loginResult = serverFacade.login(new LoginRequest(username, password));
+        if (loginResult.message() != null) {
+            println("Error: " + loginResult.message());
+            return;
+        }
+        postLoginUI();
+    }
+
+
+
 
     // Help	Displays text informing the user what actions they can take.
     // Logout	Logs out the user. Calls the server logout API to logout the user.
@@ -193,11 +190,143 @@ public class GameUI {
     //              Your client will need to keep track of which number corresponds to which game
     //              from the last time it listed the games. Functionality will be added in Phase 6.
     public static void postLoginUI() {
-        println( "postLoginUI" );
+        // Reset the terminal screen
+        print( ERASE_SCREEN );
+        TerminalUI.resetTerminalColors( out );
+
+        boolean exitPostLogin = false;
+        // Prelogin Menu loop
+        while (!exitPostLogin) {
+            printPostLoginMenu();
+            int integerInput = getValidIntegerInput(1, 5);
+            exitPostLogin = handlePostLoginMenuSelection(integerInput);
+        }
     }
 
-    public static void gamePlayUI() {
+    private static void printPostLoginMenu() {
+        println("The Ultimate Chess 240 Game Menu 2.0");
+        println("1. Logout (Maybe someone like you should consider this?)");
+        println("2. Create Game");
+        println("3. List Games (Avoid this option at all costs! I don't like work.)");
+        println("4. Play Game");
+        println("5. Observe Game ");
+        println("Please type a number: ");
+    }
 
+    private static boolean handlePostLoginMenuSelection( int selection) {
+        try {
+            switch (selection) {
+                case 1: // Logout
+                    println("Phew...One step closer to leaving me in peace!");
+                    return true;
+                case 2: // Create Game
+                case 3: // List Games
+                case 4: // Play Game
+                case 5: // Observe Game
+                default:
+                    throw new RuntimeException("Error: Invalid integer input in postLoginUI()");
+            }
+        } catch (Exception exception) {
+            println("Error: " + exception.getMessage());
+        }
+        return false; // Continue the pre-login UI loop
+    }
+
+    private static void handleLogout() throws Exception {
+        println("Fine. Let me collect some personal info first for blackmail purposes.");
+        String authToken = getStringInput("AuthToken? ");
+
+        LogoutResult logoutResult = serverFacade.logout( new LogoutRequest( authToken ) );
+        if (logoutResult.message() != null) {
+            println("Error: " + logoutResult.message());
+            return;
+        }
+
+        preLoginUI(); //???
+    }
+
+    private static void handleCreateGame() throws Exception {
+        println("Fine. Let me collect some personal info first for blackmail purposes.");
+        String username = getStringInput("Username? ");
+        String password = getStringInput("Password? ");
+        String email = getStringInput("Email? ");
+
+        RegisterResult registerResult = serverFacade.register(new RegisterRequest(username, password, email));
+        if (registerResult.message() != null) {
+            println("Error: " + registerResult.message());
+            return;
+        }
+
+        LoginResult loginResult = serverFacade.login(new LoginRequest(username, password));
+        if (loginResult.message() != null) {
+            println("Error: " + loginResult.message());
+            return;
+        }
+
+        postLoginUI();
+    }
+
+    private static void handleListGames() throws Exception {
+        println("Fine. Let me collect some personal info first for blackmail purposes.");
+        String username = getStringInput("Username? ");
+        String password = getStringInput("Password? ");
+        String email = getStringInput("Email? ");
+
+        RegisterResult registerResult = serverFacade.register(new RegisterRequest(username, password, email));
+        if (registerResult.message() != null) {
+            println("Error: " + registerResult.message());
+            return;
+        }
+
+        LoginResult loginResult = serverFacade.login(new LoginRequest(username, password));
+        if (loginResult.message() != null) {
+            println("Error: " + loginResult.message());
+            return;
+        }
+
+        postLoginUI();
+    }
+
+    private static void handleJoinGame() throws Exception {
+        println("Fine. Let me collect some personal info first for blackmail purposes.");
+        String username = getStringInput("Username? ");
+        String password = getStringInput("Password? ");
+        String email = getStringInput("Email? ");
+
+        RegisterResult registerResult = serverFacade.register(new RegisterRequest(username, password, email));
+        if (registerResult.message() != null) {
+            println("Error: " + registerResult.message());
+            return;
+        }
+
+        LoginResult loginResult = serverFacade.login(new LoginRequest(username, password));
+        if (loginResult.message() != null) {
+            println("Error: " + loginResult.message());
+            return;
+        }
+
+        postLoginUI();
+    }
+
+    private static void handleObserveGame() throws Exception {
+        println("Fine. Let me collect some personal info first for blackmail purposes.");
+        String username = getStringInput("Username? ");
+        String password = getStringInput("Password? ");
+        String email = getStringInput("Email? ");
+
+        RegisterResult registerResult = serverFacade.register(new RegisterRequest(username, password, email));
+        if (registerResult.message() != null) {
+            println("Error: " + registerResult.message());
+            return;
+        }
+
+        LoginResult loginResult = serverFacade.login(new LoginRequest(username, password));
+        if (loginResult.message() != null) {
+            println("Error: " + loginResult.message());
+            return;
+        }
+
+        postLoginUI();
     }
 
     public static void drawGameBoard(ChessBoard board) {
@@ -214,5 +343,16 @@ public class GameUI {
         ChessBoardUI.drawBoard( chessBoard, ChessGame.TeamColor.BLACK );
     }
 
+    private static void print(String string) {
+        out.print( string );
+    }
+
+    private static void printf(String string) {
+        out.printf( string );
+    }
+
+    private static void println(String string) {
+        out.println( string );
+    }
 
 }
