@@ -3,7 +3,6 @@ package handlers;
 
 import com.google.gson.Gson;
 import dataaccess.DataAccessException;
-import dataaccess.exceptions.Error500Internal;
 import model.custom.ClearResult;
 import service.ClearApplicationService;
 import spark.Request;
@@ -12,17 +11,7 @@ import spark.Route;
 
 
 public class ClearApplicationHandler implements Route {
-    private final ClearApplicationService clearApplicationService;
-
-
-    public ClearApplicationHandler() throws Error500Internal {
-        try {
-            clearApplicationService = new ClearApplicationService();
-        } catch ( DataAccessException e ) {
-            throw new Error500Internal( e.getMessage() );
-        }
-    }
-
+    private ClearApplicationService clearApplicationService;
 
     @Override
     public Object handle( Request request, Response response ) {
@@ -30,11 +19,18 @@ public class ClearApplicationHandler implements Route {
         // Attempt to clear the database.
         // Otherwise, return an error.
         try {
+            clearApplicationService = new ClearApplicationService();
             clearApplicationService.clearDatabase();
-            return "{}";
+            return gson.toJson( new ClearResult( true, null ));
         } catch ( DataAccessException exception ) {
             response.status( 500 );
-            return gson.toJson( new ClearResult( "Error: " + exception ) );
+            return gson.toJson( new ClearResult( false, "Error: " + exception ) );
         }
+    }
+
+    // Method to clear the database
+    public void clearDatabase() throws DataAccessException {
+        clearApplicationService = new ClearApplicationService();
+        clearApplicationService.clearDatabase();
     }
 }

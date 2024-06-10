@@ -1,6 +1,5 @@
 package chess;
 
-
 public interface Constants {
     /// Phase 0
     // Board dimensions
