@@ -3,6 +3,7 @@ import dataaccess.exceptions.Error400BadRequest;
 import dataaccess.exceptions.Error401Unauthorized;
 import dataaccess.exceptions.Error403AlreadyTaken;
 import dataaccess.exceptions.Error500Internal;
+import handlers.*;
 import model.custom.*;
 import model.original.GameData;
 import server.Server;
@@ -26,95 +27,31 @@ public class ServerFacade {
     }
 
     public static ClearResult clearApplication() {
-        try {
-            ClearApplicationService clearApplicationService = new ClearApplicationService();
-        } catch ( DataAccessException dataAccessException ) {
-
-        }
+        ClearApplicationHandler clearApplicationHandler = new ClearApplicationHandler();
     }
 
     public static CreateResult createGame( CreateRequest createRequest) {
-        try {
-            CreateGameService createGameService = new CreateGameService(createRequest);
-            return createGameService.createGame();
-        } catch ( DataAccessException dataAccessException ) {
-
-        } catch ( Error400BadRequest error400BadRequest ) {
-
-        } catch ( Error401Unauthorized error401Unauthorized ) {
-
-        }
+        CreateGameHandler createGameHandler = new CreateGameHandler();
     }
 
     public static JoinResult joinGame( JoinRequest joinRequest ) {
-        try {
 
-        } catch ( Error403AlreadyTaken error403AlreadyTaken ) {
-
-        } catch ( Error500Internal error500Internal ) {
-
-        }
-            JoinGameService joinGameService = new JoinGameService(joinRequest);
+        JoinGameHandler joinGameHandler = new JoinGameHandler();
     }
 
     public static ArrayList<GameData> listGames( ListRequest listRequest ) {
-        try {
-            ListGamesService listGamesService = new ListGamesService(listRequest);
-        } catch ( DataAccessException dataAccessException ) {
-
-        } catch ( Error400BadRequest error400BadRequest ) {
-
-        } catch ( Error401Unauthorized error401Unauthorized ) {
-
-        } catch ( Error403AlreadyTaken error403AlreadyTaken ) {
-
-        } catch ( Error500Internal error500Internal ) {
-
-        }
+        ListGamesHandler listGamesHandler = new ListGamesHandler();
     }
 
-    public static String login( LoginRequest loginRequest ) {
-        try {
-            LoginService loginService = new LoginService(loginRequest);
-        } catch ( DataAccessException dataAccessException ) {
-
-        } catch ( Error400BadRequest error400BadRequest ) {
-
-        } catch ( Error401Unauthorized error401Unauthorized ) {
-
-        } catch ( Error403AlreadyTaken error403AlreadyTaken ) {
-
-        } catch ( Error500Internal error500Internal ) {
-
-        }
+    public static LoginResult login( LoginRequest loginRequest ) {
+        LoginHandler loginHandler = new LoginHandler();
     }
 
-    public static void logout( LogoutRequest logoutRequest ) {
-        try {
-            LogoutService logoutService = new LogoutService(logoutRequest);
-        } catch ( DataAccessException dataAccessException ) {
-
-        } catch ( Error400BadRequest error400BadRequest ) {
-
-        } catch ( Error401Unauthorized error401Unauthorized ) {
-
-        } catch ( Error403AlreadyTaken error403AlreadyTaken ) {
-
-        } catch ( Error500Internal error500Internal ) {
-
-        }
+    public static LogoutResult logout( LogoutRequest logoutRequest ) {
+        LogoutHandler logoutHandler = new LogoutHandler();
     }
 
-    public static String register( RegisterRequest registerRequest ) {
-        try {
-            RegisterService registerService = new RegisterService(registerRequest);
-            return registerService.register();
-        } catch ( DataAccessException dataAccessException ) {
-
-        } catch ( Error400BadRequest error400BadRequest ) {
-
-        } catch ( Error403AlreadyTaken error403AlreadyTaken ) {
-
-        }
+    public static RegisterResult register( RegisterRequest registerRequest ) {
+        RegisterHandler registerHandler = new RegisterHandler();
     }
 }

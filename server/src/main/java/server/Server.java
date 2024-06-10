@@ -2,7 +2,6 @@ package server;
 
 
 import dataaccess.DatabaseManager;
-import dataaccess.exceptions.Error500Internal;
 import handlers.*;
 import spark.Spark;
 
@@ -19,17 +18,13 @@ public class Server {
 
 
     public Server() {
-        try {
-            clearApplicationHandler = new ClearApplicationHandler();
-            createGameHandler = new CreateGameHandler();
-            joinGameHandler = new JoinGameHandler();
-            listGamesHandler = new ListGamesHandler();
-            loginHandler = new LoginHandler();
-            logoutHandler = new LogoutHandler();
-            registerHandler = new RegisterHandler();
-        } catch ( Error500Internal e ) {
-            throw new RuntimeException( e.getMessage() );
-        }
+        clearApplicationHandler = new ClearApplicationHandler();
+        createGameHandler = new CreateGameHandler();
+        joinGameHandler = new JoinGameHandler();
+        listGamesHandler = new ListGamesHandler();
+        loginHandler = new LoginHandler();
+        logoutHandler = new LogoutHandler();
+        registerHandler = new RegisterHandler();
     }
 
 
