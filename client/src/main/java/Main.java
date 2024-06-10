@@ -1,3 +1,4 @@
+import chess.ChessBoard;
 import chess.ChessGame;
 import chess.ChessPiece;
 import connections.ServerFacade;
@@ -32,16 +33,17 @@ public class Main {
             JoinResult joinResult = serverFacade.joinGame( new JoinRequest( loginResult.authToken(), "BLACK", createResult.gameID() ) );
             System.out.println(joinResult);
 
-
             ListResult listResult = serverFacade.listGames( new ListRequest( loginResult.authToken() ) );
             System.out.println(listResult);
-            listResult.games()
+
+            GameUI.drawGameBoard(listResult.games().getFirst() );
+            GameUI.drawGameBoard(new ChessBoard() );
+
 
         } catch ( Error500Internal | URISyntaxException | IOException e ) {
             throw new RuntimeException( e );
         }
 //        serverFacade.initServer();
 
-        GameUI.drawGameBoard();
     }
 }
