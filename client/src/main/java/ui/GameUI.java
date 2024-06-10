@@ -3,8 +3,14 @@ package ui;
 
 import chess.ChessBoard;
 import chess.ChessGame;
+import connections.ServerFacade;
 import datatypes.ExtendedChessBoard;
+import model.custom.LoginRequest;
+import model.custom.LoginResult;
+import model.custom.RegisterRequest;
+import model.custom.RegisterResult;
 import model.original.GameData;
+import model.original.UserData;
 
 import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
@@ -16,6 +22,8 @@ import static ui.ChessUIConstants.*;
 public class GameUI {
     private static ChessBoard chessBoard = new ChessBoard();
     private static PrintStream out = new PrintStream( System.out, true, StandardCharsets.UTF_8 );
+    private static Scanner scanner = new Scanner( System.in );
+    private static ServerFacade serverFacade = new ServerFacade();
 
     private static void print(String string) {
         out.print( string );
@@ -29,15 +37,36 @@ public class GameUI {
         out.println( string );
     }
 
+    // Helper method to validate string input
+    private static String getStringInput() {
+        scanner = new Scanner( System.in );
+        return scanner.nextLine();
+    }
+
+    // Helper method to validate string input
+    private static String getValidStringInput(String goal) {
+        // If the user types a string, continue. Otherwise, keep scanning.
+        while (true) {
+            scanner = new Scanner( System.in );
+            String inputString = scanner.nextLine();
+            if (inputString.equalsIgnoreCase( goal ))  {
+                return inputString;
+            }
+            scanner.next(); // Discard the invalid input token
+            println( "Invalid input. A String would be wonderful please" );
+        }
+    }
+
     // Helper method to validate integer input
-    private static int getValidIntegerInput(Scanner scanner, int min, int max) {
+    private static int getValidIntegerInput(int min, int max) {
         int number;
         // If the user types in a valid number, continue. Otherwise, keep scanning.
         while (true) {
+            scanner = new Scanner( System.in );
             if (scanner.hasNextInt()) {
                 number = scanner.nextInt();
                 if (number >= min && number <= max) {
-                    break; // Exit the loop if input is valid
+                    return number; // Exit the loop if input is valid
                 } else {
                     println("Invalid input. Let's just enter an integer between " + min + " and " + max + ", shall we?.");
                 }
@@ -46,7 +75,6 @@ public class GameUI {
                 println( "Invalid input. Please just make my life easy and enter an integer." );
             }
         }
-        return number;
     }
 
     /*
@@ -61,12 +89,12 @@ public class GameUI {
                 to the Postlogin UI.
      */
     public static void preLoginUI() {
-        Scanner scanner;
         // Reset the terminal screen
         print( ERASE_SCREEN );
         TerminalUI.resetTerminalColors( out );
         // Print out the menu
         println( "Welcome to CS 240 Chess! Type 'Help' to get started.");
+
         // If the user types help, continue. Otherwise, keep scanning.
         while (true) {
             scanner = new Scanner( System.in );
@@ -77,17 +105,71 @@ public class GameUI {
             }
             println( "Invalid input. Please spare me the misery and just type 'Help'..." );
         }
-        println( "1. Register");
-        println( "2. Login");
-        println( "3. Quit (and leave me in peace...highly recommended)");
-        println( "4. Help (and I'll be forced to print out this menu again)");
-        print("Please type your number: ");
 
-        // If the user types in a valid number, continue. Otherwise, keep scanning.
-        scanner = new Scanner( System.in );
-        int number = getValidIntegerInput( scanner, 1, 4);
+        // Prelogin Menu loop
+        while (true) {
+            println( "1. Register" );
+            println( "2. Login" );
+            println( "3. Quit (and leave me in peace...highly recommended)" );
+            println( "4. Help (and I'll be forced to print out this menu again)" );
+            print( "Please type a number: " );
 
+            // If the user types in a valid number, continue. Otherwise, keep scanning.
+            int integerInput = getValidIntegerInput( 1, 4 );
 
+            // Process the integer input
+            switch ( integerInput ) {
+                case 1:
+                    println("Fine. Let me collect some personal info first for blackmail purposes.");
+                    println("Username? ");
+                    String username = getStringInput();
+                    println("Password? ");
+                    String password = getStringInput();
+                    println("Email? ");
+                    String email = getStringInput();
+                    // Connect with the server
+                    try {
+                        RegisterResult registerResult = serverFacade.register( new RegisterRequest( username, password, email ) );
+                        if (registerResult.message() != null) {
+                            println("Error: " + registerResult.message());
+                            break;
+                        }
+                        LoginResult loginResult = serverFacade.login( new LoginRequest( username, password ) );
+                        if (loginResult.message() != null) {
+                            println("Error: " + loginResult.message());
+                            break;
+                        }
+                        postLoginUI();
+                        return;
+                    } catch ( Exception exception ) {
+                        throw new RuntimeException( exception );
+                    }
+                case 2:
+                    println("Remind me again what your username was?");
+                    username = getStringInput();
+                    println("And your password?");
+                    password = getStringInput();
+                    // Connect with the server
+                    try {
+                        LoginResult loginResult = serverFacade.login( new LoginRequest( username, password ) );
+                        if (loginResult.message() != null) {
+                            println("Error: " + loginResult.message());
+                            break;
+                        }
+                        postLoginUI();
+                        return;
+                    } catch ( Exception exception ) {
+                        throw new RuntimeException( exception );
+                    }
+                case 3: // Exit the program
+                    println( "Good riddance...They don't pay me nearly enough to deal with you guys." );
+                    return;
+                case 4: // Repeat the while loop
+                    break;
+                default:
+                    throw new RuntimeException( "Error: Invalid integer input in preLoginUI()" );
+            }
+        }
     }
 
     // Help	Displays text informing the user what actions they can take.
@@ -111,7 +193,7 @@ public class GameUI {
     //              Your client will need to keep track of which number corresponds to which game
     //              from the last time it listed the games. Functionality will be added in Phase 6.
     public static void postLoginUI() {
-
+        println( "postLoginUI" );
     }
 
     public static void gamePlayUI() {
