@@ -8,6 +8,7 @@ import model.custom.*;
 import server.Server;
 
 import static connections.HTTPClient.sendRequest;
+import static connections.HTTPClient.submitRequest;
 
 
 public class ServerFacade {
@@ -36,31 +37,31 @@ public class ServerFacade {
     }
 
     public ClearResult clearApplication() throws Error500Internal {
-        return sendRequest( "/db", "DELETE", null, null, ClearResult.class );
+        return submitRequest( "/db", "DELETE", null, null, ClearResult.class );
     }
 
     public CreateResult createGame( CreateRequest createRequest) throws Error500Internal {
-        return sendRequest("/game", "POST", createRequest.authToken(), createRequest, CreateResult.class);
+        return submitRequest("/game", "POST", createRequest.authToken(), createRequest, CreateResult.class);
     }
 
     public JoinResult joinGame( JoinRequest joinRequest ) throws Error500Internal {
-        return sendRequest("/game", "PUT", joinRequest.authToken(), joinRequest, JoinResult.class);
+        return submitRequest("/game", "PUT", joinRequest.authToken(), joinRequest, JoinResult.class);
     }
 
     public ListResult listGames( ListRequest listRequest ) throws Error500Internal {
-        return sendRequest("/game", "GET", listRequest.authToken(), null, ListResult.class);
+        return submitRequest("/game", "GET", listRequest.authToken(), null, ListResult.class);
     }
 
     public LoginResult login( LoginRequest loginRequest ) throws Error500Internal {
-        return sendRequest("/session", "POST", null, loginRequest, LoginResult.class);
+        return submitRequest("/session", "POST", null, loginRequest, LoginResult.class);
     }
 
     public LogoutResult logout( LogoutRequest logoutRequest ) throws Error500Internal {
-        return sendRequest("/session", "DELETE", logoutRequest.authToken(), null, LogoutResult.class);
+        return submitRequest("/session", "DELETE", logoutRequest.authToken(), null, LogoutResult.class);
     }
 
     public RegisterResult register( RegisterRequest registerRequest ) throws Error500Internal {
-        return sendRequest("/user", "POST", null, registerRequest, RegisterResult.class);
+        return submitRequest("/user", "POST", null, registerRequest, RegisterResult.class);
     }
 
 

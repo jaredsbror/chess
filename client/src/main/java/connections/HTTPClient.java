@@ -19,8 +19,6 @@ import static connections.HTTPClient.HttpRequest.*;
 public class HTTPClient {
     private static HttpURLConnection httpURLConnection;
     private static String baseURL = "http://localhost:8080";
-    private static String path = "";
-    private static String method = "";
     private static Map<String, String> body;
 
     public enum HttpRequest {
@@ -33,25 +31,20 @@ public class HTTPClient {
         REGISTER
     }
 
-    public static String sendRequest(HttpRequest request, String reqPath, String reqMethod, String authToken, Object requestObject) throws Exception {
+    public static String submitRequest(HttpRequest request, String reqPath, String reqMethod, String authToken, Object requestObject) throws Exception {
+        // Specify the desired endpoint
+        URI uri = new URI(baseURL + reqPath);
+        httpURLConnection = (HttpURLConnection) uri.toURL().openConnection();
         // Specify that we are going to write out data
         httpURLConnection.setDoOutput(true);
-
-        // Set the path
-        path = reqPath;
-
         // Set the request method
-        method = reqMethod;
-        httpURLConnection.setRequestMethod( method );
-
+        httpURLConnection.setRequestMethod( reqMethod );
         // Write out a header
         httpURLConnection.setRequestProperty("Content-Type", "application/json");
         if (authToken != null) httpURLConnection.setRequestProperty("Authorization", authToken);
 
         // Write out the body
         switch ( request ) {
-            case CLEAR_APPLICATION: // NO HEADER, NO BODY
-                break;
             case CREATE_GAME: // HEADER, BODY
                 // Parse the requestObject
                 CreateRequest createRequest = (CreateRequest) requestObject;
@@ -63,46 +56,26 @@ public class HTTPClient {
                 // Parse the requestObject
                 JoinRequest joinRequest = ( JoinRequest ) requestObject;
                 // Create the body
-                body = Map.of();
+                body = Map.of("playerColor", joinRequest.playerColor(), "gameID", joinRequest.gameID().toString()); //???
                 addBodyToHTTPRequest();
-                break;
-            case LIST_GAMES: // HEADER, NO BODY
                 break;
             case LOGIN: // NO HEADER, BODY
                 // Parse the requestObject
                 LoginRequest loginRequest = (LoginRequest) requestObject;
                 // Create the body
-                body = Map.of();
+                body = Map.of("username", loginRequest.username(), "password", loginRequest.password());
                 addBodyToHTTPRequest();
-                break;
-            case LOGOUT: // HEADER, NO BODY
                 break;
             case REGISTER: // NO HEADER, BODY
                 // Parse the requestObject
                 RegisterRequest registerRequest = ( RegisterRequest ) requestObject;
                 // Create the body
-                body = Map.of();
+                body = Map.of("username", registerRequest.username(), "password", registerRequest.password(), "email", registerRequest.email());
                 addBodyToHTTPRequest();
                 break;
             default:
                 break;
         }
-        return processRequest();
-    }
-
-    private static void addBodyToHTTPRequest() throws IOException {
-        // Add the body to the httpURLConnection
-        try (var outputStream = httpURLConnection.getOutputStream()) {
-            var jsonBody = new Gson().toJson(body);
-            outputStream.write(jsonBody.getBytes());
-        }
-    }
-
-    private static String processRequest() throws IOException, URISyntaxException {
-        // Specify the desired endpoint
-        URI uri = new URI(baseURL + path);
-        httpURLConnection = (HttpURLConnection) uri.toURL().openConnection();
-
         // Make the request
         httpURLConnection.connect();
 
@@ -111,6 +84,14 @@ public class HTTPClient {
             InputStreamReader inputStreamReader = new InputStreamReader(respBody);
             System.out.println(new Gson().fromJson(inputStreamReader, Map.class));
             return inputStreamReader.toString();
+        }
+    }
+
+    private static void addBodyToHTTPRequest() throws IOException {
+        // Add the body to the httpURLConnection
+        try (var outputStream = httpURLConnection.getOutputStream()) {
+            var jsonBody = new Gson().toJson(body);
+            outputStream.write(jsonBody.getBytes());
         }
     }
 }
