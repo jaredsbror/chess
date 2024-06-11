@@ -177,7 +177,7 @@ public class GameUI {
     }
 
     private static void handleClearDatabase() throws Exception {
-        println("Type 'y' to Confirm Database Clearing. ");
+        println("Confirm Database Clearing (y/n): ");
 
         // Confirm database deletion
         scanner = new Scanner( System.in );
@@ -232,7 +232,6 @@ public class GameUI {
 
     private static void printPostLoginMenu() {
         println("\n\nThe Ultimate Chess 240 Game Menu 2.0");
-        println("AuthToken: " + authToken);
         println("1. Logout (Maybe someone like you should consider this?)");
         println("2. Create Game");
         println("3. List Games (Avoid this option at all costs! I'm allergic to work!)");
@@ -251,21 +250,27 @@ public class GameUI {
                     handleCreateGame();
                     break;
                 case 3: // List Games
+                    handleListGames();
+                    break;
                 case 4: // Play Game
+                    handleJoinGame();
+                    break;
                 case 5: // Observe Game
-
+                    handleObserveGame();
+                    break;
                 default:
                     throw new RuntimeException("Error: Invalid integer input in postLoginUI()");
             }
         } catch (Exception exception) {
             println("Error: " + exception.getMessage());
         }
-        return false; // Continue the pre-login UI loop
+        return false; // Continue the post-login UI loop
     }
 
     private static void handleLogout() throws Exception {
         println("Phew...One step closer to leaving me in peace!");
 
+        // Connect to the server
         LogoutResult logoutResult = serverFacade.logout( new LogoutRequest( authToken ) );
         if (logoutResult.message() != null) {
             println("Error: " + logoutResult.message());
@@ -277,6 +282,7 @@ public class GameUI {
     private static void handleCreateGame() throws Exception {
         String gameName = getStringInput("What will you name this so-called 'game'? ");
 
+        // Connect to the server
         CreateResult createResult = serverFacade.createGame(new CreateRequest(authToken, gameName));
         if (createResult.message() != null) {
             println("Error: " + createResult.message());
@@ -286,66 +292,47 @@ public class GameUI {
     }
 
     private static void handleListGames() throws Exception {
-        println("Fine. Let me collect some personal info first for blackmail purposes.");
-        String username = getStringInput("Username? ");
-        String password = getStringInput("Password? ");
-        String email = getStringInput("Email? ");
-
-        RegisterResult registerResult = serverFacade.register(new RegisterRequest(username, password, email));
-        if (registerResult.message() != null) {
-            println("Error: " + registerResult.message());
+        // Connect to the server
+        ListResult listResult = serverFacade.listGames(new ListRequest(authToken));
+        if (listResult.message() != null) {
+            println("Error: " + listResult.message());
             return;
         }
-
-        LoginResult loginResult = serverFacade.login(new LoginRequest(username, password));
-        if (loginResult.message() != null) {
-            println("Error: " + loginResult.message());
-            return;
+        // Print out the games
+        for (var gameData : listResult.games()) {
+            println( gameData.toString() );
         }
-
-        postLoginUI();
     }
 
     private static void handleJoinGame() throws Exception {
-        println("Fine. Let me collect some personal info first for blackmail purposes.");
-        String username = getStringInput("Username? ");
-        String password = getStringInput("Password? ");
-        String email = getStringInput("Email? ");
-
-        RegisterResult registerResult = serverFacade.register(new RegisterRequest(username, password, email));
-        if (registerResult.message() != null) {
-            println("Error: " + registerResult.message());
+        String playerColor = getStringInput( "Player Color?" );
+        println("Game ID?");
+        int gameID = getValidIntegerInput( 1, 1000000 );
+        // Connect to the server
+        JoinResult joinResult = serverFacade.joinGame(new JoinRequest(authToken, playerColor, gameID));
+        if (joinResult.message() != null) {
+            println("Error: " + joinResult.message());
             return;
         }
-
-        LoginResult loginResult = serverFacade.login(new LoginRequest(username, password));
-        if (loginResult.message() != null) {
-            println("Error: " + loginResult.message());
-            return;
-        }
-
-        postLoginUI();
+        // Display the game
+        playGameUI();
     }
 
     private static void handleObserveGame() throws Exception {
-        println("Fine. Let me collect some personal info first for blackmail purposes.");
-        String username = getStringInput("Username? ");
-        String password = getStringInput("Password? ");
-        String email = getStringInput("Email? ");
+        println("Game ID?");
+        int gameID = getValidIntegerInput( 1, 1000000 );
 
-        RegisterResult registerResult = serverFacade.register(new RegisterRequest(username, password, email));
-        if (registerResult.message() != null) {
-            println("Error: " + registerResult.message());
-            return;
-        }
+        // Display the game
+        observeGameUI();
+    }
 
-        LoginResult loginResult = serverFacade.login(new LoginRequest(username, password));
-        if (loginResult.message() != null) {
-            println("Error: " + loginResult.message());
-            return;
-        }
 
-        postLoginUI();
+    public static void playGameUI() {
+
+    }
+
+    public static void observeGameUI() {
+
     }
 
     public static void drawGameBoard(ChessBoard board) {
