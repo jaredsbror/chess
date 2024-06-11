@@ -1,14 +1,7 @@
-import chess.ChessBoard;
 import chess.ChessGame;
 import chess.ChessPiece;
-import connections.ServerFacade;
-import dataaccess.exceptions.Error500Internal;
-import handlers.ClearApplicationHandler;
-import model.custom.*;
+import client.ServerFacade;
 import ui.GameUI;
-
-import java.io.IOException;
-import java.net.URISyntaxException;
 
 
 public class Main {
@@ -16,10 +9,12 @@ public class Main {
         var piece = new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.PAWN);
         System.out.println("♕ 240 Chess Client: " + piece);
 
-        GameUI.preLoginUI();
-
-
 //        ServerFacade serverFacade = new ServerFacade();
+//        serverFacade.initServer();
+        GameUI.preLoginUI();
+//        serverFacade.stopServer();
+
+//        client.ServerFacade serverFacade = new client.ServerFacade();
 //        try {
 //            ClearResult clearResult = serverFacade.clearApplication();
 //            System.out.println(clearResult);

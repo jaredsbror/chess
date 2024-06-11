@@ -1,7 +1,8 @@
-package connections;
+package client;
 
 
 import com.google.gson.Gson;
+import connections.HTTPClient;
 import dataaccess.exceptions.Error500Internal;
 import model.custom.*;
 import server.Server;
@@ -17,14 +18,6 @@ public class ServerFacade {
     private int statusCode;
     private String statusString;
     private final Gson gson = new Gson();
-
-    public int getStatusCode() {
-        return this.statusCode;
-    }
-
-    public String getStatusString() {
-        return this.statusString;
-    }
 
     public void initServer() {
         server = new Server();

@@ -3,7 +3,7 @@ package ui;
 
 import chess.ChessBoard;
 import chess.ChessGame;
-import connections.ServerFacade;
+import client.ServerFacade;
 import model.custom.*;
 import model.original.GameData;
 
@@ -11,7 +11,6 @@ import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Scanner;
 
 import static ui.ChessUIConstants.*;
@@ -380,6 +379,7 @@ public class GameUI {
         drawGameBoard( gameData );
         // Get user input
         int exitInt = getValidIntegerInput( 1, 1 );
+
     }
 
     public static void drawGameBoard(ChessBoard board) {
