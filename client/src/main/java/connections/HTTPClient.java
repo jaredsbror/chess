@@ -15,7 +15,7 @@ import java.util.Map;
 
 public class HTTPClient {
     private static HttpURLConnection httpURLConnection;
-    private final static String baseURL = "http://localhost:8080";
+    private static final String BASE_URL = "http://localhost:8080";
     private static Map<String, String> body = new HashMap<>();
     private static Integer responseCode = null;
     private static String responseString = null;
@@ -41,7 +41,7 @@ public class HTTPClient {
 
     public static String submitRequest(HttpRequestType request, String path, String method, String authToken, Object requestObject) throws IOException, URISyntaxException {
         // Specify the desired endpoint
-        URI uri = new URI(baseURL + path);
+        URI uri = new URI(BASE_URL + path);
         httpURLConnection = (HttpURLConnection) uri.toURL().openConnection();
         // Specify that we are going to write out data
         httpURLConnection.setDoOutput(true);
