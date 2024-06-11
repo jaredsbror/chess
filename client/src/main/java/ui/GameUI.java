@@ -11,6 +11,7 @@ import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Scanner;
 
 import static ui.ChessUIConstants.*;
@@ -22,6 +23,7 @@ public class GameUI {
     private static Scanner scanner = new Scanner( System.in );
     private static final ServerFacade serverFacade = new ServerFacade();
     private static String authToken = null;
+    private static Integer gameID = null;
     private static final Map<Integer, Integer> gameNumbersToGameIDs = new HashMap<>();
 
     /*
@@ -311,32 +313,73 @@ public class GameUI {
 
     private static void handleJoinGame() throws Exception {
         String playerColor = getStringInput( "Player Color?" );
-        println("Game ID?");
-        int gameID = getValidIntegerInput( 1, 1000000 );
+        println("Game Number? (displayed before each listed game, e.g. 1) GameData...");
+        int gameNumber =getValidIntegerInput( 0, 1000000 );
+        gameID = gameNumbersToGameIDs.get(gameNumber);
         // Connect to the server
         JoinResult joinResult = serverFacade.joinGame(new JoinRequest(authToken, playerColor, gameID));
         if (joinResult.message() != null) {
             println("Error: " + joinResult.message());
             return;
         }
+        // Connect to the server to get the gameData
+        ListResult listResult = serverFacade.listGames(new ListRequest(authToken));
+        if (listResult.message() != null) {
+            println("Error: " + listResult.message());
+            return;
+        }
+        // Locate the game with the correct gameID
+        GameData gameData = null;
+        for (var game: listResult.games()) {
+            if ( gameID.equals( game.gameID() ) ) gameData = game;
+        }
         // Display the game
-        playGameUI();
+        playGameUI(gameData);
     }
 
     private static void handleObserveGame() throws Exception {
-        println("Game ID?");
-        int gameID = getValidIntegerInput( 1, 1000000 );
-
+        println("Game Number? (displayed before each listed game, e.g. 1) GameData...");
+        int gameNumber = getValidIntegerInput( 0, 1000000 );
+        gameID = gameNumbersToGameIDs.get(gameNumber);
+        // Connect to the server to get the gameData
+        ListResult listResult = serverFacade.listGames(new ListRequest(authToken));
+        if (listResult.message() != null) {
+            println("Error: " + listResult.message());
+            return;
+        }
+        // Locate the game with the correct gameID
+        GameData gameData = null;
+        for (var game: listResult.games()) {
+            if ( gameID.equals( game.gameID() ) ) gameData = game;
+        }
         // Display the game
-        observeGameUI();
+        observeGameUI(gameData);
     }
 
-    public static void playGameUI() {
-
+    public static void playGameUI(GameData gameData) {
+        // Draw menu and chessboard
+        println( "1. Exit" );
+        println( "2. Make a Move (Not Yet Implemented)");
+        drawGameBoard( gameData );
+        // Game UI loop
+        while (true) {
+            // Get user input
+            int exitInt = getValidIntegerInput( 1, 2 );
+            // Process user input
+            if (exitInt == 1) {
+                break;
+            } else {
+                println("Not Yet Implemented");
+            }
+        }
     }
 
-    public static void observeGameUI() {
-
+    public static void observeGameUI(GameData gameData) {
+        // Draw menu and chessboard
+        println( "1. Exit" );
+        drawGameBoard( gameData );
+        // Get user input
+        int exitInt = getValidIntegerInput( 1, 1 );
     }
 
     public static void drawGameBoard(ChessBoard board) {

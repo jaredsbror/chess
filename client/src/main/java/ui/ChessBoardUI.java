@@ -5,6 +5,7 @@ import chess.ChessBoard;
 import chess.ChessGame;
 import datatypes.ChessSquare;
 import datatypes.ExtendedChessBoard;
+import model.original.GameData;
 
 import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
@@ -27,7 +28,6 @@ public class ChessBoardUI {
     public static void drawBoard( ExtendedChessBoard extendedChessBoardObject) {
         // Reset the terminal screen
         var out = new PrintStream( System.out, true, StandardCharsets.UTF_8 );
-        out.print( ERASE_SCREEN );
         // Iterate over the rows and print them out
         for (int row = 0; row < CHESS_EDGE_SIZE_IN_SQUARES; row++) {
             drawRow( out, extendedChessBoardObject.getRow( row ) );
