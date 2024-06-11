@@ -17,15 +17,14 @@ import static ui.ChessUIConstants.ERASE_SCREEN;
 
 
 public class GameUI {
-    private PrintStream out = new PrintStream( System.out, true, StandardCharsets.UTF_8 );
-    private ServerFacade serverFacade;
-    private Map<Integer, Integer> gameNumbersToGameIDs = new HashMap<>();
-    private ChessBoard chessBoard = new ChessBoard();
+    private final PrintStream out = new PrintStream( System.out, true, StandardCharsets.UTF_8 );
+    private final ServerFacade serverFacade;
+    private final Map<Integer, Integer> gameNumbersToGameIDs = new HashMap<>();
     private Scanner scanner = new Scanner( System.in );
     private String authToken = null;
     private Integer gameID = null;
-    private TerminalUI terminalUI = new TerminalUI();
-    private ChessBoardUI chessBoardUI = new ChessBoardUI();
+    private final TerminalUI terminalUI = new TerminalUI();
+    private final ChessBoardUI chessBoardUI = new ChessBoardUI();
 
     public GameUI(int port) {
         serverFacade = new ServerFacade(port);
@@ -310,7 +309,7 @@ public class GameUI {
         // Print out the games and assign the matching index numbers to their ids
         gameNumbersToGameIDs.clear();
         for ( int index = 0; index < listResult.games().size(); index++ ) {
-            println( index + ") " + listResult.games().get( index ) );
+            println( "Game #" + index + " NAME[" + listResult.games().get( index ).gameName() + "] WHITE[" +  listResult.games().get( index ).whiteUsername() + "] BLACK[" +  listResult.games().get( index ).blackUsername() + "]");
             gameNumbersToGameIDs.put( index, listResult.games().get( index ).gameID() );
         }
     }
@@ -387,13 +386,13 @@ public class GameUI {
         println( "1. Exit" );
         drawGameBoard( gameData );
         // Get user input
-        int exitInt = getValidIntegerInput( 1, 1 );
+        getValidIntegerInput( 1, 1 );
 
     }
 
 
     public void drawGameBoard( GameData gameData ) {
-        chessBoard = new ChessBoard( ChessBoard.parseBoard( gameData.game().toString() ) );
+        ChessBoard chessBoard = new ChessBoard( ChessBoard.parseBoard( gameData.game().toString() ) );
         chessBoard.resetBoard();
         chessBoardUI.drawBoard( chessBoard, ChessGame.TeamColor.WHITE );
         chessBoardUI.drawBoard( chessBoard, ChessGame.TeamColor.BLACK );

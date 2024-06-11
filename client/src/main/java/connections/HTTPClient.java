@@ -15,7 +15,7 @@ import java.util.Map;
 
 public class HTTPClient {
     private HttpURLConnection httpURLConnection;
-    private String baseURL;
+    private final String baseURL;
     private Map<String, String> body = new HashMap<>();
     private Integer responseCode = null;
     private String responseString = null;
@@ -23,7 +23,6 @@ public class HTTPClient {
     public HTTPClient(int port) {
         baseURL = "http://localhost:" + port;
     }
-
 
     public int getResponseCode() {
         return responseCode;
