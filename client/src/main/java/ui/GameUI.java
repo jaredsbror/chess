@@ -50,7 +50,7 @@ public class GameUI {
         // Prelogin Menu loop
         while (!exitPreLogin) {
             printPreLoginMenu();
-            int integerInput = getValidIntegerInput(1, 4);
+            int integerInput = getValidIntegerInput(1, 5);
             exitPreLogin = handlePreLoginMenuSelection(integerInput);
         }
     }
@@ -112,6 +112,7 @@ public class GameUI {
         println( "2. Login" );
         println( "3. Quit (and leave me in peace...highly recommended)" );
         println( "4. Help (and I'll be forced to print out this menu again)" );
+        println( "5. Clear Database (proceed at your own risk!");
         print( "Please type a number: " );
     }
 
@@ -129,6 +130,9 @@ public class GameUI {
                     System.exit(0);
                 case 4:
                     break; // Will cause the menu to be printed again
+                case 5:
+                    handleClearDatabase();
+                    break;
                 default:
                     throw new RuntimeException("Error: Invalid integer input in preLoginUI()");
             }
@@ -155,7 +159,7 @@ public class GameUI {
             println("Error: " + loginResult.message());
             return;
         }
-
+        authToken = loginResult.authToken();
         postLoginUI();
     }
 
@@ -172,7 +176,24 @@ public class GameUI {
         postLoginUI();
     }
 
+    private static void handleClearDatabase() throws Exception {
+        println("Type 'y' to Confirm Database Clearing. ");
 
+        // Confirm database deletion
+        scanner = new Scanner( System.in );
+        String confirmation = scanner.nextLine();
+        if (confirmation.equalsIgnoreCase( "y" )) {
+            println("Confirming Database Clearing");
+            // Connect to the server
+            ClearResult clearResult = serverFacade.clearApplication();
+            if (clearResult.message() != null) {
+                println("Error: " + clearResult.message());
+                return;
+            }
+        } else {
+            println("Aborting Database Clearing...Did not receive a positive response");
+        }
+    }
 
 
     // Help	Displays text informing the user what actions they can take.
@@ -214,9 +235,9 @@ public class GameUI {
         println("AuthToken: " + authToken);
         println("1. Logout (Maybe someone like you should consider this?)");
         println("2. Create Game");
-        println("3. List Games (Avoid this option at all costs! I don't like work.)");
+        println("3. List Games (Avoid this option at all costs! I'm allergic to work!)");
         println("4. Play Game");
-        println("5. Observe Game ");
+        println("5. Observe Game");
         println("Please type a number: ");
     }
 
@@ -232,6 +253,7 @@ public class GameUI {
                 case 3: // List Games
                 case 4: // Play Game
                 case 5: // Observe Game
+
                 default:
                     throw new RuntimeException("Error: Invalid integer input in postLoginUI()");
             }
