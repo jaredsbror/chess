@@ -9,6 +9,8 @@ import model.original.GameData;
 
 import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Scanner;
 
 import static ui.ChessUIConstants.*;
@@ -20,6 +22,7 @@ public class GameUI {
     private static Scanner scanner = new Scanner( System.in );
     private static final ServerFacade serverFacade = new ServerFacade();
     private static String authToken = null;
+    private static final Map<Integer, Integer> gameNumbersToGameIDs = new HashMap<>();
 
     /*
     Help	Displays text informing the user what actions they can take.
@@ -298,9 +301,11 @@ public class GameUI {
             println("Error: " + listResult.message());
             return;
         }
-        // Print out the games
-        for (var gameData : listResult.games()) {
-            println( gameData.toString() );
+        // Print out the games and assign the matching index numbers to their ids
+        gameNumbersToGameIDs.clear();
+        for (int index = 0; index < listResult.games().size(); index++) {
+            println( index + ") " + listResult.games().get( index ));
+            gameNumbersToGameIDs.put( index, listResult.games().get( index ).gameID() );
         }
     }
 
@@ -325,7 +330,6 @@ public class GameUI {
         // Display the game
         observeGameUI();
     }
-
 
     public static void playGameUI() {
 
