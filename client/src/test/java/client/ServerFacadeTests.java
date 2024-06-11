@@ -72,7 +72,7 @@ public class ServerFacadeTests {
     @Order( 13 )
     void RegisterUser() {
         Assertions.assertDoesNotThrow( () -> {
-            serverFacade.clearApplication();
+            setupForServerFacadeTests( SetupLevel.CLEAR_DATABASE );
             serverFacade.register( new RegisterRequest( Constants.USERNAME, Constants.PASSWORD, Constants.EMAIL ) );
         } );
     }
@@ -80,10 +80,7 @@ public class ServerFacadeTests {
     @Test
     @Order( 14 )
     void RegisterRepeatedUser() {
-        Assertions.assertDoesNotThrow( () -> {
-            serverFacade.clearApplication();
-            serverFacade.register( new RegisterRequest( Constants.USERNAME, Constants.PASSWORD, Constants.EMAIL  ) );
-        } );
+        Assertions.assertDoesNotThrow( () -> setupForServerFacadeTests( SetupLevel.REGISTER_USER ) );
         Assertions.assertThrows( IOException.class, () -> {
             serverFacade.register( new RegisterRequest( Constants.USERNAME, Constants.PASSWORD, Constants.EMAIL ) );
         } );
@@ -93,8 +90,7 @@ public class ServerFacadeTests {
     @Order( 9 )
     void LoginWithValidCredentials() {
         Assertions.assertDoesNotThrow( () -> {
-            serverFacade.clearApplication();
-            serverFacade.register( new RegisterRequest( Constants.USERNAME, Constants.PASSWORD, Constants.EMAIL  ) );
+            setupForServerFacadeTests( SetupLevel.REGISTER_USER );
             authToken = serverFacade.login( new LoginRequest( Constants.USERNAME, Constants.PASSWORD ) ).authToken();
         } );
     }
@@ -103,8 +99,7 @@ public class ServerFacadeTests {
     @Order( 10 )
     void LoginWithInvalidCredentials() {
         Assertions.assertDoesNotThrow( () -> {
-            serverFacade.clearApplication();
-            serverFacade.register( new RegisterRequest( Constants.USERNAME, Constants.PASSWORD, Constants.EMAIL  ) );
+            setupForServerFacadeTests( SetupLevel.REGISTER_USER );
         } );
         Assertions.assertThrows( IOException.class, () -> {
             serverFacade.login( new LoginRequest( Constants.USERNAME, "Constants.PASSWORD" ) );
@@ -115,9 +110,7 @@ public class ServerFacadeTests {
     @Order( 3 )
     void CreateGameWithValidAuthToken() {
         Assertions.assertDoesNotThrow( () -> {
-            serverFacade.clearApplication();
-            serverFacade.register( new RegisterRequest( Constants.USERNAME, Constants.PASSWORD, Constants.EMAIL  ) );
-            authToken = serverFacade.login( new LoginRequest( Constants.USERNAME, Constants.PASSWORD ) ).authToken();
+            setupForServerFacadeTests( SetupLevel.LOGIN_USER );
             serverFacade.createGame( new CreateRequest( authToken, Constants.GAME_NAME ) );
         } );
     }
@@ -126,9 +119,7 @@ public class ServerFacadeTests {
     @Order( 4 )
     void CreateGameWithInvalidAuthToken() {
         Assertions.assertDoesNotThrow( () -> {
-            serverFacade.clearApplication();
-            serverFacade.register( new RegisterRequest( Constants.USERNAME, Constants.PASSWORD, Constants.EMAIL  ) );
-            authToken = serverFacade.login( new LoginRequest( Constants.USERNAME, Constants.PASSWORD ) ).authToken();
+            setupForServerFacadeTests( SetupLevel.LOGIN_USER );
         } );
         Assertions.assertThrows( IOException.class, () -> {
             serverFacade.createGame( new CreateRequest( "INVALID", Constants.GAME_NAME ) );
@@ -139,10 +130,7 @@ public class ServerFacadeTests {
     @Order( 5 )
     void JoinGameWithValidTeamColor() {
         Assertions.assertDoesNotThrow( () -> {
-            serverFacade.clearApplication();
-            serverFacade.register( new RegisterRequest( Constants.USERNAME, Constants.PASSWORD, Constants.EMAIL  ) );
-            authToken = serverFacade.login( new LoginRequest( Constants.USERNAME, Constants.PASSWORD ) ).authToken();
-            gameID = serverFacade.createGame( new CreateRequest( authToken, Constants.GAME_NAME ) ).gameID();
+            setupForServerFacadeTests( SetupLevel.CREATE_GAME );
             serverFacade.joinGame( new JoinRequest( authToken, "WHITE", gameID ) );
         } );
     }
@@ -151,10 +139,7 @@ public class ServerFacadeTests {
     @Order( 6 )
     void JoinGameWithInvalidTeamColor() {
         Assertions.assertDoesNotThrow( () -> {
-            serverFacade.clearApplication();
-            serverFacade.register( new RegisterRequest( Constants.USERNAME, Constants.PASSWORD, Constants.EMAIL  ) );
-            authToken = serverFacade.login( new LoginRequest( Constants.USERNAME, Constants.PASSWORD ) ).authToken();
-            gameID = serverFacade.createGame( new CreateRequest( authToken, Constants.GAME_NAME ) ).gameID();
+            setupForServerFacadeTests( SetupLevel.CREATE_GAME );
         } );
         Assertions.assertThrows( IOException.class, () -> {
             serverFacade.joinGame( new JoinRequest( authToken, "INVALID", gameID ) );
@@ -165,9 +150,7 @@ public class ServerFacadeTests {
     @Order( 7 )
     void ListEmptyDatabase() {
         Assertions.assertDoesNotThrow( () -> {
-            serverFacade.clearApplication();
-            serverFacade.register( new RegisterRequest( Constants.USERNAME, Constants.PASSWORD, Constants.EMAIL  ) );
-            authToken = serverFacade.login( new LoginRequest( Constants.USERNAME, Constants.PASSWORD ) ).authToken();
+            setupForServerFacadeTests( SetupLevel.LOGIN_USER );
             serverFacade.listGames( new ListRequest( authToken ) );
         } );
     }
@@ -176,10 +159,7 @@ public class ServerFacadeTests {
     @Order( 8 )
    void ListPopulatedDatabase() {
         Assertions.assertDoesNotThrow( () -> {
-            serverFacade.clearApplication();
-            serverFacade.register( new RegisterRequest( Constants.USERNAME, Constants.PASSWORD, Constants.EMAIL  ) );
-            authToken = serverFacade.login( new LoginRequest( Constants.USERNAME, Constants.PASSWORD ) ).authToken();
-            gameID = serverFacade.createGame( new CreateRequest( authToken, Constants.GAME_NAME ) ).gameID();
+            setupForServerFacadeTests( SetupLevel.CREATE_GAME );
             serverFacade.listGames( new ListRequest( authToken ) );
         } );
     }
@@ -190,9 +170,7 @@ public class ServerFacadeTests {
     @Order( 11 )
     void LogoutWithValidCredentials() {
         Assertions.assertDoesNotThrow( () -> {
-            serverFacade.clearApplication();
-            serverFacade.register( new RegisterRequest( Constants.USERNAME, Constants.PASSWORD, Constants.EMAIL  ) );
-            authToken = serverFacade.login( new LoginRequest( Constants.USERNAME, Constants.PASSWORD ) ).authToken();
+            setupForServerFacadeTests( SetupLevel.LOGIN_USER );
             serverFacade.logout( new LogoutRequest( authToken ) );
         } );
     }
@@ -201,12 +179,10 @@ public class ServerFacadeTests {
     @Order( 12 )
     void LogoutWithInvalidCredentials() {
         Assertions.assertDoesNotThrow( () -> {
-            serverFacade.clearApplication();
-            serverFacade.register( new RegisterRequest( Constants.USERNAME, Constants.PASSWORD, Constants.EMAIL  ) );
-            authToken = serverFacade.login( new LoginRequest( Constants.USERNAME, Constants.PASSWORD ) ).authToken();
+            setupForServerFacadeTests( SetupLevel.LOGIN_USER );
         } );
         Assertions.assertThrows( IOException.class, () -> {
-            serverFacade.logout( new LogoutRequest( authToken ) );
+            serverFacade.logout( new LogoutRequest( "authToken" ) );
         } );
     }
 
