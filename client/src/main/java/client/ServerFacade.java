@@ -4,7 +4,6 @@ package client;
 import com.google.gson.Gson;
 import connections.HTTPClient;
 import model.custom.*;
-import server.Server;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -13,7 +12,6 @@ import static connections.HTTPClient.submitRequest;
 
 
 public class ServerFacade {
-    private Server server;
     private int statusCode;
     private String statusString;
     private final Gson gson = new Gson();
