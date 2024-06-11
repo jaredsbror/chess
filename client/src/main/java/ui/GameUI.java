@@ -16,9 +16,10 @@ import static ui.ChessUIConstants.*;
 
 public class GameUI {
     private static ChessBoard chessBoard = new ChessBoard();
-    private static PrintStream out = new PrintStream( System.out, true, StandardCharsets.UTF_8 );
+    private static final PrintStream out = new PrintStream( System.out, true, StandardCharsets.UTF_8 );
     private static Scanner scanner = new Scanner( System.in );
-    private static ServerFacade serverFacade = new ServerFacade();
+    private static final ServerFacade serverFacade = new ServerFacade();
+    private static String authToken = null;
 
     /*
     Help	Displays text informing the user what actions they can take.
@@ -36,11 +37,15 @@ public class GameUI {
         print( ERASE_SCREEN );
         TerminalUI.resetTerminalColors( out );
         // Print out the menu
-        println( "Welcome to CS 240 Chess! Type 'Help' to get started.");
+        println( "\nWelcome to CS 240 Chess! Type 'Help' to get started.");
 
         // Prompt for 'Help' input
         waitForHelpInput();
 
+        preLoginMenuLoop();
+    }
+
+    private static void preLoginMenuLoop() {
         boolean exitPreLogin = false;
         // Prelogin Menu loop
         while (!exitPreLogin) {
@@ -103,7 +108,7 @@ public class GameUI {
     }
 
     private static void printPreLoginMenu() {
-        println( "1. Register" );
+        println( "\n1. Register" );
         println( "2. Login" );
         println( "3. Quit (and leave me in peace...highly recommended)" );
         println( "4. Help (and I'll be forced to print out this menu again)" );
@@ -163,6 +168,7 @@ public class GameUI {
             println("Error: " + loginResult.message());
             return;
         }
+        authToken = loginResult.authToken();
         postLoginUI();
     }
 
@@ -204,7 +210,8 @@ public class GameUI {
     }
 
     private static void printPostLoginMenu() {
-        println("The Ultimate Chess 240 Game Menu 2.0");
+        println("\n\nThe Ultimate Chess 240 Game Menu 2.0");
+        println("AuthToken: " + authToken);
         println("1. Logout (Maybe someone like you should consider this?)");
         println("2. Create Game");
         println("3. List Games (Avoid this option at all costs! I don't like work.)");
@@ -217,9 +224,11 @@ public class GameUI {
         try {
             switch (selection) {
                 case 1: // Logout
-                    println("Phew...One step closer to leaving me in peace!");
+                    handleLogout();
                     return true;
                 case 2: // Create Game
+                    handleCreateGame();
+                    break;
                 case 3: // List Games
                 case 4: // Play Game
                 case 5: // Observe Game
@@ -233,37 +242,25 @@ public class GameUI {
     }
 
     private static void handleLogout() throws Exception {
-        println("Fine. Let me collect some personal info first for blackmail purposes.");
-        String authToken = getStringInput("AuthToken? ");
+        println("Phew...One step closer to leaving me in peace!");
 
         LogoutResult logoutResult = serverFacade.logout( new LogoutRequest( authToken ) );
         if (logoutResult.message() != null) {
             println("Error: " + logoutResult.message());
             return;
         }
-
-        preLoginUI(); //???
+        preLoginMenuLoop(); //???
     }
 
     private static void handleCreateGame() throws Exception {
-        println("Fine. Let me collect some personal info first for blackmail purposes.");
-        String username = getStringInput("Username? ");
-        String password = getStringInput("Password? ");
-        String email = getStringInput("Email? ");
+        String gameName = getStringInput("What will you name this so-called 'game'? ");
 
-        RegisterResult registerResult = serverFacade.register(new RegisterRequest(username, password, email));
-        if (registerResult.message() != null) {
-            println("Error: " + registerResult.message());
+        CreateResult createResult = serverFacade.createGame(new CreateRequest(authToken, gameName));
+        if (createResult.message() != null) {
+            println("Error: " + createResult.message());
             return;
         }
-
-        LoginResult loginResult = serverFacade.login(new LoginRequest(username, password));
-        if (loginResult.message() != null) {
-            println("Error: " + loginResult.message());
-            return;
-        }
-
-        postLoginUI();
+        println("Wonderful name! I'm sure your mother would be proud of you.");
     }
 
     private static void handleListGames() throws Exception {
