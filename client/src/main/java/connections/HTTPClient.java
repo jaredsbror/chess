@@ -2,7 +2,6 @@ package connections;
 
 
 import com.google.gson.Gson;
-import dataaccess.exceptions.Error500Internal;
 import model.custom.*;
 
 import java.io.IOException;
@@ -40,7 +39,7 @@ public class HTTPClient {
         REGISTER
     }
 
-    public static String submitRequest(HttpRequestType request, String path, String method, String authToken, Object requestObject) throws IOException, URISyntaxException, Error500Internal {
+    public static String submitRequest(HttpRequestType request, String path, String method, String authToken, Object requestObject) throws IOException, URISyntaxException {
         // Specify the desired endpoint
         URI uri = new URI(baseURL + path);
         httpURLConnection = (HttpURLConnection) uri.toURL().openConnection();
@@ -57,7 +56,7 @@ public class HTTPClient {
             case CREATE_GAME: // HEADER, BODY
                 // Parse the requestObject
                 CreateRequest createRequest = (CreateRequest) requestObject;
-                if (createRequest == null) throw new Error500Internal( "Error: Null CreateRequest in submitRequest()" );
+                if (createRequest == null) throw new IOException( "Error: Null CreateRequest in submitRequest()" );
                 // Create the body
                 body = Map.of("gameName", createRequest.gameName());
                 addBodyToHTTPRequest();
@@ -65,7 +64,7 @@ public class HTTPClient {
             case JOIN_GAME: // HEADER, BODY
                 // Parse the requestObject
                 JoinRequest joinRequest = ( JoinRequest ) requestObject;
-                if (joinRequest == null) throw new Error500Internal( "Error: Null JoinRequest in submitRequest()" );
+                if (joinRequest == null) throw new IOException( "Error: Null JoinRequest in submitRequest()" );
                 // Create the body
                 body = Map.of("playerColor", joinRequest.playerColor(), "gameID", joinRequest.gameID().toString()); //???
                 addBodyToHTTPRequest();
@@ -73,7 +72,7 @@ public class HTTPClient {
             case LOGIN: // NO HEADER, BODY
                 // Parse the requestObject
                 LoginRequest loginRequest = (LoginRequest) requestObject;
-                if (loginRequest == null) throw new Error500Internal( "Error: Null LoginRequest in submitRequest()" );
+                if (loginRequest == null) throw new IOException( "Error: Null LoginRequest in submitRequest()" );
                 // Create the body
                 body = Map.of("username", loginRequest.username(), "password", loginRequest.password());
                 addBodyToHTTPRequest();
@@ -81,7 +80,7 @@ public class HTTPClient {
             case REGISTER: // NO HEADER, BODY
                 // Parse the requestObject
                 RegisterRequest registerRequest = ( RegisterRequest ) requestObject;
-                if (registerRequest == null) throw new Error500Internal( "Error: Null RegisterRequest in submitRequest()" );
+                if (registerRequest == null) throw new IOException( "Error: Null RegisterRequest in submitRequest()" );
                 // Create the body
                 body = Map.of("username", registerRequest.username(), "password", registerRequest.password(), "email", registerRequest.email());
                 addBodyToHTTPRequest();
