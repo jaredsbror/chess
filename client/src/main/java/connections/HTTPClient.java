@@ -45,7 +45,7 @@ public class HTTPClient {
 
     public String submitRequest(HttpRequestType request, String path, String method, String authToken, Object requestObject) throws IOException, URISyntaxException {
         // Specify the desired endpoint
-        URI uri = new URI(BASE_URL + path);
+        URI uri = new URI(baseURL + path);
         httpURLConnection = (HttpURLConnection) uri.toURL().openConnection();
         // Specify that we are going to write out data
         httpURLConnection.setDoOutput(true);
