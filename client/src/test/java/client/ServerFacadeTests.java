@@ -54,7 +54,7 @@ public class ServerFacadeTests {
 
     @Test
     @Order( 1 )
-    public void ClearEmptyDatabase() {
+    public void clearEmptyDatabase() {
         Assertions.assertDoesNotThrow( () -> {
             serverFacade.clearApplication();
         } );
@@ -62,7 +62,7 @@ public class ServerFacadeTests {
 
     @Test
     @Order( 2 )
-    public void ClearPopulatedDatabase() {
+    public void clearPopulatedDatabase() {
         Assertions.assertDoesNotThrow( () -> {
             serverFacade.clearApplication();
         } );
@@ -70,7 +70,7 @@ public class ServerFacadeTests {
 
     @Test
     @Order( 13 )
-    void RegisterUser() {
+    void registerUser() {
         Assertions.assertDoesNotThrow( () -> {
             setupForServerFacadeTests( SetupLevel.CLEAR_DATABASE );
             serverFacade.register( new RegisterRequest( Constants.USERNAME, Constants.PASSWORD, Constants.EMAIL ) );
@@ -79,7 +79,7 @@ public class ServerFacadeTests {
 
     @Test
     @Order( 14 )
-    void RegisterRepeatedUser() {
+    void registerRepeatedUser() {
         Assertions.assertDoesNotThrow( () -> setupForServerFacadeTests( SetupLevel.REGISTER_USER ) );
         Assertions.assertThrows( IOException.class, () -> {
             serverFacade.register( new RegisterRequest( Constants.USERNAME, Constants.PASSWORD, Constants.EMAIL ) );
@@ -88,7 +88,7 @@ public class ServerFacadeTests {
 
     @Test
     @Order( 9 )
-    void LoginWithValidCredentials() {
+    void loginWithValidCredentials() {
         Assertions.assertDoesNotThrow( () -> {
             setupForServerFacadeTests( SetupLevel.REGISTER_USER );
             authToken = serverFacade.login( new LoginRequest( Constants.USERNAME, Constants.PASSWORD ) ).authToken();
@@ -97,7 +97,7 @@ public class ServerFacadeTests {
 
     @Test
     @Order( 10 )
-    void LoginWithInvalidCredentials() {
+    void loginWithInvalidCredentials() {
         Assertions.assertDoesNotThrow( () -> {
             setupForServerFacadeTests( SetupLevel.REGISTER_USER );
         } );
@@ -108,7 +108,7 @@ public class ServerFacadeTests {
 
     @Test
     @Order( 3 )
-    void CreateGameWithValidAuthToken() {
+    void createGameWithValidAuthToken() {
         Assertions.assertDoesNotThrow( () -> {
             setupForServerFacadeTests( SetupLevel.LOGIN_USER );
             serverFacade.createGame( new CreateRequest( authToken, Constants.GAME_NAME ) );
@@ -117,7 +117,7 @@ public class ServerFacadeTests {
 
     @Test
     @Order( 4 )
-    void CreateGameWithInvalidAuthToken() {
+    void createGameWithInvalidAuthToken() {
         Assertions.assertDoesNotThrow( () -> {
             setupForServerFacadeTests( SetupLevel.LOGIN_USER );
         } );
@@ -128,7 +128,7 @@ public class ServerFacadeTests {
 
     @Test
     @Order( 5 )
-    void JoinGameWithValidTeamColor() {
+    void joinGameWithValidTeamColor() {
         Assertions.assertDoesNotThrow( () -> {
             setupForServerFacadeTests( SetupLevel.CREATE_GAME );
             serverFacade.joinGame( new JoinRequest( authToken, "WHITE", gameID ) );
@@ -137,7 +137,7 @@ public class ServerFacadeTests {
 
     @Test
     @Order( 6 )
-    void JoinGameWithInvalidTeamColor() {
+    void joinGameWithInvalidTeamColor() {
         Assertions.assertDoesNotThrow( () -> {
             setupForServerFacadeTests( SetupLevel.CREATE_GAME );
         } );
@@ -148,7 +148,7 @@ public class ServerFacadeTests {
 
     @Test
     @Order( 7 )
-    void ListEmptyDatabase() {
+    void listEmptyDatabase() {
         Assertions.assertDoesNotThrow( () -> {
             setupForServerFacadeTests( SetupLevel.LOGIN_USER );
             serverFacade.listGames( new ListRequest( authToken ) );
@@ -157,7 +157,7 @@ public class ServerFacadeTests {
 
     @Test
     @Order( 8 )
-   void ListPopulatedDatabase() {
+   void listPopulatedDatabase() {
         Assertions.assertDoesNotThrow( () -> {
             setupForServerFacadeTests( SetupLevel.CREATE_GAME );
             serverFacade.listGames( new ListRequest( authToken ) );
@@ -168,7 +168,7 @@ public class ServerFacadeTests {
 
     @Test
     @Order( 11 )
-    void LogoutWithValidCredentials() {
+    void logoutWithValidCredentials() {
         Assertions.assertDoesNotThrow( () -> {
             setupForServerFacadeTests( SetupLevel.LOGIN_USER );
             serverFacade.logout( new LogoutRequest( authToken ) );
@@ -177,7 +177,7 @@ public class ServerFacadeTests {
 
     @Test
     @Order( 12 )
-    void LogoutWithInvalidCredentials() {
+    void logoutWithInvalidCredentials() {
         Assertions.assertDoesNotThrow( () -> {
             setupForServerFacadeTests( SetupLevel.LOGIN_USER );
         } );
