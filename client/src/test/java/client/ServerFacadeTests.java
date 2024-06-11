@@ -35,7 +35,6 @@ public class ServerFacadeTests {
         gameID = serverFacade.createGame( new CreateRequest( authToken, Constants.GAME_NAME ) ).gameID();
         if (setupLevel == SetupLevel.CREATE_GAME) return;
         serverFacade.joinGame( new JoinRequest( authToken, "WHITE", gameID ) );
-        if (setupLevel == SetupLevel.JOIN_GAME) return;
     }
 
 
@@ -44,7 +43,7 @@ public class ServerFacadeTests {
         server = new Server();
         var port = server.run(0);
         System.out.println("Started test HTTP server on " + port);
-        serverFacade = new ServerFacade();
+        serverFacade = new ServerFacade(port);
     }
 
     @AfterAll
@@ -81,9 +80,7 @@ public class ServerFacadeTests {
     @Order( 14 )
     void registerRepeatedUser() {
         Assertions.assertDoesNotThrow( () -> setupForServerFacadeTests( SetupLevel.REGISTER_USER ) );
-        Assertions.assertThrows( IOException.class, () -> {
-            serverFacade.register( new RegisterRequest( Constants.USERNAME, Constants.PASSWORD, Constants.EMAIL ) );
-        } );
+        Assertions.assertThrows( IOException.class, () -> serverFacade.register( new RegisterRequest( Constants.USERNAME, Constants.PASSWORD, Constants.EMAIL ) ) );
     }
 
     @Test
@@ -98,12 +95,8 @@ public class ServerFacadeTests {
     @Test
     @Order( 10 )
     void loginWithInvalidCredentials() {
-        Assertions.assertDoesNotThrow( () -> {
-            setupForServerFacadeTests( SetupLevel.REGISTER_USER );
-        } );
-        Assertions.assertThrows( IOException.class, () -> {
-            serverFacade.login( new LoginRequest( Constants.USERNAME, "Constants.PASSWORD" ) );
-        } );
+        Assertions.assertDoesNotThrow( () -> setupForServerFacadeTests( SetupLevel.REGISTER_USER ) );
+        Assertions.assertThrows( IOException.class, () -> serverFacade.login( new LoginRequest( Constants.USERNAME, "Constants.PASSWORD" ) ) );
     }
 
     @Test
@@ -118,12 +111,8 @@ public class ServerFacadeTests {
     @Test
     @Order( 4 )
     void createGameWithInvalidAuthToken() {
-        Assertions.assertDoesNotThrow( () -> {
-            setupForServerFacadeTests( SetupLevel.LOGIN_USER );
-        } );
-        Assertions.assertThrows( IOException.class, () -> {
-            serverFacade.createGame( new CreateRequest( "INVALID", Constants.GAME_NAME ) );
-        } );
+        Assertions.assertDoesNotThrow( () -> setupForServerFacadeTests( SetupLevel.LOGIN_USER ) );
+        Assertions.assertThrows( IOException.class, () -> serverFacade.createGame( new CreateRequest( "INVALID", Constants.GAME_NAME ) ) );
     }
 
     @Test
@@ -138,12 +127,8 @@ public class ServerFacadeTests {
     @Test
     @Order( 6 )
     void joinGameWithInvalidTeamColor() {
-        Assertions.assertDoesNotThrow( () -> {
-            setupForServerFacadeTests( SetupLevel.CREATE_GAME );
-        } );
-        Assertions.assertThrows( IOException.class, () -> {
-            serverFacade.joinGame( new JoinRequest( authToken, "INVALID", gameID ) );
-        } );
+        Assertions.assertDoesNotThrow( () -> setupForServerFacadeTests( SetupLevel.CREATE_GAME ) );
+        Assertions.assertThrows( IOException.class, () -> serverFacade.joinGame( new JoinRequest( authToken, "INVALID", gameID ) ) );
     }
 
     @Test
@@ -178,12 +163,8 @@ public class ServerFacadeTests {
     @Test
     @Order( 12 )
     void logoutWithInvalidCredentials() {
-        Assertions.assertDoesNotThrow( () -> {
-            setupForServerFacadeTests( SetupLevel.LOGIN_USER );
-        } );
-        Assertions.assertThrows( IOException.class, () -> {
-            serverFacade.logout( new LogoutRequest( "authToken" ) );
-        } );
+        Assertions.assertDoesNotThrow( () -> setupForServerFacadeTests( SetupLevel.LOGIN_USER ) );
+        Assertions.assertThrows( IOException.class, () -> serverFacade.logout( new LogoutRequest( "authToken" ) ) );
     }
 
 

@@ -14,18 +14,22 @@ import java.util.Map;
 
 
 public class HTTPClient {
-    private static HttpURLConnection httpURLConnection;
-    private static final String BASE_URL = "http://localhost:8080";
-    private static Map<String, String> body = new HashMap<>();
-    private static Integer responseCode = null;
-    private static String responseString = null;
+    private HttpURLConnection httpURLConnection;
+    private String baseURL;
+    private Map<String, String> body = new HashMap<>();
+    private Integer responseCode = null;
+    private String responseString = null;
+
+    public HTTPClient(int port) {
+        baseURL = "http://localhost:" + port;
+    }
 
 
-    public static int getResponseCode() {
+    public int getResponseCode() {
         return responseCode;
     }
 
-    public static String getResponseString() {
+    public String getResponseString() {
         return responseString;
     }
 
@@ -39,7 +43,7 @@ public class HTTPClient {
         REGISTER
     }
 
-    public static String submitRequest(HttpRequestType request, String path, String method, String authToken, Object requestObject) throws IOException, URISyntaxException {
+    public String submitRequest(HttpRequestType request, String path, String method, String authToken, Object requestObject) throws IOException, URISyntaxException {
         // Specify the desired endpoint
         URI uri = new URI(BASE_URL + path);
         httpURLConnection = (HttpURLConnection) uri.toURL().openConnection();
@@ -108,7 +112,7 @@ public class HTTPClient {
         }
     }
 
-    private static void addBodyToHTTPRequest() throws IOException {
+    private void addBodyToHTTPRequest() throws IOException {
         // Add the body to the httpURLConnection
         try (var outputStream = httpURLConnection.getOutputStream()) {
             var jsonBody = new Gson().toJson(body);

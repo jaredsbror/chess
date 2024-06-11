@@ -17,14 +17,19 @@ import static ui.ChessUIConstants.ERASE_SCREEN;
 
 
 public class GameUI {
-    private static PrintStream out = new PrintStream( System.out, true, StandardCharsets.UTF_8 );
-    private static ServerFacade serverFacade = new ServerFacade();
-    private static Map<Integer, Integer> gameNumbersToGameIDs = new HashMap<>();
-    private static ChessBoard chessBoard = new ChessBoard();
-    private static Scanner scanner = new Scanner( System.in );
-    private static String authToken = null;
-    private static Integer gameID = null;
+    private PrintStream out = new PrintStream( System.out, true, StandardCharsets.UTF_8 );
+    private ServerFacade serverFacade;
+    private Map<Integer, Integer> gameNumbersToGameIDs = new HashMap<>();
+    private ChessBoard chessBoard = new ChessBoard();
+    private Scanner scanner = new Scanner( System.in );
+    private String authToken = null;
+    private Integer gameID = null;
+    private TerminalUI terminalUI = new TerminalUI();
+    private ChessBoardUI chessBoardUI = new ChessBoardUI();
 
+    public GameUI(int port) {
+        serverFacade = new ServerFacade(port);
+    }
 
     /*
     Help	Displays text informing the user what actions they can take.
@@ -37,10 +42,10 @@ public class GameUI {
                 If successfully registered, the client should be logged in and transition
                 to the Postlogin UI.
      */
-    public static void preLoginUI() {
+    public void preLoginUI() {
         // Reset the terminal screen
         print( ERASE_SCREEN );
-        TerminalUI.resetTerminalColors( out );
+        terminalUI.resetTerminalColors( out );
         // Print out the menu
         println( "\nWelcome to CS 240 Chess! Type 'Help' to get started." );
 
@@ -51,7 +56,7 @@ public class GameUI {
     }
 
 
-    private static void preLoginMenuLoop() {
+    private void preLoginMenuLoop() {
         boolean exitPreLogin = false;
         // Prelogin Menu loop
         while ( !exitPreLogin ) {
@@ -63,7 +68,7 @@ public class GameUI {
 
 
     // Helper method to validate string input
-    private static String getStringInput( String prompt ) {
+    private String getStringInput( String prompt ) {
         println( prompt );
         scanner = new Scanner( System.in );
         return scanner.nextLine();
@@ -71,7 +76,7 @@ public class GameUI {
 
 
     // Helper method to validate integer input
-    private static int getValidIntegerInput( int min, int max ) {
+    private int getValidIntegerInput( int min, int max ) {
         int number;
         // If the user types in a valid number, continue. Otherwise, keep scanning.
         while ( true ) {
@@ -91,7 +96,7 @@ public class GameUI {
     }
 
 
-    private static void waitForHelpInput() {
+    private void waitForHelpInput() {
         while ( true ) {
             String inputString = scanner.nextLine().trim();
             if ( inputString.equalsIgnoreCase( "Help" ) ) {
@@ -103,7 +108,7 @@ public class GameUI {
     }
 
 
-    private static void printPreLoginMenu() {
+    private void printPreLoginMenu() {
         println( "\n1. Register" );
         println( "2. Login" );
         println( "3. Quit (and leave me in peace...highly recommended)" );
@@ -113,7 +118,7 @@ public class GameUI {
     }
 
 
-    private static boolean handlePreLoginMenuSelection( int selection ) {
+    private boolean handlePreLoginMenuSelection( int selection ) {
         try {
             switch ( selection ) {
                 case 1:
@@ -140,7 +145,7 @@ public class GameUI {
     }
 
 
-    private static void handleRegister() throws Exception {
+    private void handleRegister() throws Exception {
         println( "Fine. Let me collect some personal info first for blackmail purposes." );
         String username = getStringInput( "Username? " );
         String password = getStringInput( "Password? " );
@@ -162,7 +167,7 @@ public class GameUI {
     }
 
 
-    private static void handleLogin() throws Exception {
+    private void handleLogin() throws Exception {
         String username = getStringInput( "Remind me again what your username was?" );
         String password = getStringInput( "And your password?" );
 
@@ -176,7 +181,7 @@ public class GameUI {
     }
 
 
-    private static void handleClearDatabase() throws Exception {
+    private void handleClearDatabase() throws Exception {
         println( "Confirm Database Clearing (y/n): " );
 
         // Confirm database deletion
@@ -215,10 +220,10 @@ public class GameUI {
     //              They should be able to enter the number of the desired game.
     //              Your client will need to keep track of which number corresponds to which game
     //              from the last time it listed the games. Functionality will be added in Phase 6.
-    public static void postLoginUI() {
+    public void postLoginUI() {
         // Reset the terminal screen
         print( ERASE_SCREEN );
-        TerminalUI.resetTerminalColors( out );
+        terminalUI.resetTerminalColors( out );
 
         boolean exitPostLogin = false;
         // Prelogin Menu loop
@@ -230,7 +235,7 @@ public class GameUI {
     }
 
 
-    private static void printPostLoginMenu() {
+    private void printPostLoginMenu() {
         println( "\n\nThe Ultimate Chess 240 Game Menu 2.0" );
         println( "1. Logout (Maybe someone like you should consider this?)" );
         println( "2. Create Game" );
@@ -241,7 +246,7 @@ public class GameUI {
     }
 
 
-    private static boolean handlePostLoginMenuSelection( int selection ) {
+    private boolean handlePostLoginMenuSelection( int selection ) {
         try {
             switch ( selection ) {
                 case 1: // Logout
@@ -269,7 +274,7 @@ public class GameUI {
     }
 
 
-    private static void handleLogout() throws Exception {
+    private void handleLogout() throws Exception {
         println( "Phew...One step closer to leaving me in peace!" );
 
         // Connect to the server
@@ -282,7 +287,7 @@ public class GameUI {
     }
 
 
-    private static void handleCreateGame() throws Exception {
+    private void handleCreateGame() throws Exception {
         String gameName = getStringInput( "What will you name this so-called 'game'? " );
 
         // Connect to the server
@@ -295,7 +300,7 @@ public class GameUI {
     }
 
 
-    private static void handleListGames() throws Exception {
+    private void handleListGames() throws Exception {
         // Connect to the server
         ListResult listResult = serverFacade.listGames( new ListRequest( authToken ) );
         if ( listResult.message() != null ) {
@@ -311,7 +316,7 @@ public class GameUI {
     }
 
 
-    private static void handleJoinGame() throws Exception {
+    private void handleJoinGame() throws Exception {
         String playerColor = getStringInput( "Player Color?" );
         println( "Game Number? (displayed before each listed game, e.g. 1) GameData..." );
         int gameNumber = getValidIntegerInput( 0, 1000000 );
@@ -338,7 +343,7 @@ public class GameUI {
     }
 
 
-    private static void handleObserveGame() throws Exception {
+    private void handleObserveGame() throws Exception {
         println( "Game Number? (displayed before each listed game, e.g. 1) GameData..." );
         int gameNumber = getValidIntegerInput( 0, 1000000 );
         gameID = gameNumbersToGameIDs.get( gameNumber );
@@ -358,7 +363,7 @@ public class GameUI {
     }
 
 
-    public static void playGameUI( GameData gameData ) {
+    public void playGameUI( GameData gameData ) {
         // Draw menu and chessboard
         println( "1. Exit" );
         println( "2. Make a Move (Not Yet Implemented)" );
@@ -377,7 +382,7 @@ public class GameUI {
     }
 
 
-    public static void observeGameUI( GameData gameData ) {
+    public void observeGameUI( GameData gameData ) {
         // Draw menu and chessboard
         println( "1. Exit" );
         drawGameBoard( gameData );
@@ -387,20 +392,20 @@ public class GameUI {
     }
 
 
-    public static void drawGameBoard( GameData gameData ) {
+    public void drawGameBoard( GameData gameData ) {
         chessBoard = new ChessBoard( ChessBoard.parseBoard( gameData.game().toString() ) );
         chessBoard.resetBoard();
-        ChessBoardUI.drawBoard( chessBoard, ChessGame.TeamColor.WHITE );
-        ChessBoardUI.drawBoard( chessBoard, ChessGame.TeamColor.BLACK );
+        chessBoardUI.drawBoard( chessBoard, ChessGame.TeamColor.WHITE );
+        chessBoardUI.drawBoard( chessBoard, ChessGame.TeamColor.BLACK );
     }
 
 
-    private static void print( String string ) {
+    private void print( String string ) {
         out.print( string );
     }
 
 
-    private static void println( String string ) {
+    private void println( String string ) {
         out.println( string );
     }
 
