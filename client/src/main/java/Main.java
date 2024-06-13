@@ -1,6 +1,6 @@
 import chess.ChessGame;
 import chess.ChessPiece;
-import ui.GameUI;
+import ui.ClientUI;
 
 
 public class Main {
@@ -8,7 +8,7 @@ public class Main {
         var piece = new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.PAWN);
         System.out.println("♕ 240 Chess Client: " + piece);
 
-        GameUI gameUI = new GameUI( 8080 );
-        gameUI.preLoginUI();
+        ClientUI clientUI = new ClientUI( 8080 );
+        clientUI.preLoginUI();
     }
 }

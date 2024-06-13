@@ -16,7 +16,7 @@ import java.util.Scanner;
 import static ui.ChessUIConstants.ERASE_SCREEN;
 
 
-public class GameUI {
+public class ClientUI {
     private final PrintStream out = new PrintStream( System.out, true, StandardCharsets.UTF_8 );
     private final ServerFacade serverFacade;
     private final Map<Integer, Integer> gameNumbersToGameIDs = new HashMap<>();
@@ -26,7 +26,7 @@ public class GameUI {
     private final TerminalUI terminalUI = new TerminalUI();
     private final ChessBoardUI chessBoardUI = new ChessBoardUI();
 
-    public GameUI(int port) {
+    public ClientUI( int port) {
         serverFacade = new ServerFacade(port);
     }
 

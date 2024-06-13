@@ -9,7 +9,6 @@ public class ResignCommand extends UserGameCommand{
         this.gameID = gameID;
     }
 
-
     public int getGameID() {
         return gameID;
     }
