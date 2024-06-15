@@ -2,7 +2,7 @@ package dataaccess.auth;
 
 
 import dataaccess.AuthDAO;
-import dataaccess.DataAccessException;
+import dataaccess.exceptions.DataAccessException;
 import dataaccess.DatabaseManager;
 import model.original.AuthData;
 

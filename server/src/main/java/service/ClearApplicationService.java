@@ -1,7 +1,7 @@
 package service;
 
 
-import dataaccess.DataAccessException;
+import dataaccess.exceptions.DataAccessException;
 import dataaccess.auth.SQLAuthDAO;
 import dataaccess.game.SQLGameDAO;
 import dataaccess.user.SQLUserDAO;

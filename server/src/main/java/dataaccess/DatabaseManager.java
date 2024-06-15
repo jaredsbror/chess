@@ -5,6 +5,7 @@ import chess.ChessBoard;
 import chess.ChessGame;
 import chess.ChessPiece;
 import chess.Constants;
+import dataaccess.exceptions.DataAccessException;
 import model.original.AuthData;
 import model.original.GameData;
 import model.original.UserData;

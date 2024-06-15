@@ -4,7 +4,7 @@ package dataaccess.game;
 import chess.ChessBoard;
 import chess.ChessGame;
 import chess.ChessPiece;
-import dataaccess.DataAccessException;
+import dataaccess.exceptions.DataAccessException;
 import dataaccess.DatabaseManager;
 import dataaccess.GameDAO;
 import model.original.GameData;

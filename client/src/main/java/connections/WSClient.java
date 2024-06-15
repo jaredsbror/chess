@@ -21,6 +21,7 @@ public class WSClient extends Endpoint {
         WebSocketContainer container = ContainerProvider.getWebSocketContainer();
         this.session = container.connectToServer(this, uri);
 
+        // Add onMessage { ClientUI.notify() } (in messagehandler
         this.session.addMessageHandler(new MessageHandler.Whole<String>() {
             public void onMessage(String message) {
                 System.out.println(message);
@@ -28,9 +29,11 @@ public class WSClient extends Endpoint {
         });
     }
 
+    // SENT A JSON MESSAGE
     public void send(String msg) throws Exception {
         this.session.getBasicRemote().sendText(msg);
     }
+
 
     public void onOpen(Session session, EndpointConfig endpointConfig) {
     }

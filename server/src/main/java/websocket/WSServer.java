@@ -15,6 +15,9 @@ public class WSServer {
 
     @OnWebSocketMessage
     public void onMessage(Session session, String message) throws Exception {
+        // PROCESSES THE JSON MESSAGE AND DOES STUFF
+        // CONNECT, MAKE MOVE, RESIGN
+
         session.getRemote().sendString("WebSocket response: " + message);
     }
 }

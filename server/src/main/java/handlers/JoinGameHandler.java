@@ -2,7 +2,7 @@ package handlers;
 
 
 import com.google.gson.Gson;
-import dataaccess.DataAccessException;
+import dataaccess.exceptions.DataAccessException;
 import dataaccess.exceptions.Error400BadRequest;
 import dataaccess.exceptions.Error401Unauthorized;
 import dataaccess.exceptions.Error403AlreadyTaken;

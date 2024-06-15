@@ -1,6 +1,6 @@
 import chess.ChessGame;
 import chess.ChessPiece;
-import dataaccess.DataAccessException;
+import dataaccess.exceptions.DataAccessException;
 import dataaccess.DatabaseManager;
 import server.Server;
 

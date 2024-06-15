@@ -4,8 +4,10 @@ package ui;
 import chess.ChessBoard;
 import chess.ChessGame;
 import client.ServerFacade;
+import datatypes.ServerMessageObserver;
 import model.custom.*;
 import model.original.GameData;
+import websocket.messages.ServerMessage;
 
 import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
@@ -15,16 +17,16 @@ import java.util.Scanner;
 
 import static ui.ChessUIConstants.ERASE_SCREEN;
 
-
-public class ClientUI {
+// Have Handler use switch-case to deserialize/serialize messages and use notify method to process them in ClientUI.
+public class ClientUI implements ServerMessageObserver {
     private final PrintStream out = new PrintStream( System.out, true, StandardCharsets.UTF_8 );
+    private final TerminalUI terminalUI = new TerminalUI();
+    private final ChessBoardUI chessBoardUI = new ChessBoardUI();
     private final ServerFacade serverFacade;
     private final Map<Integer, Integer> gameNumbersToGameIDs = new HashMap<>();
     private Scanner scanner = new Scanner( System.in );
     private String authToken = null;
     private Integer gameID = null;
-    private final TerminalUI terminalUI = new TerminalUI();
-    private final ChessBoardUI chessBoardUI = new ChessBoardUI();
 
     public ClientUI( int port) {
         serverFacade = new ServerFacade(port);
@@ -408,4 +410,10 @@ public class ClientUI {
         out.println( string );
     }
 
+
+    // WS
+    @Override
+    public void notify( ServerMessage serverMessage ) {
+
+    }
 }

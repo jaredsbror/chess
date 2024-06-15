@@ -2,7 +2,7 @@ package dataaccess.auth;
 
 
 import chess.Constants;
-import dataaccess.DataAccessException;
+import dataaccess.exceptions.DataAccessException;
 import dataaccess.DatabaseUtil;
 import model.original.AuthData;
 import org.junit.jupiter.api.*;

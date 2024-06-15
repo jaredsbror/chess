@@ -2,7 +2,7 @@ package handlers;
 
 
 import com.google.gson.Gson;
-import dataaccess.DataAccessException;
+import dataaccess.exceptions.DataAccessException;
 import model.custom.ClearResult;
 import service.ClearApplicationService;
 import spark.Request;

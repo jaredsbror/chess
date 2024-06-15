@@ -2,7 +2,7 @@ package handlers;
 
 
 import com.google.gson.Gson;
-import dataaccess.DataAccessException;
+import dataaccess.exceptions.DataAccessException;
 import dataaccess.exceptions.Error401Unauthorized;
 import model.custom.LoginRequest;
 import model.custom.LoginResult;
