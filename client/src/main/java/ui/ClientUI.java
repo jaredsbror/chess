@@ -29,16 +29,11 @@ public class ClientUI implements ServerMessageObserver {
     private Integer gameID = null;
     private Integer gameIndex = null;
     private GameData gameData = null;
-    private final ChessGame.TeamColor teamColor;
+    private ChessGame.TeamColor teamColor;
 
     public ClientUI( int port) {
         serverFacade = new ServerFacade(port);
         teamColor = ChessGame.TeamColor.WHITE;
-    }
-
-    public ClientUI( int port, ChessGame.TeamColor teamColor ) {
-        serverFacade = new ServerFacade(port);
-        this.teamColor = teamColor;
     }
 
     /*
@@ -192,7 +187,8 @@ public class ClientUI implements ServerMessageObserver {
 
 
     private void handleClearDatabase() throws Exception {
-        println( "Confirm Database Clearing (y/n): " );
+        println( "Confirm Database Clearing (y/n):" );
+        print(">>> ");
 
         // Confirm database deletion
         scanner = new Scanner( System.in );
@@ -326,7 +322,9 @@ public class ClientUI implements ServerMessageObserver {
 
     private void handleJoinGame() throws Exception {
         String playerColor = getStringInput( "Player Color?" );
-        println( "Game Number? (displayed before each listed game, e.g. 1) GameData..." );
+        if (playerColor.equalsIgnoreCase( "WHITE" ) ) teamColor = ChessGame.TeamColor.WHITE;
+        else if ( playerColor.equalsIgnoreCase( "BLACK" ) ) teamColor = ChessGame.TeamColor.BLACK;
+        println( "Game Number? (i.e. Game #1, #2, etc... as shown after listing games))\n[Note that unless you list the games first, joining a game will return an error, even with a valid game number!]" );
         gameIndex = getValidIntegerInput( 0, 1000000 );
         gameID = gameNumbersToGameIDs.get( gameIndex );
         // Display the game

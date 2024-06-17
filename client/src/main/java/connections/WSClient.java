@@ -21,7 +21,7 @@ public class WSClient extends Endpoint {
         WebSocketContainer container = ContainerProvider.getWebSocketContainer();
         this.session = container.connectToServer(this, uri);
 
-        // Add onMessage { ClientUI.notify() } (in messagehandler
+        // Add onMessage { ClientUI.notify() } (
         this.session.addMessageHandler(new MessageHandler.Whole<String>() {
             public void onMessage(String message) {
 
