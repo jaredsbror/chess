@@ -494,7 +494,5 @@ public class ChessClient implements ServerMessageObserver {
     // WS
     @Override
     public void notify( ServerMessage serverMessage ) throws Exception {
-
     }
-
 }
