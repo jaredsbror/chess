@@ -34,7 +34,7 @@ public class ClientUI implements ServerMessageObserver {
     private GameData gameData = null;
     private ChessGame.TeamColor teamColor;
 
-    public ClientUI( int port) {
+    public ClientUI( int port) throws Exception {
         serverFacade = new ServerFacade(port);
         teamColor = ChessGame.TeamColor.WHITE;
     }
@@ -407,7 +407,8 @@ public class ClientUI implements ServerMessageObserver {
         println("4. Highlight Legal Moves");
         // Connect to the server to get the gameData
         gameData = getGameData( gameID, true );
-        drawGameBoard(  gameData, ChessGame.TeamColor.WHITE );
+        teamColor = ChessGame.TeamColor.WHITE;
+        drawGameBoard(  gameData, teamColor );
     }
 
     public void observeGameUILoop() throws Exception  {

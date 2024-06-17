@@ -8,7 +8,12 @@ public class Main {
         var piece = new ChessPiece( ChessGame.TeamColor.WHITE, ChessPiece.PieceType.PAWN);
         System.out.println("♕ 240 Chess Client: " + piece);
 
-        ClientUI clientUI = new ClientUI( 8080);
+        ClientUI clientUI = null;
+        try {
+            clientUI = new ClientUI( 8080);
+        } catch ( Exception e ) {
+            throw new RuntimeException( e );
+        }
         clientUI.preLoginUI();
     }
 }

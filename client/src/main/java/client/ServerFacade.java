@@ -3,6 +3,7 @@ package client;
 
 import com.google.gson.Gson;
 import connections.HTTPClient;
+import connections.WSClient;
 import datatypes.ServerMessageObserver;
 import model.custom.*;
 import websocket.messages.ServerMessage;
@@ -14,24 +15,27 @@ import java.net.URISyntaxException;
 
 public class ServerFacade {
     private final HTTPClient httpClient;
+    private final WSClient wsClient;
     private int statusCode;
     private String statusString;
     private final Gson gson = new Gson();
     private final ServerMessageObserver serverMessageObserver;
 
-    public ServerFacade(int port) {
+    public ServerFacade(int port) throws Exception {
         httpClient = new HTTPClient(port);
         serverMessageObserver = new ServerMessageObserver() {
             @Override
             public void notify( ServerMessage serverMessage ) {
-                System.out.println(serverMessage);
+                System.out.println("SERVER RESPONSE: " + serverMessage);
             }
         };
+        wsClient = new WSClient( serverMessageObserver );
     }
 
-    public ServerFacade(int port,  ServerMessageObserver serverMessageObserver ) {
+    public ServerFacade(int port,  ServerMessageObserver serverMessageObserver ) throws Exception {
         httpClient = new HTTPClient(port);
         this.serverMessageObserver = serverMessageObserver;
+        wsClient = new WSClient( serverMessageObserver );
     }
 
     public ClearResult clearApplication() throws IOException, URISyntaxException {

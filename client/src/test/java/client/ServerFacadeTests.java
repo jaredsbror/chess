@@ -43,7 +43,9 @@ public class ServerFacadeTests {
         server = new Server();
         var port = server.run(0);
         System.out.println("Started test HTTP server on " + port);
-        serverFacade = new ServerFacade(port);
+        Assertions.assertDoesNotThrow( () -> {
+            serverFacade = new ServerFacade(port);
+        } );
     }
 
     @AfterAll
