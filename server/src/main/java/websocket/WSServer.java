@@ -1,16 +1,20 @@
 package websocket;
 
 
+import chess.ChessGame;
+import chess.ChessPosition;
 import com.google.gson.Gson;
 import dataaccess.auth.SQLAuthDAO;
 import dataaccess.exceptions.DataAccessException;
 import dataaccess.game.SQLGameDAO;
 import dataaccess.user.SQLUserDAO;
+import model.original.GameData;
 import org.eclipse.jetty.io.Connection;
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.annotations.*;
 import spark.Spark;
 import websocket.commands.*;
+import websocket.messages.ErrorCommand;
 import websocket.messages.LoadGameCommand;
 import websocket.messages.NotificationCommand;
 import websocket.messages.ServerMessage;
@@ -70,27 +74,63 @@ public class WSServer {
     }
 
     // Used to request to make a move in a game.
-    private void makeMove( Session senderSession , MakeMoveCommand makeMoveCommand) {
+    private void makeMove( Session senderSession , MakeMoveCommand makeMoveCommand) throws Exception {
         // Server verifies the validity of the move.
-
         // Game is updated to represent the move. Game is updated in the database.
-
+        GameData gameData = sqlGameDAO.getGameData( gameID );
+        ChessGame chessGame = gameData.game();
+        try {
+            chessGame.makeMove( makeMoveCommand.getChessMove() );
+        } catch ( Exception exception ) {
+            broadcastSender( gameID, senderSession, new ErrorCommand( ServerMessage.ServerMessageType.ERROR, exception.getMessage()) );
+            return;
+        }
         // Server sends a LOAD_GAME message to all clients in the game (including the root
         // client) with an updated game.
-
+        broadcastAll(gameID, new LoadGameCommand( ServerMessage.ServerMessageType.LOAD_GAME, sqlGameDAO.getGameData( gameID ) ) );
         // Server sends a Notification message to all other clients in that game informing
         // them what move was made.
-
+        String notificationString = username + " made move " + makeMoveCommand.getChessMove().toString();
+        broadcastAllExceptSender( gameID, senderSession,  new NotificationCommand( ServerMessage.ServerMessageType.NOTIFICATION, notificationString ));
         // If the move results in check, checkmate or stalemate the server sends a
         // Notification message to all clients.
+        // Send the notification
+        if (chessGame.isInCheckmate( ChessGame.TeamColor.WHITE )) {
+            notificationString = gameData.whiteUsername() + " is in checkmate. Good game!";
+            broadcastAll( gameID, new NotificationCommand( ServerMessage.ServerMessageType.NOTIFICATION, notificationString ) );
+
+        } else if (chessGame.isInCheckmate( ChessGame.TeamColor.BLACK )) {
+            notificationString = gameData.blackUsername() + " is in checkmate. Good game!";
+            broadcastAll( gameID, new NotificationCommand( ServerMessage.ServerMessageType.NOTIFICATION, notificationString ) );
+
+        } else if (chessGame.isInStalemate( ChessGame.TeamColor.WHITE )) {
+            notificationString = gameData.whiteUsername() + " is in stalemate. Good game!";
+            broadcastAll( gameID, new NotificationCommand( ServerMessage.ServerMessageType.NOTIFICATION, notificationString ) );
+
+        } else if (chessGame.isInStalemate( ChessGame.TeamColor.BLACK )) {
+            notificationString = gameData.blackUsername() + " is in stalemate. Good game!";
+            broadcastAll( gameID, new NotificationCommand( ServerMessage.ServerMessageType.NOTIFICATION, notificationString ) );
+
+        } else if (chessGame.isInCheck( ChessGame.TeamColor.WHITE )) {
+            notificationString = gameData.whiteUsername() + " is in check.";
+            broadcastAll( gameID, new NotificationCommand( ServerMessage.ServerMessageType.NOTIFICATION, notificationString ) );
+
+        } else if (chessGame.isInCheck( ChessGame.TeamColor.BLACK  )) {
+            notificationString = gameData.blackUsername() + " is in check.";
+            broadcastAll( gameID, new NotificationCommand( ServerMessage.ServerMessageType.NOTIFICATION, notificationString ) );
+        }
     }
 
     // Tells the server you are leaving the game so it will stop sending you notifications.
-    private void leave( Session senderSession , LeaveCommand leaveCommand) {
+    private void leave( Session senderSession , LeaveCommand leaveCommand) throws Exception {
         // If a player is leaving, then the game is updated to remove the root client.
-
+        remove( gameID, senderSession );
         // Game is updated in the database.
+        GameData gameData = sqlGameDAO.getGameData( gameID );
+        if (gameData.whiteUsername().equals( username )) {
 
+        }
+//        sqlGameDAO.updateGame(  );
         // Server sends a Notification message to all other clients in that game informing
         // them that the root client left. This applies to both players and observers.
 
@@ -131,7 +171,7 @@ public class WSServer {
     }
 
     // Send a message to all sessions in a game
-    public void broadcastAll(int gameID, Session senderSession, ServerMessage serverMessage) throws IOException {
+    public void broadcastAll(int gameID, ServerMessage serverMessage) throws Exception {
         if (sessions.get( gameID ) == null) throw new IOException( "Error: Game does not exist in broadcastAll" );
         for (var s: sessions.get( gameID )) {
             s.getRemote().sendString( gson.toJson( serverMessage) );
@@ -139,13 +179,13 @@ public class WSServer {
     }
 
     // Send a message to the sender only
-    public void broadcastSender(int gameID, Session senderSession, ServerMessage serverMessage) throws IOException {
+    public void broadcastSender(int gameID, Session senderSession, ServerMessage serverMessage) throws Exception {
         if (sessions.get( gameID ) == null) throw new IOException( "Error: Game does not exist in broadcastSender" );
         senderSession.getRemote().sendString( gson.toJson( serverMessage) );
     }
 
     // Send a message to every session except the sender
-    public void broadcastAllExceptSender(int gameID, Session senderSession, ServerMessage serverMessage) throws IOException {
+    public void broadcastAllExceptSender(int gameID, Session senderSession, ServerMessage serverMessage) throws Exception {
         if (sessions.get( gameID ) == null) throw new IOException( "Error: Game does not exist in broadcastAllExceptSender" );
         for (var s: sessions.get( gameID )) {
             if (!s.equals( senderSession )) {
