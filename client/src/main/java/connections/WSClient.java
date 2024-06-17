@@ -24,7 +24,7 @@ public class WSClient extends Endpoint {
         // Add onMessage { ClientUI.notify() } (in messagehandler
         this.session.addMessageHandler(new MessageHandler.Whole<String>() {
             public void onMessage(String message) {
-                System.out.println(message);
+
             }
         });
     }

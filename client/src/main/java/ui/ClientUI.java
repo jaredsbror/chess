@@ -27,9 +27,16 @@ public class ClientUI implements ServerMessageObserver {
     private Scanner scanner = new Scanner( System.in );
     private String authToken = null;
     private Integer gameID = null;
+    private final ChessGame.TeamColor teamColor;
 
     public ClientUI( int port) {
         serverFacade = new ServerFacade(port);
+        teamColor = ChessGame.TeamColor.WHITE;
+    }
+
+    public ClientUI( int port, ChessGame.TeamColor teamColor ) {
+        serverFacade = new ServerFacade(port);
+        this.teamColor = teamColor;
     }
 
     /*
@@ -366,38 +373,119 @@ public class ClientUI implements ServerMessageObserver {
 
     public void playGameUI( GameData gameData ) {
         // Draw menu and chessboard
-        println( "1. Exit" );
-        println( "2. Make a Move (Not Yet Implemented)" );
-        drawGameBoard( gameData );
+        drawPlayGameUIMenu(gameData);
+        // Loop
+        playGameUILoop(gameData);
+    }
+
+    public void drawPlayGameUIMenu(GameData gameData ) {
+        println("1. Help");
+        println("2. Redraw Chess Board");
+        println("3. Leave");
+        println("4. Make Move");
+        println("5. Resign");
+        println("6. Highlight Legal Moves");
+        drawGameBoard( gameData, teamColor);
+    }
+
+    public void playGameUILoop(GameData gameData) {
         // Game UI loop
-        while ( true ) {
-            // Get user input
-            int exitInt = getValidIntegerInput( 1, 2 );
-            // Process user input
-            if ( exitInt == 1 ) {
-                break;
-            } else {
-                println( "Not Yet Implemented" );
+        while (true) {
+            int result = getValidIntegerInput( 1, 6 );
+            switch ( result ) {
+                case 1:
+                    drawPlayGameUIMenu(gameData);
+                    break;
+                case 2:
+                    handleRedrawChessboard();
+                    break;
+                case 3:
+                    handleLeaveGame();
+                    return;
+                case 4:
+                    handleMakeMove();
+                    break;
+                case 5:
+                    handleResign();
+                    return;
+                case 6:
+                    handleHighlightLegalMoves();
+                    break;
+                default:
+                    println("Error: Invalid numerical input in playGameUILoop()");
+                    break;
             }
         }
     }
 
-
     public void observeGameUI( GameData gameData ) {
         // Draw menu and chessboard
-        println( "1. Exit" );
-        drawGameBoard( gameData );
-        // Get user input
-        getValidIntegerInput( 1, 1 );
+        drawObserveGameUIMenu(gameData);
+        // Loop
+        observeGameUILoop(gameData);
+    }
+
+    public void drawObserveGameUIMenu( GameData gameData) {
+        println("1. Help");
+        println("2. Redraw Chess Board");
+        println("3. Leave");
+        println("4. Highlight Legal Moves");
+        drawGameBoard( gameData, teamColor );
+    }
+
+    public void observeGameUILoop(GameData gameData) {
+        // Observe Game UI Loop
+        while (true) {
+            int result = getValidIntegerInput( 1, 4 );
+            switch ( result ) {
+                case 1:
+                    drawObserveGameUIMenu(gameData);
+                    break;
+                case 2:
+                    handleRedrawChessboard();
+                    break;
+                case 3:
+                    handleLeaveGame();
+                    return;
+                case 4:
+                    handleHighlightLegalMoves();
+                    break;
+                default:
+                    println("Error: Invalid numerical input in observeGameUILoop()");
+                    break;
+            }
+        }
+    }
+
+    public void handleRedrawChessboard() {
+
+    }
+
+    public void handleLeaveGame() {
+
+    }
+
+    public void handleMakeMove() {
+
+    }
+
+    public void handleResign() {
+
+    }
+
+    public void handleHighlightLegalMoves() {
 
     }
 
 
-    public void drawGameBoard( GameData gameData ) {
+
+
+
+    public void drawGameBoard( GameData gameData, ChessGame.TeamColor teamColor ) {
         ChessBoard chessBoard = new ChessBoard( ChessBoard.parseBoard( gameData.game().toString() ) );
         chessBoard.resetBoard();
-        chessBoardUI.drawBoard( chessBoard, ChessGame.TeamColor.WHITE );
-        chessBoardUI.drawBoard( chessBoard, ChessGame.TeamColor.BLACK );
+        if (teamColor == ChessGame.TeamColor.WHITE) chessBoardUI.drawBoard( chessBoard, ChessGame.TeamColor.WHITE );
+        else chessBoardUI.drawBoard( chessBoard, ChessGame.TeamColor.BLACK );
     }
 
 

@@ -13,7 +13,7 @@ import static ui.ChessUIConstants.CHESS_EDGE_SIZE_IN_SQUARES;
 
 
 public class ChessBoardUI {
-    private TerminalUI terminalUI = new TerminalUI();
+    private final TerminalUI terminalUI = new TerminalUI();
 
 
     // Draw entire board from either the white or black player's perspective
