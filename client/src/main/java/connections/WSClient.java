@@ -1,22 +1,25 @@
 package connections;
 
+
+import com.google.gson.Gson;
+import datatypes.ServerMessageObserver;
+import websocket.messages.ErrorCommand;
+import websocket.messages.LoadGameCommand;
+import websocket.messages.NotificationCommand;
+import websocket.messages.ServerMessage;
+
 import javax.websocket.*;
 import java.net.URI;
-import java.util.Scanner;
 
 public class WSClient extends Endpoint {
-
-    public static void main(String[] args) throws Exception {
-        var ws = new WSClient();
-        Scanner scanner = new Scanner(System.in);
-
-        System.out.println("Enter a message you want to echo");
-        while (true) ws.send(scanner.nextLine());
-    }
-
+    private final Gson gson = new Gson();
+    private final ServerMessageObserver serverMessageObserver;
     public Session session;
 
-    public WSClient() throws Exception {
+    public WSClient(ServerMessageObserver serverMessageObserver) throws Exception {
+        // Add ServerMessageObserver
+        this.serverMessageObserver = serverMessageObserver;
+        // Connect to Websocket
         URI uri = new URI("ws://localhost:8080/ws");
         WebSocketContainer container = ContainerProvider.getWebSocketContainer();
         this.session = container.connectToServer(this, uri);
@@ -24,7 +27,20 @@ public class WSClient extends Endpoint {
         // Add onMessage { ClientUI.notify() } (
         this.session.addMessageHandler(new MessageHandler.Whole<String>() {
             public void onMessage(String message) {
-
+                // Detect the server message type and return the appropriate deserialized object
+                ServerMessage baseServerMessage = gson.fromJson( message, ServerMessage.class );
+                switch (baseServerMessage.getServerMessageType()) {
+                    case LOAD_GAME -> {
+                        serverMessageObserver.notify(gson.fromJson( message, LoadGameCommand.class ));
+                    }
+                    case ERROR -> {
+                        serverMessageObserver.notify(gson.fromJson( message, ErrorCommand.class ));
+                    }
+                    case NOTIFICATION -> {
+                        serverMessageObserver.notify(gson.fromJson( message, NotificationCommand.class ));
+                    }
+                    default -> throw new RuntimeException("Error: Invalid ServerMessageType in WSClient.java");
+                }
             }
         });
     }

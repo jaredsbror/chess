@@ -33,7 +33,7 @@ public class ClientUI implements ServerMessageObserver {
 
     public ClientUI( int port) {
         serverFacade = new ServerFacade(port);
-        teamColor = ChessGame.TeamColor.WHITE;
+        teamColor = null;
     }
 
     /*
@@ -292,7 +292,7 @@ public class ClientUI implements ServerMessageObserver {
 
 
     private void handleCreateGame() throws Exception {
-        String gameName = getStringInput( "What will you name this so-called 'game'? " );
+        String gameName = getStringInput( "What will you name this farce of a 'game'? " );
 
         // Connect to the server
         CreateResult createResult = serverFacade.createGame( new CreateRequest( authToken, gameName ) );
@@ -489,6 +489,15 @@ public class ClientUI implements ServerMessageObserver {
     // WS
     @Override
     public void notify( ServerMessage serverMessage ) {
-
+        // Detect the server message type and process the appropriate deserialized object
+        switch (serverMessage.getServerMessageType()) {
+            case LOAD_GAME -> {
+            }
+            case ERROR -> {
+            }
+            case NOTIFICATION -> {
+            }
+            default -> throw new RuntimeException("Error: Invalid ServerMessageType in ClientUI.java");
+        }
     }
 }
