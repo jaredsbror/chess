@@ -15,4 +15,8 @@ public class TerminalUI {
     public void resetTerminalColors( PrintStream out ) {
         setForegroundBackground( out, SET_TEXT_COLOR_WHITE, SET_BG_COLOR_BLACK );
     }
+
+    public void eraseScreen( PrintStream out ) {
+        out.print(ERASE_SCREEN);
+    }
 }

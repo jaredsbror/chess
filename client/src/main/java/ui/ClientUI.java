@@ -27,6 +27,8 @@ public class ClientUI implements ServerMessageObserver {
     private Scanner scanner = new Scanner( System.in );
     private String authToken = null;
     private Integer gameID = null;
+    private Integer gameIndex = null;
+    private GameData gameData = null;
     private final ChessGame.TeamColor teamColor;
 
     public ClientUI( int port) {
@@ -52,14 +54,13 @@ public class ClientUI implements ServerMessageObserver {
      */
     public void preLoginUI() {
         // Reset the terminal screen
-        print( ERASE_SCREEN );
         terminalUI.resetTerminalColors( out );
         // Print out the menu
         println( "\nWelcome to CS 240 Chess! Type 'Help' to get started." );
-
+        print(">>> ");
         // Prompt for 'Help' input
         waitForHelpInput();
-
+        // Start the pre-login menu
         preLoginMenuLoop();
     }
 
@@ -78,6 +79,7 @@ public class ClientUI implements ServerMessageObserver {
     // Helper method to validate string input
     private String getStringInput( String prompt ) {
         println( prompt );
+        print(">>> ");
         scanner = new Scanner( System.in );
         return scanner.nextLine();
     }
@@ -88,6 +90,7 @@ public class ClientUI implements ServerMessageObserver {
         int number;
         // If the user types in a valid number, continue. Otherwise, keep scanning.
         while ( true ) {
+            print(">>> ");
             scanner = new Scanner( System.in );
             if ( scanner.hasNextInt() ) {
                 number = scanner.nextInt();
@@ -117,12 +120,11 @@ public class ClientUI implements ServerMessageObserver {
 
 
     private void printPreLoginMenu() {
-        println( "\n1. Register" );
+        println( "\n\n1. Register" );
         println( "2. Login" );
         println( "3. Quit (and leave me in peace...highly recommended)" );
         println( "4. Help (and I'll be forced to print out this menu again)" );
         println( "5. Clear Database (proceed at your own risk!" );
-        print( "Please type a number: " );
     }
 
 
@@ -250,7 +252,6 @@ public class ClientUI implements ServerMessageObserver {
         println( "3. List Games (Avoid this option at all costs! I'm allergic to work!)" );
         println( "4. Play Game" );
         println( "5. Observe Game" );
-        println( "Please type a number: " );
     }
 
 
@@ -284,7 +285,6 @@ public class ClientUI implements ServerMessageObserver {
 
     private void handleLogout() throws Exception {
         println( "Phew...One step closer to leaving me in peace!" );
-
         // Connect to the server
         LogoutResult logoutResult = serverFacade.logout( new LogoutRequest( authToken ) );
         if ( logoutResult.message() != null ) {
@@ -327,88 +327,62 @@ public class ClientUI implements ServerMessageObserver {
     private void handleJoinGame() throws Exception {
         String playerColor = getStringInput( "Player Color?" );
         println( "Game Number? (displayed before each listed game, e.g. 1) GameData..." );
-        int gameNumber = getValidIntegerInput( 0, 1000000 );
-        gameID = gameNumbersToGameIDs.get( gameNumber );
-        // Connect to the server
-        JoinResult joinResult = serverFacade.joinGame( new JoinRequest( authToken, playerColor, gameID ) );
-        if ( joinResult.message() != null ) {
-            println( "Error: " + joinResult.message() );
-            return;
-        }
-        // Connect to the server to get the gameData
-        ListResult listResult = serverFacade.listGames( new ListRequest( authToken ) );
-        if ( listResult.message() != null ) {
-            println( "Error: " + listResult.message() );
-            return;
-        }
-        // Locate the game with the correct gameID
-        GameData gameData = null;
-        for ( var game : listResult.games() ) {
-            if ( gameID.equals( game.gameID() ) ) gameData = game;
-        }
+        gameIndex = getValidIntegerInput( 0, 1000000 );
+        gameID = gameNumbersToGameIDs.get( gameIndex );
         // Display the game
-        playGameUI( gameData );
+        playGameUI();
     }
 
 
     private void handleObserveGame() throws Exception {
         println( "Game Number? (displayed before each listed game, e.g. 1) GameData..." );
-        int gameNumber = getValidIntegerInput( 0, 1000000 );
-        gameID = gameNumbersToGameIDs.get( gameNumber );
-        // Connect to the server to get the gameData
-        ListResult listResult = serverFacade.listGames( new ListRequest( authToken ) );
-        if ( listResult.message() != null ) {
-            println( "Error: " + listResult.message() );
-            return;
-        }
-        // Locate the game with the correct gameID
-        GameData gameData = null;
-        for ( var game : listResult.games() ) {
-            if ( gameID.equals( game.gameID() ) ) gameData = game;
-        }
+        gameIndex = getValidIntegerInput( 0, 1000000 );
+        gameID = gameNumbersToGameIDs.get( gameIndex );
         // Display the game
-        observeGameUI( gameData );
+        observeGameUI();
     }
 
 
-    public void playGameUI( GameData gameData ) {
+    public void playGameUI() throws Exception {
         // Draw menu and chessboard
-        drawPlayGameUIMenu(gameData);
+        drawPlayGameUIMenu();
         // Loop
-        playGameUILoop(gameData);
+        playGameUILoop();
     }
 
-    public void drawPlayGameUIMenu(GameData gameData ) {
-        println("1. Help");
+    public void drawPlayGameUIMenu() throws Exception {
+        println("\n\n1. Help");
         println("2. Redraw Chess Board");
         println("3. Leave");
         println("4. Make Move");
         println("5. Resign");
         println("6. Highlight Legal Moves");
-        drawGameBoard( gameData, teamColor);
+        // Connect to the server to get the gameData
+        gameData = getGameData( gameID, true );
+        drawGameBoard(  gameData, teamColor );
     }
 
-    public void playGameUILoop(GameData gameData) {
+    public void playGameUILoop() throws Exception  {
         // Game UI loop
         while (true) {
             int result = getValidIntegerInput( 1, 6 );
             switch ( result ) {
-                case 1:
-                    drawPlayGameUIMenu(gameData);
+                case 1: // Help
+                    drawPlayGameUIMenu();
                     break;
-                case 2:
-                    handleRedrawChessboard();
+                case 2: // Redraw Chessboard
+                    drawPlayGameUIMenu();
                     break;
-                case 3:
+                case 3: // Leave Game
                     handleLeaveGame();
                     return;
-                case 4:
+                case 4: // Make move
                     handleMakeMove();
                     break;
-                case 5:
+                case 5: // Resign
                     handleResign();
                     return;
-                case 6:
+                case 6: // Highlight Legal Moves
                     handleHighlightLegalMoves();
                     break;
                 default:
@@ -418,36 +392,38 @@ public class ClientUI implements ServerMessageObserver {
         }
     }
 
-    public void observeGameUI( GameData gameData ) {
+    public void observeGameUI() throws Exception  {
         // Draw menu and chessboard
-        drawObserveGameUIMenu(gameData);
+        drawObserveGameUIMenu();
         // Loop
-        observeGameUILoop(gameData);
+        observeGameUILoop();
     }
 
-    public void drawObserveGameUIMenu( GameData gameData) {
-        println("1. Help");
+    public void drawObserveGameUIMenu() throws Exception {
+        println("\n\n1. Help");
         println("2. Redraw Chess Board");
         println("3. Leave");
         println("4. Highlight Legal Moves");
-        drawGameBoard( gameData, teamColor );
+        // Connect to the server to get the gameData
+        gameData = getGameData( gameID, true );
+        drawGameBoard(  gameData, ChessGame.TeamColor.WHITE );
     }
 
-    public void observeGameUILoop(GameData gameData) {
+    public void observeGameUILoop() throws Exception  {
         // Observe Game UI Loop
         while (true) {
             int result = getValidIntegerInput( 1, 4 );
             switch ( result ) {
-                case 1:
-                    drawObserveGameUIMenu(gameData);
+                case 1: // Help
+                    drawObserveGameUIMenu();
                     break;
-                case 2:
-                    handleRedrawChessboard();
+                case 2: // Redraw Chessboard
+                    drawObserveGameUIMenu();
                     break;
-                case 3:
+                case 3: // Leave Game
                     handleLeaveGame();
                     return;
-                case 4:
+                case 4: // Highlight Legal Moves
                     handleHighlightLegalMoves();
                     break;
                 default:
@@ -457,31 +433,44 @@ public class ClientUI implements ServerMessageObserver {
         }
     }
 
-    public void handleRedrawChessboard() {
+    public void handleLeaveGame() throws Exception  {
 
     }
 
-    public void handleLeaveGame() {
+    public void handleMakeMove() throws Exception  {
 
     }
 
-    public void handleMakeMove() {
+    public void handleResign() throws Exception  {
 
     }
 
-    public void handleResign() {
-
-    }
-
-    public void handleHighlightLegalMoves() {
+    public void handleHighlightLegalMoves() throws Exception  {
 
     }
 
 
 
+    public GameData getGameData(int index, boolean isGameID) throws Exception {
+        // Depending on isGameID, get the gameID (either it's the gameID or the game index)
+        if (isGameID) gameID = index;
+        else gameID = gameNumbersToGameIDs.get( index );
+        // Connect to the server to get the gameData
+        ListResult listResult = serverFacade.listGames( new ListRequest( authToken ) );
+        if ( listResult.message() != null ) {
+            println( "Error: " + listResult.message() );
+            return null;
+        }
+        // Locate the game with the correct gameID
+        GameData gameData = null;
+        for ( var game : listResult.games() ) {
+            if ( gameID.equals( game.gameID() ) ) gameData = game;
+        }
+        return gameData;
+    }
 
 
-    public void drawGameBoard( GameData gameData, ChessGame.TeamColor teamColor ) {
+    public void drawGameBoard( GameData gameData, ChessGame.TeamColor teamColor ) throws Exception  {
         ChessBoard chessBoard = new ChessBoard( ChessBoard.parseBoard( gameData.game().toString() ) );
         chessBoard.resetBoard();
         if (teamColor == ChessGame.TeamColor.WHITE) chessBoardUI.drawBoard( chessBoard, ChessGame.TeamColor.WHITE );
