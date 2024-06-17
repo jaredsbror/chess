@@ -7,6 +7,9 @@ import client.ServerFacade;
 import datatypes.ServerMessageObserver;
 import model.custom.*;
 import model.original.GameData;
+import websocket.messages.ErrorCommand;
+import websocket.messages.LoadGameCommand;
+import websocket.messages.NotificationCommand;
 import websocket.messages.ServerMessage;
 
 import java.io.PrintStream;
@@ -33,7 +36,7 @@ public class ClientUI implements ServerMessageObserver {
 
     public ClientUI( int port) {
         serverFacade = new ServerFacade(port);
-        teamColor = null;
+        teamColor = ChessGame.TeamColor.WHITE;
     }
 
     /*
@@ -488,14 +491,20 @@ public class ClientUI implements ServerMessageObserver {
 
     // WS
     @Override
-    public void notify( ServerMessage serverMessage ) {
+    public void notify( ServerMessage serverMessage ) throws Exception {
         // Detect the server message type and process the appropriate deserialized object
         switch (serverMessage.getServerMessageType()) {
             case LOAD_GAME -> {
+                LoadGameCommand loadGameCommand = (LoadGameCommand) serverMessage;
+                drawGameBoard( loadGameCommand.getGameData(), teamColor );
             }
             case ERROR -> {
+                ErrorCommand errorCommand = (ErrorCommand) serverMessage;
+                out.println("Error: " + errorCommand.getErrorMessage());
             }
             case NOTIFICATION -> {
+                NotificationCommand notificationCommand = (NotificationCommand) serverMessage;
+                out.println(notificationCommand.getMessage());
             }
             default -> throw new RuntimeException("Error: Invalid ServerMessageType in ClientUI.java");
         }

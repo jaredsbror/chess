@@ -31,13 +31,25 @@ public class WSClient extends Endpoint {
                 ServerMessage baseServerMessage = gson.fromJson( message, ServerMessage.class );
                 switch (baseServerMessage.getServerMessageType()) {
                     case LOAD_GAME -> {
-                        serverMessageObserver.notify(gson.fromJson( message, LoadGameCommand.class ));
+                        try {
+                            serverMessageObserver.notify(gson.fromJson( message, LoadGameCommand.class ));
+                        } catch ( Exception e ) {
+                            throw new RuntimeException( e );
+                        }
                     }
                     case ERROR -> {
-                        serverMessageObserver.notify(gson.fromJson( message, ErrorCommand.class ));
+                        try {
+                            serverMessageObserver.notify(gson.fromJson( message, ErrorCommand.class ));
+                        } catch ( Exception e ) {
+                            throw new RuntimeException( e );
+                        }
                     }
                     case NOTIFICATION -> {
-                        serverMessageObserver.notify(gson.fromJson( message, NotificationCommand.class ));
+                        try {
+                            serverMessageObserver.notify(gson.fromJson( message, NotificationCommand.class ));
+                        } catch ( Exception e ) {
+                            throw new RuntimeException( e );
+                        }
                     }
                     default -> throw new RuntimeException("Error: Invalid ServerMessageType in WSClient.java");
                 }
