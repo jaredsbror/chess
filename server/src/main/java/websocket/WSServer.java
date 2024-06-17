@@ -2,6 +2,10 @@ package websocket;
 
 
 import com.google.gson.Gson;
+import dataaccess.auth.SQLAuthDAO;
+import dataaccess.exceptions.DataAccessException;
+import dataaccess.game.SQLGameDAO;
+import dataaccess.user.SQLUserDAO;
 import org.eclipse.jetty.io.Connection;
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.annotations.*;
@@ -14,6 +18,7 @@ import websocket.messages.ServerMessage;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Scanner;
 import java.util.Vector;
 
 
@@ -21,12 +26,27 @@ import java.util.Vector;
 public class WSServer {
     private final Gson gson = new Gson();
     private final Map<Integer, Vector<Session>> sessions = new HashMap<>();
+    private String authToken = null;
+    private String username = null;
+    private Integer gameID = null;
+    private final SQLAuthDAO sqlAuthDAO;
+    private final SQLGameDAO sqlGameDAO;
+    private final SQLUserDAO sqlUserDAO;
+
+    public WSServer() throws Exception {
+        sqlAuthDAO = new SQLAuthDAO();
+        sqlGameDAO = new SQLGameDAO();
+        sqlUserDAO = new SQLUserDAO();
+    }
 
     @OnWebSocketMessage
     public void onMessage( Session senderSession, String message) throws Exception {
         // PROCESSES THE JSON MESSAGE AND DOES STUFF
         // CONNECT, MAKE MOVE, LEAVE, RESIGN
         UserGameCommand userGameCommand = gson.fromJson( message, UserGameCommand.class );
+        authToken = userGameCommand.getAuthString();
+        username = sqlAuthDAO.getAuthDataGivenAuthToken( authToken ).username();
+        gameID = userGameCommand.getGameID();
         switch (userGameCommand.getCommandType()) {
             case CONNECT -> connect( senderSession, gson.fromJson( message, ConnectCommand.class ));
             case MAKE_MOVE -> makeMove( senderSession, gson.fromJson( message, MakeMoveCommand.class ));
@@ -36,41 +56,54 @@ public class WSServer {
     }
 
     // Used for a user to request to connect to a game as a player or observer.
-    private void connect( Session messageSender, ConnectCommand connectCommand ) throws IOException {
+    private void connect( Session senderSession, ConnectCommand connectCommand ) throws Exception {
         // Server sends a LOAD_GAME message back to the root client.
-        messageSender.getRemote().sendString( gson.toJson(new LoadGameCommand( ServerMessage.ServerMessageType.LOAD_GAME ) ) );
+        senderSession.getRemote().sendString( gson.toJson(new LoadGameCommand( ServerMessage.ServerMessageType.LOAD_GAME, sqlGameDAO.getGameData( gameID ) ) ) );
         // Server sends a Notification message to all other clients in that game informing
         // them the root client connected to the game, either as a player (in which case
         // their color must be specified) or as an observer.
-        broadcast
+        String notificationString = connectCommand.getPlayStyle() == ConnectCommand.PlayStyle.PLAYER ?
+                                    "Player " + username + " has joined the " + connectCommand.getTeamColor() + " team." :
+                                    "Observer " + username + " is observing the game.";
+        NotificationCommand notificationCommand = new NotificationCommand( ServerMessage.ServerMessageType.NOTIFICATION, notificationString );
+        broadcastAllExceptSender( connectCommand.getGameID(), senderSession, notificationCommand );
     }
 
     // Used to request to make a move in a game.
-    private void makeMove( Session messageSender , MakeMoveCommand makeMoveCommand) {
+    private void makeMove( Session senderSession , MakeMoveCommand makeMoveCommand) {
         // Server verifies the validity of the move.
+
         // Game is updated to represent the move. Game is updated in the database.
+
         // Server sends a LOAD_GAME message to all clients in the game (including the root
         // client) with an updated game.
+
         // Server sends a Notification message to all other clients in that game informing
         // them what move was made.
+
         // If the move results in check, checkmate or stalemate the server sends a
         // Notification message to all clients.
     }
 
     // Tells the server you are leaving the game so it will stop sending you notifications.
-    private void leave( Session messageSender , LeaveCommand leaveCommand) {
+    private void leave( Session senderSession , LeaveCommand leaveCommand) {
         // If a player is leaving, then the game is updated to remove the root client.
+
         // Game is updated in the database.
+
         // Server sends a Notification message to all other clients in that game informing
         // them that the root client left. This applies to both players and observers.
+
     }
 
     // Forfeits the match and ends the game (no more moves can be made).
-    private void resign( Session messageSender , ResignCommand resignCommand) {
+    private void resign( Session senderSession , ResignCommand resignCommand) {
         // Server marks the game as over (no more moves can be made). Game is updated in
         // the database.
+
         // Server sends a Notification message to all clients in that game informing them
         // that the root client resigned. This applies to both players and observers.
+
     }
 
 

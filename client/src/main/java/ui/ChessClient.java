@@ -32,6 +32,7 @@ public class ChessClient implements ServerMessageObserver {
     private Integer gameID = null;
     private Integer gameIndex = null;
     private GameData gameData = null;
+    private String playerName = null;
     private ChessGame.TeamColor teamColor;
 
     public ChessClient( int port) throws Exception {
