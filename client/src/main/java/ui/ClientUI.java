@@ -43,14 +43,14 @@ public class ClientUI implements ServerMessageObserver {
     Help	Displays text informing the user what actions they can take.
     Quit	Exits the program.
     Login	Prompts the user to input login information.
-            Calls the server login API to login the user.
+            Calls the server login API to log in the user.
             When successfully logged in, the client should transition to the Postlogin UI.
     Register	Prompts the user to input registration information.
                 Calls the server register API to register and login the user.
                 If successfully registered, the client should be logged in and transition
                 to the Postlogin UI.
      */
-    public void preLoginUI() {
+    public void preLoginUI() throws Exception {
         // Reset the terminal screen
         terminalUI.resetTerminalColors( out );
         // Print out the menu
@@ -63,7 +63,7 @@ public class ClientUI implements ServerMessageObserver {
     }
 
 
-    private void preLoginMenuLoop() {
+    private void preLoginMenuLoop() throws Exception {
         boolean exitPreLogin = false;
         // Prelogin Menu loop
         while ( !exitPreLogin ) {
@@ -75,7 +75,7 @@ public class ClientUI implements ServerMessageObserver {
 
 
     // Helper method to validate string input
-    private String getStringInput( String prompt ) {
+    private String getStringInput( String prompt ) throws Exception {
         println( prompt );
         print(">>> ");
         scanner = new Scanner( System.in );
@@ -84,7 +84,7 @@ public class ClientUI implements ServerMessageObserver {
 
 
     // Helper method to validate integer input
-    private int getValidIntegerInput( int min, int max ) {
+    private int getValidIntegerInput( int min, int max ) throws Exception {
         int number;
         // If the user types in a valid number, continue. Otherwise, keep scanning.
         while ( true ) {
@@ -105,7 +105,7 @@ public class ClientUI implements ServerMessageObserver {
     }
 
 
-    private void waitForHelpInput() {
+    private void waitForHelpInput() throws Exception {
         while ( true ) {
             String inputString = scanner.nextLine().trim();
             if ( inputString.equalsIgnoreCase( "Help" ) ) {
@@ -117,7 +117,7 @@ public class ClientUI implements ServerMessageObserver {
     }
 
 
-    private void printPreLoginMenu() {
+    private void printPreLoginMenu() throws Exception {
         println( "\n\n1. Register" );
         println( "2. Login" );
         println( "3. Quit (and leave me in peace...highly recommended)" );
@@ -126,7 +126,7 @@ public class ClientUI implements ServerMessageObserver {
     }
 
 
-    private boolean handlePreLoginMenuSelection( int selection ) {
+    private boolean handlePreLoginMenuSelection( int selection ) throws Exception {
         try {
             switch ( selection ) {
                 case 1:
@@ -229,7 +229,7 @@ public class ClientUI implements ServerMessageObserver {
     //              They should be able to enter the number of the desired game.
     //              Your client will need to keep track of which number corresponds to which game
     //              from the last time it listed the games. Functionality will be added in Phase 6.
-    public void postLoginUI() {
+    public void postLoginUI() throws Exception {
         // Reset the terminal screen
         print( ERASE_SCREEN );
         terminalUI.resetTerminalColors( out );
@@ -244,7 +244,7 @@ public class ClientUI implements ServerMessageObserver {
     }
 
 
-    private void printPostLoginMenu() {
+    private void printPostLoginMenu() throws Exception {
         println( "\n\nThe Ultimate Chess 240 Game Menu 2.0" );
         println( "1. Logout (Maybe someone like you should consider this?)" );
         println( "2. Create Game" );
@@ -254,7 +254,7 @@ public class ClientUI implements ServerMessageObserver {
     }
 
 
-    private boolean handlePostLoginMenuSelection( int selection ) {
+    private boolean handlePostLoginMenuSelection( int selection ) throws Exception {
         try {
             switch ( selection ) {
                 case 1: // Logout

@@ -11,9 +11,9 @@ public class Main {
         ClientUI clientUI = null;
         try {
             clientUI = new ClientUI( 8080);
+            clientUI.preLoginUI();
         } catch ( Exception e ) {
             throw new RuntimeException( e );
         }
-        clientUI.preLoginUI();
     }
 }
