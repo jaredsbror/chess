@@ -20,8 +20,8 @@ import java.util.Scanner;
 
 import static ui.ChessUIConstants.ERASE_SCREEN;
 
-// Have Handler use switch-case to deserialize/serialize messages and use notify method to process them in ClientUI.
-public class ClientUI implements ServerMessageObserver {
+// Have Handler use switch-case to deserialize/serialize messages and use notify method to process them in ChessClient.
+public class ChessClient implements ServerMessageObserver {
     private final PrintStream out = new PrintStream( System.out, true, StandardCharsets.UTF_8 );
     private final TerminalUI terminalUI = new TerminalUI();
     private final ChessBoardUI chessBoardUI = new ChessBoardUI();
@@ -34,7 +34,7 @@ public class ClientUI implements ServerMessageObserver {
     private GameData gameData = null;
     private ChessGame.TeamColor teamColor;
 
-    public ClientUI( int port) throws Exception {
+    public ChessClient( int port) throws Exception {
         serverFacade = new ServerFacade(port);
         teamColor = ChessGame.TeamColor.WHITE;
     }
@@ -507,7 +507,23 @@ public class ClientUI implements ServerMessageObserver {
                 NotificationCommand notificationCommand = (NotificationCommand) serverMessage;
                 out.println(notificationCommand.getMessage());
             }
-            default -> throw new RuntimeException("Error: Invalid ServerMessageType in ClientUI.java");
+            default -> throw new RuntimeException("Error: Invalid ServerMessageType in ChessClient.java");
         }
     }
 }
+
+/*
+
+This document:
+1) Notify
+2) Redraw game board? Way to detect whether the client is currently observing or playing a game?
+3) Other menu items like
+Leave
+Make Move
+Resign
+Highlight Legal Moves
+Other:
+1) WSServer onMessage
+2) When to use WSClient.send???
+
+ */

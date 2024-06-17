@@ -24,7 +24,7 @@ public class WSClient extends Endpoint {
         WebSocketContainer container = ContainerProvider.getWebSocketContainer();
         this.session = container.connectToServer(this, uri);
 
-        // Add onMessage { ClientUI.notify() } (
+        // Add onMessage { ChessClient.notify() } (
         this.session.addMessageHandler(new MessageHandler.Whole<String>() {
             public void onMessage(String message) {
                 // Detect the server message type and return the appropriate deserialized object
