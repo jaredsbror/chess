@@ -111,6 +111,17 @@ public class HTTPClient {
         }
     }
 
+
+    // Update game
+
+
+    // Method to leave game
+
+
+    // Method to join game
+
+
+
     private void addBodyToHTTPRequest() throws IOException {
         // Add the body to the httpURLConnection
         try (var outputStream = httpURLConnection.getOutputStream()) {

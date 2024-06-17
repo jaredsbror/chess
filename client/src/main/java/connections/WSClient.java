@@ -3,10 +3,7 @@ package connections;
 
 import com.google.gson.Gson;
 import datatypes.ServerMessageObserver;
-import websocket.messages.ErrorCommand;
-import websocket.messages.LoadGameCommand;
-import websocket.messages.NotificationCommand;
-import websocket.messages.ServerMessage;
+import websocket.messages.*;
 
 import javax.websocket.*;
 import java.net.URI;
@@ -63,6 +60,8 @@ public class WSClient extends Endpoint {
     }
 
 
-    public void onOpen(Session session, EndpointConfig endpointConfig) {
+    @Override
+    public void onOpen( javax.websocket.Session session, EndpointConfig endpointConfig ) {
+
     }
 }
