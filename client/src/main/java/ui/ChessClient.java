@@ -498,7 +498,7 @@ public class ChessClient implements ServerMessageObserver {
         switch (serverMessage.getServerMessageType()) {
             case LOAD_GAME -> {
                 LoadGameCommand loadGameCommand = (LoadGameCommand) serverMessage;
-                drawGameBoard( loadGameCommand.getGameData(), teamColor );
+//                drawGameBoard( loadGameCommand(), teamColor );
             }
             case ERROR -> {
                 ErrorCommand errorCommand = (ErrorCommand) serverMessage;
