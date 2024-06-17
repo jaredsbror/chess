@@ -15,26 +15,17 @@ import java.net.URISyntaxException;
 
 public class ServerFacade {
     private final HTTPClient httpClient;
-    private final WSClient wsClient;
+    private WSClient wsClient;
     private int statusCode;
     private String statusString;
     private final Gson gson = new Gson();
-    private final ServerMessageObserver serverMessageObserver;
 
     public ServerFacade(int port) throws Exception {
         httpClient = new HTTPClient(port);
-        serverMessageObserver = new ServerMessageObserver() {
-            @Override
-            public void notify( ServerMessage serverMessage ) {
-                System.out.println("SERVER RESPONSE: " + serverMessage);
-            }
-        };
-        wsClient = new WSClient( serverMessageObserver );
     }
 
     public ServerFacade(int port,  ServerMessageObserver serverMessageObserver ) throws Exception {
         httpClient = new HTTPClient(port);
-        this.serverMessageObserver = serverMessageObserver;
         wsClient = new WSClient( serverMessageObserver );
     }
 
