@@ -78,5 +78,13 @@ public class ServerFacade {
         return registerResult;
     }
 
+    // Four websocket methods that will call WebsocketClient and sent json string using WSClient.send
+    // CONNECT
+
+    // MAKE_MOVE
+
+    // LEAVE
+
+    // RESIGN
 
 }

@@ -5,14 +5,9 @@ import model.original.GameData;
 
 
 public class LoadGameCommand extends ServerMessage {
-    private final GameData gameData;
+    private final GameData game = null;
 
-    public LoadGameCommand( ServerMessageType type, GameData gameData ) {
+    public LoadGameCommand( ServerMessageType type ) {
         super( type );
-        this.gameData = gameData;
-    }
-
-    public GameData getGameData() {
-        return gameData;
     }
 }

@@ -4,6 +4,7 @@ package server;
 import dataaccess.DatabaseManager;
 import handlers.*;
 import spark.Spark;
+import websocket.WSServer;
 
 
 public class Server {
@@ -60,6 +61,9 @@ public class Server {
 
         // List games
         Spark.get( "/game", listGamesHandler );
+
+        // Websocket Path
+        Spark.webSocket("/ws", WSServer.class);
 
         Spark.awaitInitialization();
         return Spark.port();
