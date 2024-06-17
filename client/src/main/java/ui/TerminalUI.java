@@ -16,7 +16,4 @@ public class TerminalUI {
         setForegroundBackground( out, SET_TEXT_COLOR_WHITE, SET_BG_COLOR_BLACK );
     }
 
-    public void eraseScreen( PrintStream out ) {
-        out.print(ERASE_SCREEN);
-    }
 }

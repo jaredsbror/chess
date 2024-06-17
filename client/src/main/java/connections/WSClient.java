@@ -22,41 +22,34 @@ public class WSClient extends Endpoint {
         this.session = container.connectToServer(this, uri);
 
         // Add onMessage { ChessClient.notify() } (
-        this.session.addMessageHandler(new MessageHandler.Whole<String>() {
-            public void onMessage(String message) {
-                // Detect the server message type and return the appropriate deserialized object
-                ServerMessage baseServerMessage = gson.fromJson( message, ServerMessage.class );
-                switch (baseServerMessage.getServerMessageType()) {
-                    case LOAD_GAME -> {
-                        try {
-                            serverMessageObserver.notify(gson.fromJson( message, LoadGameCommand.class ));
-                        } catch ( Exception e ) {
-                            throw new RuntimeException( e );
-                        }
+        this.session.addMessageHandler( (MessageHandler.Whole<String>) message -> {
+            // Detect the server message type and return the appropriate deserialized object
+            ServerMessage baseServerMessage = gson.fromJson( message, ServerMessage.class );
+            switch (baseServerMessage.getServerMessageType()) {
+                case LOAD_GAME -> {
+                    try {
+                        serverMessageObserver.notify(gson.fromJson( message, LoadGameCommand.class ));
+                    } catch ( Exception e ) {
+                        throw new RuntimeException( e );
                     }
-                    case ERROR -> {
-                        try {
-                            serverMessageObserver.notify(gson.fromJson( message, ErrorCommand.class ));
-                        } catch ( Exception e ) {
-                            throw new RuntimeException( e );
-                        }
-                    }
-                    case NOTIFICATION -> {
-                        try {
-                            serverMessageObserver.notify(gson.fromJson( message, NotificationCommand.class ));
-                        } catch ( Exception e ) {
-                            throw new RuntimeException( e );
-                        }
-                    }
-                    default -> throw new RuntimeException("Error: Invalid ServerMessageType in WSClient.java");
                 }
+                case ERROR -> {
+                    try {
+                        serverMessageObserver.notify(gson.fromJson( message, ErrorCommand.class ));
+                    } catch ( Exception e ) {
+                        throw new RuntimeException( e );
+                    }
+                }
+                case NOTIFICATION -> {
+                    try {
+                        serverMessageObserver.notify(gson.fromJson( message, NotificationCommand.class ));
+                    } catch ( Exception e ) {
+                        throw new RuntimeException( e );
+                    }
+                }
+                default -> throw new RuntimeException("Error: Invalid ServerMessageType in WSClient.java");
             }
-        });
-    }
-
-    // SENT A JSON MESSAGE
-    public void send(String msg) throws Exception {
-        this.session.getBasicRemote().sendText(msg);
+        } );
     }
 
 

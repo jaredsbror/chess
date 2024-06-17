@@ -494,37 +494,7 @@ public class ChessClient implements ServerMessageObserver {
     // WS
     @Override
     public void notify( ServerMessage serverMessage ) throws Exception {
-        // Detect the server message type and process the appropriate deserialized object
-        switch (serverMessage.getServerMessageType()) {
-            case LOAD_GAME -> {
-                LoadGameCommand loadGameCommand = (LoadGameCommand) serverMessage;
-//                drawGameBoard( loadGameCommand(), teamColor );
-            }
-            case ERROR -> {
-                ErrorCommand errorCommand = (ErrorCommand) serverMessage;
-                out.println("Error: " + errorCommand.getErrorMessage());
-            }
-            case NOTIFICATION -> {
-                NotificationCommand notificationCommand = (NotificationCommand) serverMessage;
-                out.println(notificationCommand.getMessage());
-            }
-            default -> throw new RuntimeException("Error: Invalid ServerMessageType in ChessClient.java");
-        }
+
     }
+
 }
-
-/*
-
-This document:
-1) Notify
-2) Redraw game board? Way to detect whether the client is currently observing or playing a game?
-3) Other menu items like
-Leave
-Make Move
-Resign
-Highlight Legal Moves
-Other:
-1) WSServer onMessage
-2) When to use WSClient.send???
-
- */
