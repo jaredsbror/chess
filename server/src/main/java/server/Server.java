@@ -40,6 +40,9 @@ public class Server {
 
         Spark.staticFiles.location( "web" );
 
+        // Websocket Path
+        Spark.webSocket("/ws", WSServer.class);
+
         // Register your endpoints and handle exceptions here.
         // Clear Application
         Spark.delete( "/db", clearApplicationHandler );
@@ -62,8 +65,7 @@ public class Server {
         // List games
         Spark.get( "/game", listGamesHandler );
 
-        // Websocket Path
-        Spark.webSocket("/ws", WSServer.class);
+
 
         Spark.awaitInitialization();
         return Spark.port();
